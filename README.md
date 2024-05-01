@@ -1,5 +1,7 @@
-# sm64ex
+# sm64ByCat
 Fork of [sm64ex/sm64ex](https://github.com/sm64pc/sm64ex). 
+
+If you want to know changes made in this fork , click here : [click](https://github.com/quentin452/sm64ByCat/wiki/!Changes-made-in-the-fork).
 
 Feel free to report bugs and contribute, but remember, there must be **no upload of any copyrighted asset**. 
 Run `./extract_assets.py --clean && make clean` or `make distclean` to remove ROM-originated content.
