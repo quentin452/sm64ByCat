@@ -1,10 +1,10 @@
 # sm64ex
-Fork of [sm64-port/sm64-port](https://github.com/sm64-port/sm64-port) with additional features. 
+Fork of [sm64ex/sm64ex](https://github.com/sm64pc/sm64ex). 
 
 Feel free to report bugs and contribute, but remember, there must be **no upload of any copyrighted asset**. 
 Run `./extract_assets.py --clean && make clean` or `make distclean` to remove ROM-originated content.
 
-Please contribute **first** to the [nightly branch](https://github.com/sm64pc/sm64ex/tree/nightly/). New functionality will be merged to master once they're considered to be well-tested.
+Please contribute **first** to the [nightly branch](https://github.com/quentin452/sm64ByCat/tree/nightly/). New functionality will be merged to master once they're considered to be well-tested.
 
 *Read this in other languages: [Español](README_es_ES.md), [Português](README_pt_BR.md), [简体中文](README_zh_CN.md) or [Bahasa Melayu](README_ms_MY.md).*
 
@@ -25,6 +25,6 @@ For example `--savepath .` will read saves from the current directory (which not
    `--savepath '!'` will read saves from the executable directory.
 
 ## Building
-For building instructions, please refer to the [wiki](https://github.com/sm64pc/sm64ex/wiki).
+For building instructions, please refer to the [wiki](https://github.com/quentin452/sm64ByCat/wiki).
 
 **Make sure you have MXE first before attempting to compile for Windows on Linux and WSL. Follow the guide on the wiki.**
