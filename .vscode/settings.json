@@ -72,7 +72,8 @@
     "xhash": "cpp",
     "xtree": "cpp",
     "cassert": "cpp",
-    "*.in": "c"
+    "*.in": "c",
+    "bettercamera.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {

@@ -22,7 +22,6 @@
             "command": "make",
             "args": [
                 "RENDER_API=D3D12",
-               // "BETTERCAMERA=1",
                // "TEXTURE_FIX=1",
                // "EXTERNAL_DATA=1",
                 //"EXT_OPTIONS_MENU=1",

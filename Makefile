@@ -37,8 +37,6 @@ NO_PIE ?= 1
 TARGET_ARCH ?= native
 TARGET_BITS ?= 0
 
-# Disable better camera by default
-BETTERCAMERA ?= 0
 # Disable no drawing distance by default
 NODRAWINGDISTANCE ?= 0
 # Disable texture fixes by default (helps with them purists)
@@ -586,13 +584,6 @@ else
 endif
 
 # Check for enhancement options
-
-# Check for Puppycam option
-ifeq ($(BETTERCAMERA),1)
-  CC_CHECK += -DBETTERCAMERA
-  CFLAGS += -DBETTERCAMERA
-  EXT_OPTIONS_MENU := 1
-endif
 
 ifeq ($(TEXTSAVES),1)
   CC_CHECK += -DTEXTSAVES

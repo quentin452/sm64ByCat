@@ -9,7 +9,6 @@ Ejecuta `./extract_assets.py --clean && make clean` o `make distclean` para borr
  * Renderizado nativo. Podrás jugar a Super Mario 64 sin necesidad de un emulador. 
  * Resolución y relación de aspecto variables. Puedes jugar a Super Mario 64 a básicamente cualquier resolución o tamaño de ventana.
  * Soporte nativo para mandos XInput. En Linux, se ha confirmado que el DualShock 4 funciona sin más.
- * Cámara analógica y cámara controlada con el ratón. (Se activa con `make BETTERCAMERA=1`.)
  * Opción para desactivar el límite de distancia de renderizado. (Se activa con `make NODRAWINGDISTANCE=1`.)
  * Configurar los controles desde el juego.
  * Posibilidad de saltarte la intro con la opción de línea de comandos `--skip-intro`
@@ -102,11 +101,11 @@ cd ..
 
 (Ten en cuenta que mingw32 y mingw64 han sido intercambiados. Esto es para que puedas compilar la versión de 32 bits si quieres.)
 
-Aquí pones las opciones que quieras según la versión que quieras compilar. Por ejemplo, si quieres activar la cámara analógica, añade al final BETTERCAMERA=1. Si quieres la opción de distancia de renderizado ilimitada, añade NODRAWINGDISTANCE=1.
+Si quieres la opción de distancia de renderizado ilimitada, añade NODRAWINGDISTANCE=1.
 
 Por ejemplo:
 ```
-PATH=/mingw32/bin:/mingw64/bin:$PATH make BETTERCAMERA=1 NODRAWINGDISTANCE=1
+PATH=/mingw32/bin:/mingw64/bin:$PATH make NODRAWINGDISTANCE=1
 ```
 Listo. El .exe estará en sm64pc\build\. Disfruta.
 ## Compilar en Linux

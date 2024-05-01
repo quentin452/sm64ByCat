@@ -24,9 +24,7 @@
 #include "types.h"
 #include "macros.h"
 #include "pc/cheats.h"
-#ifdef BETTERCAMERA
 #include "bettercamera.h"
-#endif
 #ifdef EXT_OPTIONS_MENU
 #include "options_menu.h"
 #endif

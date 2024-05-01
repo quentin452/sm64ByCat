@@ -14,9 +14,7 @@
 #include "mario_step.h"
 #include "save_file.h"
 #include "thread6.h"
-#ifdef BETTERCAMERA
 #include "bettercamera.h"
-#endif
 
 void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3) {
     s32 animFrame = m->marioObj->header.gfx.unk38.animFrame;
@@ -1654,9 +1652,6 @@ s32 act_shot_from_cannon(struct MarioState *m) {
         case AIR_STEP_LANDED:
             set_mario_action(m, ACT_DIVE_SLIDE, 0);
             m->faceAngle[0] = 0;
-#ifndef BETTERCAMERA
-            set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
-#else
             if (newcam_active == 0)
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             else
@@ -1664,7 +1659,7 @@ s32 act_shot_from_cannon(struct MarioState *m) {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
                 gLakituState.mode = CAMERA_MODE_NEWCAM;
             }
-#endif
+
             queue_rumble_data(5, 80);
             break;
 
@@ -1678,9 +1673,7 @@ s32 act_shot_from_cannon(struct MarioState *m) {
 
             m->particleFlags |= PARTICLE_VERTICAL_STAR;
             set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
-#ifndef BETTERCAMERA
-            set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
-#else
+
             if (newcam_active == 0)
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             else
@@ -1688,7 +1681,7 @@ s32 act_shot_from_cannon(struct MarioState *m) {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
                 gLakituState.mode = CAMERA_MODE_NEWCAM;
             }
-#endif
+
             break;
 
         case AIR_STEP_HIT_LAVA_WALL:
@@ -1717,9 +1710,7 @@ s32 act_flying(struct MarioState *m) {
 
     if (m->input & INPUT_Z_PRESSED) {
         if (m->area->camera->mode == CAMERA_MODE_BEHIND_MARIO) {
-#ifndef BETTERCAMERA
-            set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
-#else
+
             if (newcam_active == 0)
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             else
@@ -1727,16 +1718,14 @@ s32 act_flying(struct MarioState *m) {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
                 gLakituState.mode = CAMERA_MODE_NEWCAM;
             }
-#endif
+
         }
         return set_mario_action(m, ACT_GROUND_POUND, 1);
     }
 
     if (!(m->flags & MARIO_WING_CAP)) {
         if (m->area->camera->mode == CAMERA_MODE_BEHIND_MARIO) {
-#ifndef BETTERCAMERA
-            set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
-#else
+
             if (newcam_active == 0)
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             else
@@ -1744,15 +1733,11 @@ s32 act_flying(struct MarioState *m) {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
                 gLakituState.mode = CAMERA_MODE_NEWCAM;
             }
-#endif
         }
         return set_mario_action(m, ACT_FREEFALL, 0);
     }
 
     if (m->area->camera->mode != CAMERA_MODE_BEHIND_MARIO) {
-#ifndef BETTERCAMERA
-        set_camera_mode(m->area->camera, CAMERA_MODE_BEHIND_MARIO, 1);
-#else
         if (newcam_active == 0)
            set_camera_mode(m->area->camera, CAMERA_MODE_BEHIND_MARIO, 1);
         else
@@ -1760,7 +1745,7 @@ s32 act_flying(struct MarioState *m) {
             m->area->camera->mode = CAMERA_MODE_NEWCAM;
             gLakituState.mode = CAMERA_MODE_NEWCAM;
         }
-#endif
+
     }
 
     if (m->actionState == 0) {
@@ -1800,9 +1785,7 @@ s32 act_flying(struct MarioState *m) {
             set_anim_to_frame(m, 7);
 
             m->faceAngle[0] = 0;
-#ifndef BETTERCAMERA
-            set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
-#else
+
             if (newcam_active == 0)
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             else
@@ -1810,7 +1793,7 @@ s32 act_flying(struct MarioState *m) {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
                 gLakituState.mode = CAMERA_MODE_NEWCAM;
             }
-#endif
+
             queue_rumble_data(5, 80);
             break;
 
@@ -1829,9 +1812,6 @@ s32 act_flying(struct MarioState *m) {
 
                 m->particleFlags |= PARTICLE_VERTICAL_STAR;
                 set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
-#ifndef BETTERCAMERA
-            set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
-#else
             if (newcam_active == 0)
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             else
@@ -1839,7 +1819,7 @@ s32 act_flying(struct MarioState *m) {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
                 gLakituState.mode = CAMERA_MODE_NEWCAM;
             }
-#endif
+
             } else {
                 if (m->actionTimer++ == 0) {
                     play_sound(SOUND_ACTION_HIT, m->marioObj->header.gfx.cameraToObject);
@@ -1916,9 +1896,6 @@ s32 act_flying_triple_jump(struct MarioState *m) {
 #ifndef VERSION_JP
     if (m->input & (INPUT_B_PRESSED | INPUT_Z_PRESSED)) {
         if (m->area->camera->mode == CAMERA_MODE_BEHIND_MARIO) {
-#ifndef BETTERCAMERA
-            set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
-#else
             if (newcam_active == 0)
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             else
@@ -1926,7 +1903,7 @@ s32 act_flying_triple_jump(struct MarioState *m) {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
                 gLakituState.mode = CAMERA_MODE_NEWCAM;
             }
-#endif
+
         }
         if (m->input & INPUT_B_PRESSED) {
             return set_mario_action(m, ACT_DIVE, 0);
@@ -1965,9 +1942,6 @@ s32 act_flying_triple_jump(struct MarioState *m) {
 
     if (m->vel[1] < 4.0f) {
         if (m->area->camera->mode != CAMERA_MODE_BEHIND_MARIO) {
-#ifndef BETTERCAMERA
-            set_camera_mode(m->area->camera, CAMERA_MODE_BEHIND_MARIO, 1);
-#else
             if (newcam_active == 0)
                 set_camera_mode(m->area->camera, m->area->camera->defMode, 1);
             else
@@ -1975,7 +1949,7 @@ s32 act_flying_triple_jump(struct MarioState *m) {
                 m->area->camera->mode = CAMERA_MODE_NEWCAM;
                 gLakituState.mode = CAMERA_MODE_NEWCAM;
             }
-#endif
+
         }
 
         if (m->forwardVel < 32.0f) {
@@ -1985,11 +1959,11 @@ s32 act_flying_triple_jump(struct MarioState *m) {
         set_mario_action(m, ACT_FLYING, 1);
     }
 
-#ifndef BETTERCAMERA
+ if (newcam_active ==0){
     if (m->actionTimer++ == 10 && m->area->camera->mode != CAMERA_MODE_BEHIND_MARIO) {
         set_camera_mode(m->area->camera, CAMERA_MODE_BEHIND_MARIO, 1);
-    }
-#endif
+    }  }
+
 
     update_air_without_turn(m);
 
