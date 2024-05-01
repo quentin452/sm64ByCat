@@ -200,7 +200,7 @@ El script está incluído en la rama master, pero también puede descargarse [aq
 En la carpeta `./enhancements` hay varios archivos `patch`, que pueden aplicarse de la siguiente manera:
 
 ```
- git apply fps.patch --ignore-whitespace --reject
+ git apply NAMEOFTHEPATCH.patch --ignore-whitespace --reject
 ```
 Si ocurre un rechazo, puedes buscarlo con el comando `find | grep .rej`.
 Intenta resolver los rechazos a través de [wiggle](https://github.com/neilbrown/wiggle).
