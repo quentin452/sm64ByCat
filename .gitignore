@@ -44,7 +44,6 @@
 
 # Text editor remnants
 *.swp
-.vscode/*
 .idea/*
 
 # General project-specific ignores
