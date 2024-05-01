@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Apply FPS Patch",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "apply",
+                "enhancements/60fps_ex.patch",
+                "--ignore-whitespace",
+                "--reject"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Build Super Mario 64",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "RENDER_API=D3D12",
+               // "BETTERCAMERA=1",
+               // "TEXTURE_FIX=1",
+               // "EXTERNAL_DATA=1",
+                //"EXT_OPTIONS_MENU=1",
+               // "DISCORDRPC=1",
+               // "TEXTSAVES=1"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }//,
+           // "dependsOn": ["Apply FPS Patch"]
+        }
+    ]
+}
