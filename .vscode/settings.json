@@ -141,6 +141,6 @@
     "editor.defaultFormatter": "xaver.clang-format",
     "editor.wordBasedSuggestions": "matchingDocuments"
   },
-  "sonarlint.pathToCompileCommands": "${workspaceFolder}\\build\\compile_commands.json",
-  "cmake.configureOnOpen": false
+  "cmake.configureOnOpen": false,
+  "sonarlint.pathToCompileCommands": "${workspaceFolder}\\build\\compile_commands.json"
 }
