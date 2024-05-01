@@ -1,3 +1,4 @@
+#include "../../pc/configfile.h"
 // lll_floating_wood_piece.c.inc
 
 void bhv_lll_wood_piece_loop(void) {
@@ -14,24 +15,27 @@ void bhv_lll_floating_wood_bridge_loop(void) {
     s32 i;
     switch (o->oAction) {
         case 0:
-#ifndef NODRAWINGDISTANCE
-            if (o->oDistanceToMario < 2500.0f) {
-#endif
+            if (!configWindow.no_drawing_distance) {
+                if (o->oDistanceToMario < 2500.0f) {
+                    for (i = 1; i < 4; i++) {
+                        sp3C = spawn_object_relative(0, (i - 2) * 300, 0, 0, o, MODEL_LLL_WOOD_BRIDGE,
+                                                     bhvLllWoodPiece);
+                        sp3C->oLllWoodPieceOscillationTimer = i * 4096;
+                    }
+                    o->oAction = 1;
+                }
+            } else {
                 for (i = 1; i < 4; i++) {
                     sp3C = spawn_object_relative(0, (i - 2) * 300, 0, 0, o, MODEL_LLL_WOOD_BRIDGE,
                                                  bhvLllWoodPiece);
                     sp3C->oLllWoodPieceOscillationTimer = i * 4096;
                 }
                 o->oAction = 1;
-#ifndef NODRAWINGDISTANCE
             }
-#endif
             break;
         case 1:
-#ifndef NODRAWINGDISTANCE
-            if (o->oDistanceToMario > 2600.0f)
+            if (!configWindow.no_drawing_distance && o->oDistanceToMario > 2600.0f)
                 o->oAction = 2;
-#endif
             break;
         case 2:
             o->oAction = 0;

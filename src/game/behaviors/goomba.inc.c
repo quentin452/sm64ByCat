@@ -1,4 +1,4 @@
-
+#include "../../pc/configfile.h"
 /**
  * Behavior for bhvGoomba and bhvGoombaTripletSpawner,
  * Goombas can either be spawned individually, or spawned by a triplet spawner.
@@ -63,50 +63,43 @@ static u8 sGoombaAttackHandlers[][6] = {
     },
 };
 
+void spawn_goombas_based_on_distance(void) {
+    s32 angle;
+    s32 dAngle;
+    s16 goombaFlag;
+    s16 dx;
+    s16 dz;
+
+    dAngle =
+        0x10000 / (((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_EXTRA_GOOMBAS_MASK) >> 2) + 3);
+
+    for (angle = 0, goombaFlag = 1 << 8; angle < 0xFFFF; angle += dAngle, goombaFlag <<= 1) {
+        if (!(o->oBehParams & goombaFlag)) {
+            dx = 500.0f * coss(angle);
+            dz = 500.0f * sins(angle);
+
+            spawn_object_relative((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_SIZE_MASK)
+                                      | (goombaFlag >> 6),
+                                  dx, 0, dz, o, MODEL_GOOMBA, bhvGoomba);
+        }
+    }
+
+    o->oAction += 1;
+}
 /**
  * Update function for goomba triplet spawner.
  */
 void bhv_goomba_triplet_spawner_update(void) {
-    UNUSED s32 unused1;
-    s16 goombaFlag;
-    UNUSED s16 unused2;
-    s32 angle;
-    s32 dAngle;
-    s16 dx;
-    s16 dz;
-
-    // If mario is close enough and the goombas aren't currently loaded, then
-    // spawn them
     if (o->oAction == GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED) {
-#ifndef NODRAWINGDISTANCE
-        if (o->oDistanceToMario < 3000.0f) {
-#endif
-            // The spawner is capable of spawning more than 3 goombas, but this
-            // is not used in the game
-            dAngle =
-                0x10000
-                / (((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_EXTRA_GOOMBAS_MASK) >> 2) + 3);
-
-            for (angle = 0, goombaFlag = 1 << 8; angle < 0xFFFF; angle += dAngle, goombaFlag <<= 1) {
-                // Only spawn goombas which haven't been killed yet
-                if (!(o->oBehParams & goombaFlag)) {
-                    dx = 500.0f * coss(angle);
-                    dz = 500.0f * sins(angle);
-
-                    spawn_object_relative((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_SIZE_MASK)
-                                              | (goombaFlag >> 6),
-                                          dx, 0, dz, o, MODEL_GOOMBA, bhvGoomba);
-                }
+        if (!configWindow.no_drawing_distance) {
+            if (o->oDistanceToMario < 3000.0f) {
+                spawn_goombas_based_on_distance();
+            } else if (o->oDistanceToMario > 4000.0f) {
+                o->oAction = GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED;
             }
-
-            o->oAction += 1;
-#ifndef NODRAWINGDISTANCE
+        } else {
+            spawn_goombas_based_on_distance();
         }
-    } else if (o->oDistanceToMario > 4000.0f) {
-        // If mario is too far away, enter the unloaded action. The goombas
-        // will detect this and unload themselves
-        o->oAction = GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED;
-#endif
     }
 }
 
@@ -303,7 +296,8 @@ void bhv_goomba_update(void) {
                 break;
         }
 
-        //! @bug Weak attacks on huge goombas in a triplet mark them as dead even if they're not.
+        //! @bug Weak attacks on huge goombas in a triplet mark them as dead even if they're
+        //! not.
         // obj_handle_attacks returns the type of the attack, which is non-zero
         // even for Mario's weak attacks. Thus, if Mario weakly attacks a huge goomba
         // without harming it (e.g. by punching it), the goomba will be marked as dead

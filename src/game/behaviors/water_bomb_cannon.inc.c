@@ -1,3 +1,4 @@
+#include "../../pc/configfile.h"
 // water_bomb_cannon.inc.c
 
 void bhv_bubble_cannon_barrel_loop(void) {
@@ -38,27 +39,28 @@ void bhv_bubble_cannon_barrel_loop(void) {
 }
 
 void water_bomb_cannon_act_0(void) {
-#ifndef NODRAWINGDISTANCE
-    if (o->oDistanceToMario < 2000.0f) {
-#endif
+    if (!configWindow.no_drawing_distance) {
+        if (o->oDistanceToMario < 2000.0f) {
+            spawn_object(o, MODEL_CANNON_BARREL, bhvCannonBarrelBubbles);
+            cur_obj_unhide();
+
+            o->oAction = 1;
+            o->oMoveAnglePitch = o->oWaterCannonUnkFC = 0x1C00;
+        }
+    } else {
         spawn_object(o, MODEL_CANNON_BARREL, bhvCannonBarrelBubbles);
         cur_obj_unhide();
-
         o->oAction = 1;
         o->oMoveAnglePitch = o->oWaterCannonUnkFC = 0x1C00;
-#ifndef NODRAWINGDISTANCE
     }
-#endif
 }
 
 void water_bomb_cannon_act_1(void) {
-#ifndef NODRAWINGDISTANCE
-    if (o->oDistanceToMario > 2500.0f) {
-        o->oAction = 2;
+    if (!configWindow.no_drawing_distance) {
+        if (o->oDistanceToMario > 2500.0f) {
+            o->oAction = 2;
+        }
     } else if (o->oBehParams2ndByte == 0) {
-#else
-    if (o->oBehParams2ndByte == 0) {
-#endif
         if (o->oWaterCannonUnkF4 != 0) {
             o->oWaterCannonUnkF4 -= 1;
         } else {

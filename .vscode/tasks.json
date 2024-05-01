@@ -32,6 +32,33 @@
                 "isDefault": true
             },
             "dependsOn": "Kill sm64.us.f3dex2e.exe"
+        },
+        {
+            "label": "run-Super-Mario-64",
+            "type": "process",
+            "command": "${workspaceFolder}/build/us_pc/sm64.us.f3dex2e.exe",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        },
+        {
+            "label": "build-and-run-Super-Mario-64",
+            "type": "process",
+            "command": "${workspaceFolder}/build/us_pc/sm64.us.f3dex2e.exe",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "dependsOn": "Build Super Mario 64"
         }
     ]
 }

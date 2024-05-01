@@ -1,5 +1,5 @@
 #include <PR/ultratypes.h>
-
+#include "../pc/configfile.h"
 #include "sm64.h"
 #include "area.h"
 #include "behavior_data.h"
@@ -19,7 +19,7 @@
 #include "platform_displacement.h"
 #include "profiler.h"
 #include "spawn_object.h"
-
+#include <stdlib.h>
 /**
  * Flags controlling what debug info is displayed.
  */
@@ -66,7 +66,6 @@ u32 gTimeStopState;
  * The pool that objects are allocated from.
  */
 struct Object gObjectPool[OBJECT_POOL_CAPACITY];
-
 /**
  * A special object whose purpose is to act as a parent for macro objects.
  */
@@ -529,7 +528,6 @@ void stub_obj_list_processor_1(void) {
  */
 void clear_objects(void) {
     s32 i;
-
     gTHIWaterDrained = 0;
     gTimeStopState = 0;
     gMarioObject = NULL;
@@ -547,12 +545,10 @@ void clear_objects(void) {
 
     stub_behavior_script_2();
     stub_obj_list_processor_1();
-
     for (i = 0; i < OBJECT_POOL_CAPACITY; i++) {
         gObjectPool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;
         geo_reset_object_node(&gObjectPool[i].header.gfx);
     }
-
     gObjectMemoryPool = mem_pool_init(0x800, MEMORY_POOL_LEFT);
     gObjectLists = gObjectListArray;
 

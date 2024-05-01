@@ -65,7 +65,7 @@ static const u8 optsCameraStr[][32] = {
 static const u8 optsVideoStr[][32] = {
     { TEXT_OPT_FSCREEN },  { TEXT_OPT_TEXFILTER }, { TEXT_OPT_NEAREST }, { TEXT_OPT_LINEAR },
     { TEXT_OPT_RESETWND }, { TEXT_OPT_VSYNC },     { TEXT_OPT_AUTO },    { TEXT_OPT_HUD },
-    { TEXT_OPT_THREEPT },  { TEXT_OPT_APPLY },
+    { TEXT_OPT_THREEPT }, { TEXT_OPT_NO_DRAWING_DISTANCE }, { TEXT_OPT_APPLY },
 };
 
 static const u8 optsAudioStr[][32] = {
@@ -214,12 +214,13 @@ static struct Option optsControls[] = {
 };
 
 static struct Option optsVideo[] = {
-    DEF_OPT_TOGGLE(optsVideoStr[0], &configWindow.fullscreen),
-    DEF_OPT_TOGGLE(optsVideoStr[5], &configWindow.vsync),
-    DEF_OPT_CHOICE(optsVideoStr[1], &configFiltering, filterChoices),
-    DEF_OPT_TOGGLE(optsVideoStr[7], &configHUD),
-    DEF_OPT_BUTTON(optsVideoStr[4], optvideo_reset_window),
-    DEF_OPT_BUTTON(optsVideoStr[9], optvideo_apply),
+    DEF_OPT_TOGGLE(optsVideoStr[0], &configWindow.fullscreen), // TEXT_OPT_FSCREEN
+    DEF_OPT_TOGGLE(optsVideoStr[5], &configWindow.vsync), // TEXT_OPT_VSYNC
+    DEF_OPT_CHOICE(optsVideoStr[1], &configFiltering, filterChoices), // TEXT_OPT_TEXFILTER
+    DEF_OPT_TOGGLE(optsVideoStr[7], &configHUD), // TEXT_OPT_HUD
+    DEF_OPT_BUTTON(optsVideoStr[4], optvideo_reset_window), // TEXT_OPT_RESETWND
+    DEF_OPT_TOGGLE(optsVideoStr[9], &configWindow.no_drawing_distance), // TEXT_OPT_NO_DRAWING_DISTANCE
+    DEF_OPT_BUTTON(optsVideoStr[10], optvideo_apply), // TEXT_OPT_APPLY
 };
 
 static struct Option optsAudio[] = {

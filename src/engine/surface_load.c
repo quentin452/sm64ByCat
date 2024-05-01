@@ -16,7 +16,7 @@
 #include "surface_load.h"
 #include "game/game_init.h"
 #include "math_util.h"
-
+#include "../pc/configfile.h"
 s32 unused8038BE90;
 
 /**
@@ -790,14 +790,13 @@ void load_object_collision_model(void) {
             load_object_surfaces(&collisionData, vertexData);
         }
     }
-
-#ifndef NODRAWINGDISTANCE
-    if (marioDist < gCurrentObject->oDrawingDistance) {
-#endif
-        gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
-#ifndef NODRAWINGDISTANCE
+    if (!configWindow.no_drawing_distance) {
+        if (marioDist < gCurrentObject->oDrawingDistance) {
+            gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
+        } else {
+            gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+        }
     } else {
-        gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+        gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
     }
-#endif
 }

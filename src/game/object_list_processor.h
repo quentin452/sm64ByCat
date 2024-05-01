@@ -20,16 +20,6 @@
 #define TIME_STOP_ACTIVE (1 << 6)
 
 /**
- * The maximum number of objects that can be loaded at once.
- */
-
-#ifdef NODRAWINGDISTANCE
-#define OBJECT_POOL_CAPACITY 960
-#else
-#define OBJECT_POOL_CAPACITY 240
-#endif
-
-/**
  * Every object is categorized into an object list, which controls the order
  * they are processed and which objects they can collide with.
  */
@@ -74,6 +64,10 @@ struct NumTimesCalled {
     /*0x02*/ s16 ceil;
     /*0x04*/ s16 wall;
 };
+/**
+ * The maximum number of objects that can be loaded at once.
+ */
+#define OBJECT_POOL_CAPACITY 960
 
 extern struct NumTimesCalled gNumCalls;
 
@@ -81,6 +75,7 @@ extern s16 gDebugInfo[][8];
 extern s16 gDebugInfoOverwrite[][8];
 
 extern u32 gTimeStopState;
+
 extern struct Object gObjectPool[];
 extern struct Object gMacroObjectDefaultParent;
 extern struct ObjectNode *gObjectLists;

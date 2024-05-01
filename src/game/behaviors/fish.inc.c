@@ -1,3 +1,4 @@
+#include "../../pc/configfile.h"
 /**
  * @file fish.inc.c
  * Implements behaviour and spawning for fish located in the Secret Aquarium and other levels.
@@ -49,14 +50,22 @@ void fish_act_spawn(void) {
             fishAnimation = cyan_fish_seg6_anims_0600E264;
             break;
     }
-        /**
-         * Spawn and animate the schoolQuantity of fish if Mario enters render distance
-         * If the current level is Secret Aquarium, ignore this requirement.
-         * Fish moves at random with a max-range of 700.0f.
-         */
-#ifndef NODRAWINGDISTANCE
-    if (o->oDistanceToMario < minDistToMario || gCurrLevelNum == LEVEL_SA) {
-#endif
+    /**
+     * Spawn and animate the schoolQuantity of fish if Mario enters render distance
+     * If the current level is Secret Aquarium, ignore this requirement.
+     * Fish moves at random with a max-range of 700.0f.
+     */
+    if (!configWindow.no_drawing_distance) {
+        if (o->oDistanceToMario < minDistToMario || gCurrLevelNum == LEVEL_SA) {
+            for (i = 0; i < schoolQuantity; i++) {
+                fishObject = spawn_object(o, model, bhvFish);
+                fishObject->oBehParams2ndByte = o->oBehParams2ndByte;
+                obj_init_animation_with_sound(fishObject, fishAnimation, 0);
+                obj_translate_xyz_random(fishObject, 700.0f);
+            }
+            o->oAction = FISH_ACT_ACTIVE;
+        }
+    } else {
         for (i = 0; i < schoolQuantity; i++) {
             fishObject = spawn_object(o, model, bhvFish);
             fishObject->oBehParams2ndByte = o->oBehParams2ndByte;
@@ -64,9 +73,7 @@ void fish_act_spawn(void) {
             obj_translate_xyz_random(fishObject, 700.0f);
         }
         o->oAction = FISH_ACT_ACTIVE;
-#ifndef NODRAWINGDISTANCE
     }
-#endif
 }
 
 /**
@@ -74,13 +81,11 @@ void fish_act_spawn(void) {
  * Y coordinate is greater than 2000.0f then spawn another fish.
  */
 void fish_act_respawn(void) {
-#ifndef NODRAWINGDISTANCE
-    if (gCurrLevelNum != LEVEL_SA) {
+    if (!configWindow.no_drawing_distance && gCurrLevelNum != LEVEL_SA) {
         if (gMarioObject->oPosY - o->oPosY > 2000.0f) {
             o->oAction = FISH_ACT_RESPAWN;
         }
     }
-#endif
 }
 
 /**

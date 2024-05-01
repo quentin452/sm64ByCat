@@ -47,6 +47,7 @@ ConfigWindow configWindow = {
     .reset = false,
     .fullscreen = false,
     .exiting_fullscreen = false,
+    .no_drawing_distance = false,
     .settings_changed = false,
 };
 unsigned int configFiltering = 1;             // 0=force nearest, 1=linear, (TODO) 2=three-point
@@ -94,6 +95,9 @@ bool configDiscordRPC = true;
 
 static const struct ConfigOption options[] = {
 
+    { .name = "no_drawing_distance",
+      .type = CONFIG_TYPE_BOOL,
+      .boolValue = &configWindow.no_drawing_distance },
     { .name = "fullscreen", .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen },
     { .name = "window_x", .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.x },
     { .name = "window_y", .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.y },
@@ -224,9 +228,7 @@ const char *configfile_name(void) {
 void configfile_load(const char *filename) {
     fs_file_t *file;
     char *line;
-
     printf("Loading configuration from '%s'\n", filename);
-
     file = fs_open(filename);
     if (file == NULL) {
         // Create a new config file and save defaults
@@ -234,19 +236,15 @@ void configfile_load(const char *filename) {
         configfile_save(filename);
         return;
     }
-
     // Go through each line in the file
     while ((line = read_file_line(file)) != NULL) {
         char *p = line;
         char *tokens[1 + MAX_BINDS];
         int numTokens;
-
         while (isspace(*p))
             p++;
-
         if (!*p || *p == '#') // comment or empty line
             continue;
-
         numTokens = tokenize_string(p, sizeof(tokens) / sizeof(tokens[0]), tokens);
         if (numTokens != 0) {
             if (numTokens >= 2) {
@@ -291,7 +289,6 @@ void configfile_load(const char *filename) {
         }
         free(line);
     }
-
     fs_close(file);
 }
 
@@ -330,6 +327,5 @@ void configfile_save(const char *filename) {
                 assert(0); // unknown type
         }
     }
-
     fclose(file);
 }

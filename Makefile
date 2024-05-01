@@ -37,8 +37,6 @@ NO_PIE ?= 1
 TARGET_ARCH ?= native
 TARGET_BITS ?= 0
 
-# Disable no drawing distance by default
-NODRAWINGDISTANCE ?= 0
 # Disable texture fixes by default (helps with them purists)
 TEXTURE_FIX ?= 0
 # Enable extended options menu by default
@@ -588,12 +586,6 @@ endif
 ifeq ($(TEXTSAVES),1)
   CC_CHECK += -DTEXTSAVES
   CFLAGS += -DTEXTSAVES
-endif
-
-# Check for no drawing distance option
-ifeq ($(NODRAWINGDISTANCE),1)
-  CC_CHECK += -DNODRAWINGDISTANCE
-  CFLAGS += -DNODRAWINGDISTANCE
 endif
 
 # Check for Discord Rich Presence option

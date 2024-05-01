@@ -13,8 +13,8 @@ if len(sys.argv) > 1:
     print("done.")
 else:
     print("formatting...")
-    files_to_format = glob.glob("src/**/*.[ch]", recursive=True) + \
-                      glob.glob("lib/src/*.[ch]") + \
-                      glob.glob("enhancements/*.inc.[ch]")
+    files_to_format = glob.glob("src/**/*.[chin]", recursive=True) + \
+                      glob.glob("lib/src/*.[chin]") + \
+                      glob.glob("enhancements/*.inc.[chin]")
     format_files(files_to_format)
     print("done.")

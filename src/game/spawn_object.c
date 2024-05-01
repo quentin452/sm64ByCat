@@ -1,5 +1,5 @@
 #include <PR/ultratypes.h>
-
+#include "../pc/configfile.h"
 #include "audio/external.h"
 #include "engine/geo_layout.h"
 #include "engine/graph_node.h"
@@ -131,7 +131,6 @@ static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *ob
 void init_free_object_list(void) {
     s32 i;
     s32 poolLength = OBJECT_POOL_CAPACITY;
-
     // Add the first object in the pool to the free list
     struct Object *obj = &gObjectPool[0];
     gFreeObjectList.next = (struct ObjectNode *) obj;

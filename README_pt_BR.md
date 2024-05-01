@@ -18,7 +18,6 @@ Novas funcionalidades serão adicionadas à branch master quando forem considera
  * Renderização nativa. Você agora pode jogar SM64 no PC sem precisar de emulador.
  * Proporção de tela e resolução variáveis. O jogo renderiza corretamente em basicamente qualquer tamanho de janela.
  * Suporte a entradas de controle através de `xinput`. Tal como usando DualShock 4 em distribuições Linux.
- * Uma opção para desativar distância de renderização. (Ative com `make NODRAWINGDISTANCE=1`.)
  * Remapeamento de controles _in-game_.
  * Pule as cenas introdutórias da Peach e Lakitu com usando a opção `--skip-intro` ao executar o jogo na linha de comando.
  * Menu de cheats nas opções. (Ative com `--cheats`)

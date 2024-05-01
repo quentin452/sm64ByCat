@@ -73,7 +73,22 @@
     "xtree": "cpp",
     "cassert": "cpp",
     "*.in": "c",
-    "bettercamera.h": "c"
+    "bettercamera.h": "c",
+    "platform.h": "c",
+    "sm64.h": "c",
+    "ultratypes.h": "c",
+    "surface_collision.h": "c",
+    "configfile.h": "c",
+    "math_util.h": "c",
+    "ultra64.h": "c",
+    "object_list_processor.h": "c",
+    "level_update.h": "c",
+    "object_fields.h": "c",
+    "behavior_actions.h": "c",
+    "obj_behaviors_2.h": "c",
+    "object_helpers.h": "c",
+    "game_init.h": "c",
+    "mario.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {

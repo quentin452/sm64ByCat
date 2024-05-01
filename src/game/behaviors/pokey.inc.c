@@ -1,4 +1,4 @@
-
+#include "../../pc/configfile.h"
 /**
  * Behavior for bhvPokey and bhvPokeyBodyPart.
  * bhvPokey is responsible for the behavior of the pokey itself, as well as
@@ -149,32 +149,28 @@ void bhv_pokey_body_part_update(void) {
 static void pokey_act_uninitialized(void) {
     struct Object *bodyPart;
     s32 i;
-    s16 partModel;
+    s16 partModel = MODEL_POKEY_HEAD;
 
-#ifndef NODRAWINGDISTANCE
-    if (o->oDistanceToMario < 2000.0f) {
-#endif
-        partModel = MODEL_POKEY_HEAD;
+    if (!configWindow.no_drawing_distance && o->oDistanceToMario >= 2000.0f) {
+        return;
+    }
 
-        for (i = 0; i < 5; i++) {
-            // Spawn body parts at y offsets 480, 360, 240, 120, 0
-            // behavior param 0 = head, 4 = lowest body part
-            bodyPart = spawn_object_relative(i, 0, -i * 120 + 480, 0, o, partModel, bhvPokeyBodyPart);
+    for (i = 0; i < 5; i++) {
+        // Spawn body parts at y offsets 480, 360, 240, 120, 0
+        // behavior param 0 = head, 4 = lowest body part
+        bodyPart = spawn_object_relative(i, 0, -i * 120 + 480, 0, o, partModel, bhvPokeyBodyPart);
 
-            if (bodyPart != NULL) {
-                obj_scale(bodyPart, 3.0f);
-            }
-
-            partModel = MODEL_POKEY_BODY_PART;
+        if (bodyPart != NULL) {
+            obj_scale(bodyPart, 3.0f);
         }
 
-        o->oPokeyAliveBodyPartFlags = 0x1F;
-        o->oPokeyNumAliveBodyParts = 5;
-        o->oPokeyBottomBodyPartSize = 1.0f;
-        o->oAction = POKEY_ACT_WANDER;
-#ifndef NODRAWINGDISTANCE
+        partModel = MODEL_POKEY_BODY_PART;
     }
-#endif
+
+    o->oPokeyAliveBodyPartFlags = 0x1F;
+    o->oPokeyNumAliveBodyParts = 5;
+    o->oPokeyBottomBodyPartSize = 1.0f;
+    o->oAction = POKEY_ACT_WANDER;
 }
 
 /**
@@ -189,11 +185,9 @@ static void pokey_act_wander(void) {
 
     if (o->oPokeyNumAliveBodyParts == 0) {
         obj_mark_for_deletion(o);
-#ifndef NODRAWINGDISTANCE
-    } else if (o->oDistanceToMario > 2500.0f) {
+    } else if (!configWindow.no_drawing_distance && o->oDistanceToMario > 2500.0f) {
         o->oAction = POKEY_ACT_UNLOAD_PARTS;
         o->oForwardVel = 0.0f;
-#endif
     } else {
         treat_far_home_as_mario(1000.0f);
         cur_obj_update_floor_and_walls();

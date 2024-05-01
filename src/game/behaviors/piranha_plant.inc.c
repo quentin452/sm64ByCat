@@ -1,3 +1,4 @@
+#include "../../pc/configfile.h"
 /**
  * Behavior for bhvPiranhaPlant.
  * This controls Piranha Plants, which alternate between sleeping, attacking,
@@ -328,14 +329,12 @@ void (*TablePiranhaPlantActions[])(void) = {
  */
 void bhv_piranha_plant_loop(void) {
     cur_obj_call_action_function(TablePiranhaPlantActions);
-#ifndef NODRAWINGDISTANCE
     // In WF, hide all Piranha Plants once high enough up.
-    if (gCurrLevelNum == LEVEL_WF) {
+    if (!configWindow.no_drawing_distance && gCurrLevelNum == LEVEL_WF) {
         if (gMarioObject->oPosY > 3400.0f)
             cur_obj_hide();
         else
             cur_obj_unhide();
     }
-#endif
     o->oInteractStatus = 0;
 }

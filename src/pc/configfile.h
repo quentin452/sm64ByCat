@@ -14,6 +14,7 @@ typedef struct {
     bool reset;
     bool fullscreen;
     bool exiting_fullscreen;
+    bool no_drawing_distance;
     bool settings_changed;
 } ConfigWindow;
 
