@@ -34,7 +34,7 @@ horizontal and vertical control of the camera.
 
 //! A bunch of developer intended options, to cover every base, really.
 //#define NEWCAM_DEBUG //Some print values for puppycam. Not useful anymore, but never hurts to keep em
-//around. #define nosound //If for some reason you hate the concept of audio, you can disable it.
+// around. #define nosound //If for some reason you hate the concept of audio, you can disable it.
 //#define noaccel //Disables smooth movement of the camera with the C buttons.
 
 //! Hardcoded camera angle stuff. They're essentially area boxes that when Mario is inside, will trigger
@@ -71,7 +71,7 @@ struct newcam_hardpos newcam_fixedcam[] = {
         /*X begin*/ -540, /*Y begin*/ 800, /*Z begin*/ -3500, // Where the activation box begins
         /*X end*/ 540, /*Y end*/ 2000, /*Z end*/ -1500,       // Where the activation box ends.
         /*Cam X*/ 0, /*Cam Y*/ 1500, /*Cam Z*/ -1000,         // The position the camera gets placed for
-                                                      // NC_MODE_FIXED and NC_MODE_FIXED_NOMOVE
+                                                              // NC_MODE_FIXED and NC_MODE_FIXED_NOMOVE
         /*Look X*/ 0, /*Look Y*/ 800,
         /*Look Z*/ -2500 // The position the camera looks at for NC_MODE_FIXED_NOMOVE
     },
