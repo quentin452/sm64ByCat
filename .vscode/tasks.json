@@ -2,6 +2,20 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Kill sm64.us.f3dex2e.exe",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                "if (Get-Process -Name 'sm64.us.f3dex2e' -ErrorAction SilentlyContinue) { Stop-Process -Name 'sm64.us.f3dex2e' -Force }"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },        
+        {
             "label": "Build Super Mario 64",
             "type": "shell",
             "command": "make",
@@ -10,13 +24,14 @@
                // "TEXTURE_FIX=1",
                // "EXTERNAL_DATA=1",
                 //"EXT_OPTIONS_MENU=1",
-               // "DISCORDRPC=1",
+                //"DISCORDRPC=1",
                // "TEXTSAVES=1"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "dependsOn": "Kill sm64.us.f3dex2e.exe"
         }
     ]
 }
