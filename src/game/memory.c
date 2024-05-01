@@ -48,7 +48,6 @@ extern u8 *sPoolEnd;
 extern struct MainPoolBlock *sPoolListHeadL;
 extern struct MainPoolBlock *sPoolListHeadR;
 
-
 /**
  * Memory pool for small graphical effects that aren't connected to Objects.
  * Used for colored text, paintings, and environmental snow and bubbles.
@@ -61,7 +60,6 @@ u8 *sPoolStart;
 u8 *sPoolEnd;
 struct MainPoolBlock *sPoolListHeadL;
 struct MainPoolBlock *sPoolListHeadR;
-
 
 static struct MainPoolState *gMainPoolState = NULL;
 
@@ -84,7 +82,6 @@ void *virtual_to_segmented(UNUSED u32 segment, const void *addr) {
 
 void move_segment_table_to_dmem(void) {
 }
-
 
 /**
  * Initialize the main memory pool. This pool is conceptually a pair of stacks
@@ -404,10 +401,10 @@ void *alloc_display_list(u32 size) {
 }
 
 static struct MarioAnimDmaRelatedThing *func_802789F0(u8 *srcAddr) {
-    struct MarioAnimDmaRelatedThing *sp1C = dynamic_dma_read(srcAddr, srcAddr + sizeof(u32),
-                                                             MEMORY_POOL_LEFT);
-    u32 size = sizeof(u32) + (sizeof(u8 *) - sizeof(u32)) + sizeof(u8 *) +
-               sp1C->count * sizeof(struct OffsetSizePair);
+    struct MarioAnimDmaRelatedThing *sp1C =
+        dynamic_dma_read(srcAddr, srcAddr + sizeof(u32), MEMORY_POOL_LEFT);
+    u32 size = sizeof(u32) + (sizeof(u8 *) - sizeof(u32)) + sizeof(u8 *)
+               + sp1C->count * sizeof(struct OffsetSizePair);
     main_pool_free(sp1C);
 
     sp1C = dynamic_dma_read(srcAddr, srcAddr + size, MEMORY_POOL_LEFT);

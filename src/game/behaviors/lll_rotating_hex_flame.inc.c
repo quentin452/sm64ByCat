@@ -57,8 +57,8 @@ void fire_bar_act_3(void) {
     o->oAction = 0;
 }
 
-void (*sRotatingCwFireBarsActions[])(void) = { fire_bar_act_0, fire_bar_act_1,
-                                               fire_bar_act_2, fire_bar_act_3 };
+void (*sRotatingCwFireBarsActions[])(void) = { fire_bar_act_0, fire_bar_act_1, fire_bar_act_2,
+                                               fire_bar_act_3 };
 
 void bhv_lll_rotating_block_fire_bars_loop(void) {
     cur_obj_call_action_function(sRotatingCwFireBarsActions);

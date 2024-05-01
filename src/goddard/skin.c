@@ -65,7 +65,7 @@ void reset_net(struct ObjNet *net) {
     D_801BAAF4 = 0;
     gd_set_identity_mat4(&net->mat168);
     gd_set_identity_mat4(&net->matE8);
-    gd_rot_mat_about_vec(&net->matE8, &net->unk68); // set rot mtx to initial rotation?
+    gd_rot_mat_about_vec(&net->matE8, &net->unk68);         // set rot mtx to initial rotation?
     gd_add_vec3f_to_mat4f_offset(&net->matE8, &net->unk14); // set to initial position?
     gd_copy_mat4f(&net->matE8, &net->mat128);
 
@@ -489,16 +489,16 @@ void gd_print_net(struct ObjNet *net) {
     gd_printf("MaxRadius: %f\n", net->unkE4);
     gd_print_mtx("Matrix:", &net->mat128);
     if (net->unk1A8 != NULL) {
-        gd_printf("ShapePtr: %x (%s)\n", (u32) (uintptr_t) net->unk1A8, net->unk1A8->name);
+        gd_printf("ShapePtr: %x (%s)\n", (u32)(uintptr_t) net->unk1A8, net->unk1A8->name);
     } else {
         gd_printf("ShapePtr: NULL\n");
     }
     gd_print_vec("Scale:", &net->unk1AC);
     gd_printf("Mass: %f\n", net->unk1B8);
     gd_printf("NumModes: %d\n", net->unk1BC);
-    gd_printf("NodeGroup: %x\n", (u32) (uintptr_t) net->unk1C8);
-    gd_printf("PlaneGroup: %x\n", (u32) (uintptr_t) net->unk1CC);
-    gd_printf("VertexGroup: %x\n", (u32) (uintptr_t) net->unk1D0);
+    gd_printf("NodeGroup: %x\n", (u32)(uintptr_t) net->unk1C8);
+    gd_printf("PlaneGroup: %x\n", (u32)(uintptr_t) net->unk1CC);
+    gd_printf("VertexGroup: %x\n", (u32)(uintptr_t) net->unk1D0);
 }
 
 /* 2422E0 -> 2422F8; orig name: func_80193B10 */

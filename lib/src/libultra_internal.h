@@ -9,8 +9,7 @@
  * symbol names to the correct members in AVOID_UB.
  */
 #ifdef AVOID_UB
-typedef struct OSThread_ListHead_s
-{
+typedef struct OSThread_ListHead_s {
     /*0x00*/ struct OSThread_s *next;
     /*0x04*/ OSPri priority;
     /*0x08*/ struct OSThread_s *queue;
@@ -54,7 +53,7 @@ typedef struct {
     OSMesgQueue *unk10;
     s32 (*dma_func)(s32, u32, void *, size_t);
 #ifdef VERSION_EU
-    s32 (*edma_func)(OSPiHandle*, s32, u32, void *, size_t);
+    s32 (*edma_func)(OSPiHandle *, s32, u32, void *, size_t);
 #else
     u64 force_align;
 #endif

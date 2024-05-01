@@ -6,31 +6,31 @@
 #include <unistd.h>
 
 #ifndef _LANGUAGE_C
-# define _LANGUAGE_C
+#define _LANGUAGE_C
 #endif
 #include <PR/gbi.h>
 
 #ifdef __MINGW32__
-# define FOR_WINDOWS 1
+#define FOR_WINDOWS 1
 #else
-# define FOR_WINDOWS 0
+#define FOR_WINDOWS 0
 #endif
 
 #if FOR_WINDOWS || defined(OSX_BUILD)
-# define GLEW_STATIC
-# include <GL/glew.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
 #endif
 
 #define GL_GLEXT_PROTOTYPES 1
 
 #ifdef WAPI_SDL2
-# include <SDL2/SDL.h>
-# include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 #elif defined(WAPI_SDL1)
-# include <SDL/SDL.h>
-# ifndef GLEW_STATIC
-#  include <SDL/SDL_opengl.h>
-# endif
+#include <SDL/SDL.h>
+#ifndef GLEW_STATIC
+#include <SDL/SDL_opengl.h>
+#endif
 #endif
 
 #include "../platform.h"
@@ -90,26 +90,27 @@ static const float c_white[] = { 1.f, 1.f, 1.f, 1.f };
 
 // from https://github.com/z2442/sm64-port
 
-static void resample_32bit(const uint32_t *in, const int inwidth, const int inheight, uint32_t *out, const int outwidth, const int outheight) {
-  int i, j;
-  const uint32_t *inrow;
-  uint32_t frac, fracstep;
+static void resample_32bit(const uint32_t *in, const int inwidth, const int inheight, uint32_t *out,
+                           const int outwidth, const int outheight) {
+    int i, j;
+    const uint32_t *inrow;
+    uint32_t frac, fracstep;
 
-  fracstep = inwidth * 0x10000 / outwidth;
-  for (i = 0; i < outheight; i++, out += outwidth) {
-    inrow = in + inwidth * (i * inheight / outheight);
-    frac = fracstep >> 1;
-    for (j = 0; j < outwidth; j += 4) {
-      out[j] = inrow[frac >> 16];
-      frac += fracstep;
-      out[j + 1] = inrow[frac >> 16];
-      frac += fracstep;
-      out[j + 2] = inrow[frac >> 16];
-      frac += fracstep;
-      out[j + 3] = inrow[frac >> 16];
-      frac += fracstep;
+    fracstep = inwidth * 0x10000 / outwidth;
+    for (i = 0; i < outheight; i++, out += outwidth) {
+        inrow = in + inwidth * (i * inheight / outheight);
+        frac = fracstep >> 1;
+        for (j = 0; j < outwidth; j += 4) {
+            out[j] = inrow[frac >> 16];
+            frac += fracstep;
+            out[j + 1] = inrow[frac >> 16];
+            frac += fracstep;
+            out[j + 2] = inrow[frac >> 16];
+            frac += fracstep;
+            out[j + 3] = inrow[frac >> 16];
+            frac += fracstep;
+        }
     }
-  }
 }
 
 static inline uint32_t next_pot(uint32_t v) {
@@ -192,9 +193,11 @@ static void gfx_opengl_apply_shader(struct ShaderProgram *prg) {
     if (prg->num_inputs) {
         // have colors
         // TODO: more than one color (maybe glSecondaryColorPointer?)
-        // HACK: if there's a texture and two colors, one of them is likely for speculars or some shit (see mario head)
+        // HACK: if there's a texture and two colors, one of them is likely for speculars or some shit
+        // (see mario head)
         //       if there's two colors but no texture, the real color is likely the second one
-        // HACKHACK: alpha is 0 in the transition shader (0x01A00045), maybe figure out the flags instead
+        // HACKHACK: alpha is 0 in the transition shader (0x01A00045), maybe figure out the flags
+        // instead
         const int vlen = (prg->cc.opt_alpha && prg->shader_id != 0x01A00045) ? 4 : 3;
         const int hack = vlen * (prg->num_inputs > 1);
 
@@ -235,10 +238,18 @@ static void gfx_opengl_apply_shader(struct ShaderProgram *prg) {
         // configure texenv
         GLenum mode;
         switch (prg->mix) {
-            case SH_MT_TEXTURE:         mode = texenv_set_texture(prg); break;
-            case SH_MT_TEXTURE_TEXTURE: mode = texenv_set_texture_texture(prg); break;
-            case SH_MT_TEXTURE_COLOR:   mode = texenv_set_texture_color(prg); break;
-            default:                    mode = texenv_set_color(prg); break;
+            case SH_MT_TEXTURE:
+                mode = texenv_set_texture(prg);
+                break;
+            case SH_MT_TEXTURE_TEXTURE:
+                mode = texenv_set_texture_texture(prg);
+                break;
+            case SH_MT_TEXTURE_COLOR:
+                mode = texenv_set_texture_color(prg);
+                break;
+            default:
+                mode = texenv_set_color(prg);
+                break;
         }
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mode);
     }
@@ -303,7 +314,8 @@ static struct ShaderProgram *gfx_opengl_lookup_shader(uint32_t shader_id) {
     return NULL;
 }
 
-static void gfx_opengl_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
+static void gfx_opengl_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs,
+                                       bool used_textures[2]) {
     *num_inputs = prg->num_inputs;
     used_textures[0] = prg->texture_used[0];
     used_textures[1] = prg->texture_used[1];
@@ -320,17 +332,19 @@ static void gfx_opengl_select_texture(int tile, GLuint texture_id) {
     glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 
-static inline void *gfx_opengl_scale_texture(const uint8_t *data, const int w, const int h, const int to_w, const int to_h) {
+static inline void *gfx_opengl_scale_texture(const uint8_t *data, const int w, const int h,
+                                             const int to_w, const int to_h) {
     const int psize = to_w * to_h * 4;
 
     // realloc scale buffer if it's too small
     if (psize > scale_buf_size) {
         scale_buf = realloc(scale_buf, psize);
-        if (!scale_buf) sys_fatal("Out of memory allocating NPOT scale buffer\n");
+        if (!scale_buf)
+            sys_fatal("Out of memory allocating NPOT scale buffer\n");
         scale_buf_size = psize;
     }
 
-    resample_32bit((const uint32_t *)data, w, h, scale_buf, to_w, to_h);
+    resample_32bit((const uint32_t *) data, w, h, scale_buf, to_w, to_h);
 
     return scale_buf;
 }
@@ -351,7 +365,8 @@ static void gfx_opengl_upload_texture(const uint8_t *rgba32_buf, int width, int 
 }
 
 static inline GLenum gfx_cm_to_opengl(uint32_t val) {
-    if (val & G_TX_CLAMP) return GL_CLAMP_TO_EDGE;
+    if (val & G_TX_CLAMP)
+        return GL_CLAMP_TO_EDGE;
     return (val & G_TX_MIRROR) ? GL_MIRRORED_REPEAT : GL_REPEAT;
 }
 
@@ -362,7 +377,8 @@ static inline void gfx_opengl_apply_tmu_state(const int tile) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tmu_state[tile].wrap_t);
 }
 
-static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, uint32_t cms, uint32_t cmt) {
+static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, uint32_t cms,
+                                              uint32_t cmt) {
     const GLenum filter = linear_filter ? GL_LINEAR : GL_NEAREST;
 
     const GLenum wrap_s = gfx_cm_to_opengl(cms);
@@ -374,7 +390,8 @@ static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, uint
     tmu_state[tile].wrap_t = wrap_t;
 
     // set state for the first texture right away
-    if (!tile) gfx_opengl_apply_tmu_state(tile);
+    if (!tile)
+        gfx_opengl_apply_tmu_state(tile);
 }
 
 static void gfx_opengl_set_depth_test(bool depth_test) {
@@ -422,15 +439,17 @@ static inline void gfx_opengl_pass_fog(void) {
     if (cur_shader->texture_used[0] || cur_shader->texture_used[1])
         glDisable(GL_TEXTURE_2D);
 
-    glEnableClientState(GL_COLOR_ARRAY); // enable color array temporarily
+    glEnableClientState(GL_COLOR_ARRAY);                      // enable color array temporarily
     glColorPointer(4, GL_FLOAT, cur_buf_stride, cur_fog_ofs); // set fog colors as primary colors
-    if (!gl_blend) glEnable(GL_BLEND); // enable blending temporarily
+    if (!gl_blend)
+        glEnable(GL_BLEND); // enable blending temporarily
     glDepthFunc(GL_LEQUAL); // Z is the same as the base triangles
 
     glDrawArrays(GL_TRIANGLES, 0, 3 * cur_buf_num_tris);
 
     glDepthFunc(GL_LESS); // set back to default
-    if (!gl_blend) glDisable(GL_BLEND); // disable blending if it was disabled
+    if (!gl_blend)
+        glDisable(GL_BLEND);              // disable blending if it was disabled
     glDisableClientState(GL_COLOR_ARRAY); // will get reenabled later anyway
 
     // if texturing was enabled, re-enable it
@@ -445,18 +464,20 @@ static inline void gfx_opengl_pass_mix_texture(void) {
     glBindTexture(GL_TEXTURE_2D, tmu_state[cur_shader->texture_ord[1]].tex);
     gfx_opengl_apply_tmu_state(cur_shader->texture_ord[1]);
 
-    if (!gl_blend) glEnable(GL_BLEND); // enable blending temporarily
+    if (!gl_blend)
+        glEnable(GL_BLEND);      // enable blending temporarily
     glBlendFunc(GL_ONE, GL_ONE); // additive blending
-    glDepthFunc(GL_LEQUAL); // Z is the same as the base triangles
+    glDepthFunc(GL_LEQUAL);      // Z is the same as the base triangles
 
     // draw the same triangles, but with the inverse of the mix color
     glColor3f(c_invmix[0], c_invmix[1], c_invmix[2]);
     glDrawArrays(GL_TRIANGLES, 0, 3 * cur_buf_num_tris);
     glColor3f(1.f, 1.f, 1.f); // reset color
 
-    glDepthFunc(GL_LESS); // set back to default
+    glDepthFunc(GL_LESS);                              // set back to default
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // same here
-    if (!gl_blend) glDisable(GL_BLEND); // disable blending if it was disabled
+    if (!gl_blend)
+        glDisable(GL_BLEND); // disable blending if it was disabled
 
     // set old texture
     glBindTexture(GL_TEXTURE_2D, tmu_state[cur_shader->texture_ord[0]].tex);
@@ -478,17 +499,19 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     glDrawArrays(GL_TRIANGLES, 0, 3 * cur_buf_num_tris);
 
     // if there's two textures, draw polys with the second texture
-    if (cur_shader->texture_used[1]) gfx_opengl_pass_mix_texture();
+    if (cur_shader->texture_used[1])
+        gfx_opengl_pass_mix_texture();
 
     // cur_fog_ofs is only set if GL_EXT_fog_coord isn't used
-    if (cur_fog_ofs) gfx_opengl_pass_fog();
+    if (cur_fog_ofs)
+        gfx_opengl_pass_fog();
 }
 
 static inline bool gl_check_ext(const char *name) {
     static const char *extstr = NULL;
 
     if (extstr == NULL)
-        extstr = (const char *)glGetString(GL_EXTENSIONS);
+        extstr = (const char *) glGetString(GL_EXTENSIONS);
 
     if (!strstr(extstr, name)) {
         printf("GL extension not supported: %s\n", name);
@@ -500,8 +523,9 @@ static inline bool gl_check_ext(const char *name) {
 }
 
 static inline bool gl_get_version(int *major, int *minor, bool *is_es) {
-    const char *vstr = (const char *)glGetString(GL_VERSION);
-    if (!vstr || !vstr[0]) return false;
+    const char *vstr = (const char *) glGetString(GL_VERSION);
+    if (!vstr || !vstr[0])
+        return false;
 
     if (!strncmp(vstr, "OpenGL ES ", 10)) {
         vstr += 10;
@@ -526,7 +550,8 @@ static void gfx_opengl_init(void) {
     bool is_es = false;
     gl_get_version(&vmajor, &vminor, &is_es);
     if ((vmajor < 2 && vminor < 1) || is_es)
-        sys_fatal("OpenGL 1.1+ is required.\nReported version: %s%d.%d\n", is_es ? "ES" : "", vmajor, vminor);
+        sys_fatal("OpenGL 1.1+ is required.\nReported version: %s%d.%d\n", is_es ? "ES" : "", vmajor,
+                  vminor);
 
     // check if we support non power of two textures
     gl_npot = gl_check_ext("GL_ARB_texture_non_power_of_two");
@@ -535,7 +560,8 @@ static void gfx_opengl_init(void) {
         // this will be realloc'd as necessary
         scale_buf_size = 64 * 64 * 4;
         scale_buf = malloc(scale_buf_size);
-        if (!scale_buf) sys_fatal("Out of memory allocating for NPOT scale buffer\n");
+        if (!scale_buf)
+            sys_fatal("Out of memory allocating for NPOT scale buffer\n");
     }
 
     // check if we support multitexturing
@@ -576,28 +602,17 @@ static void gfx_opengl_shutdown(void) {
 }
 
 struct GfxRenderingAPI gfx_opengl_api = {
-    gfx_opengl_z_is_from_0_to_1,
-    gfx_opengl_unload_shader,
-    gfx_opengl_load_shader,
-    gfx_opengl_create_and_load_new_shader,
-    gfx_opengl_lookup_shader,
-    gfx_opengl_shader_get_info,
-    gfx_opengl_new_texture,
-    gfx_opengl_select_texture,
-    gfx_opengl_upload_texture,
-    gfx_opengl_set_sampler_parameters,
-    gfx_opengl_set_depth_test,
-    gfx_opengl_set_depth_mask,
-    gfx_opengl_set_zmode_decal,
-    gfx_opengl_set_viewport,
-    gfx_opengl_set_scissor,
-    gfx_opengl_set_use_alpha,
-    gfx_opengl_draw_triangles,
-    gfx_opengl_init,
-    gfx_opengl_on_resize,
-    gfx_opengl_start_frame,
-    gfx_opengl_end_frame,
-    gfx_opengl_finish_render,
+    gfx_opengl_z_is_from_0_to_1, gfx_opengl_unload_shader,
+    gfx_opengl_load_shader,      gfx_opengl_create_and_load_new_shader,
+    gfx_opengl_lookup_shader,    gfx_opengl_shader_get_info,
+    gfx_opengl_new_texture,      gfx_opengl_select_texture,
+    gfx_opengl_upload_texture,   gfx_opengl_set_sampler_parameters,
+    gfx_opengl_set_depth_test,   gfx_opengl_set_depth_mask,
+    gfx_opengl_set_zmode_decal,  gfx_opengl_set_viewport,
+    gfx_opengl_set_scissor,      gfx_opengl_set_use_alpha,
+    gfx_opengl_draw_triangles,   gfx_opengl_init,
+    gfx_opengl_on_resize,        gfx_opengl_start_frame,
+    gfx_opengl_end_frame,        gfx_opengl_finish_render,
     gfx_opengl_shutdown
 };
 

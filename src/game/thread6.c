@@ -88,7 +88,9 @@ static void update_rumble_pak(void) {
             start_rumble();
         } else {
             gCurrRumbleSettings.unk06 +=
-                ((gCurrRumbleSettings.unk02 * gCurrRumbleSettings.unk02 * gCurrRumbleSettings.unk02) / (1 << 9)) + 4;
+                ((gCurrRumbleSettings.unk02 * gCurrRumbleSettings.unk02 * gCurrRumbleSettings.unk02)
+                 / (1 << 9))
+                + 4;
 
             stop_rumble();
         }
@@ -97,7 +99,8 @@ static void update_rumble_pak(void) {
 
         if (gCurrRumbleSettings.unk0A >= 5) {
             start_rumble();
-        } else if ((gCurrRumbleSettings.unk0A >= 2) && (gGlobalTimer % gCurrRumbleSettings.unk0C == 0)) {
+        } else if ((gCurrRumbleSettings.unk0A >= 2)
+                   && (gGlobalTimer % gCurrRumbleSettings.unk0C == 0)) {
             start_rumble();
         } else {
             stop_rumble();
@@ -236,7 +239,8 @@ void thread6_rumble_loop(UNUSED void *a0) {
             sRumblePakActive = FALSE;
         }
     } else if (gGlobalTimer % 60 == 0) {
-        sRumblePakActive = osMotorInit(&gSIEventMesgQueue, &gRumblePakPfs, gPlayer1Controller->port) < 1;
+        sRumblePakActive =
+            osMotorInit(&gSIEventMesgQueue, &gRumblePakPfs, gPlayer1Controller->port) < 1;
         sRumblePakErrorCount = 0;
     }
 

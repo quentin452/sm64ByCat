@@ -10,13 +10,13 @@
 // bit which may be read by the sequence script.
 #define SEQUENCE_ARGS(priority, seqId) ((priority << 8) | seqId)
 
-#define SOUND_MODE_STEREO           0
-#define SOUND_MODE_MONO             3
-#define SOUND_MODE_HEADSET          1
+#define SOUND_MODE_STEREO 0
+#define SOUND_MODE_MONO 3
+#define SOUND_MODE_HEADSET 1
 
-#define SEQ_PLAYER_LEVEL            0
-#define SEQ_PLAYER_ENV              1
-#define SEQ_PLAYER_SFX              2
+#define SEQ_PLAYER_LEVEL 0
+#define SEQ_PLAYER_ENV 1
+#define SEQ_PLAYER_SFX 2
 
 extern s32 gAudioErrorFlags;
 extern f32 gDefaultSoundArgs[3];

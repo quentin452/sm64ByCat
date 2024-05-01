@@ -43,8 +43,8 @@ static inline fs_dir_t *fs_find_dir(const char *realpath) {
 }
 
 static int mount_cmp(const void *p1, const void *p2) {
-    const char *s1 = sys_file_name(*(const char **)p1);
-    const char *s2 = sys_file_name(*(const char **)p2);
+    const char *s1 = sys_file_name(*(const char **) p1);
+    const char *s2 = sys_file_name(*(const char **) p2);
 
     // check if one or both of these are basepacks
     const int plen = strlen(FS_BASEPACK_PREFIX);
@@ -52,10 +52,13 @@ static int mount_cmp(const void *p1, const void *p2) {
     const bool is_base2 = !strncmp(s2, FS_BASEPACK_PREFIX, plen);
 
     // if both are basepacks, compare the postfixes only
-    if (is_base1 && is_base2) return strcmp(s1 + plen, s2 + plen);
+    if (is_base1 && is_base2)
+        return strcmp(s1 + plen, s2 + plen);
     // if only one is a basepack, it goes first
-    if (is_base1) return -1;
-    if (is_base2) return 1;
+    if (is_base1)
+        return -1;
+    if (is_base2)
+        return 1;
     // otherwise strcmp order
     return strcmp(s1, s2);
 }
@@ -64,7 +67,8 @@ static void scan_path_dir(const char *ropath, const char *dir) {
     char dirpath[SYS_MAX_PATH];
     snprintf(dirpath, sizeof(dirpath), "%s/%s", ropath, dir);
 
-    if (!fs_sys_dir_exists(dirpath)) return;
+    if (!fs_sys_dir_exists(dirpath))
+        return;
 
     // since filename order in readdir() isn't guaranteed, collect paths and sort them in strcmp() order
     // (but with basepacks first)
@@ -85,12 +89,12 @@ bool fs_init(const char **rodirs, const char *gamedir, const char *writepath) {
 
     // expand and remember the write path
     strncpy(fs_writepath, fs_convert_path(buf, sizeof(buf), writepath), sizeof(fs_writepath));
-    fs_writepath[sizeof(fs_writepath)-1] = 0;
+    fs_writepath[sizeof(fs_writepath) - 1] = 0;
     printf("fs: writepath set to `%s`\n", fs_writepath);
 
     // remember the game directory name
     strncpy(fs_gamedir, gamedir, sizeof(fs_gamedir));
-    fs_gamedir[sizeof(fs_gamedir)-1] = 0;
+    fs_gamedir[sizeof(fs_gamedir) - 1] = 0;
     printf("fs: gamedir set to `%s`\n", fs_gamedir);
 
     // first, scan all possible paths and mount all basedirs in them
@@ -160,10 +164,13 @@ bool fs_unmount(const char *realpath) {
     fs_dir_t *dir = fs_find_dir(realpath);
     if (dir) {
         dir->packer->unmount(dir->pack);
-        free((void *)dir->realpath);
-        if (dir->prev) dir->prev->next = dir->next;
-        if (dir->next) dir->next->prev = dir->prev;
-        if (dir == fs_searchpaths) fs_searchpaths = dir->next;
+        free((void *) dir->realpath);
+        if (dir->prev)
+            dir->prev->next = dir->next;
+        if (dir->next)
+            dir->next->prev = dir->prev;
+        if (dir == fs_searchpaths)
+            fs_searchpaths = dir->next;
         free(dir);
         return true;
     }
@@ -210,32 +217,38 @@ fs_file_t *fs_open(const char *vpath) {
 }
 
 void fs_close(fs_file_t *file) {
-    if (!file) return;
+    if (!file)
+        return;
     file->parent->packer->close(file->parent->pack, file);
 }
 
 int64_t fs_read(fs_file_t *file, void *buf, const uint64_t size) {
-    if (!file) return -1;
+    if (!file)
+        return -1;
     return file->parent->packer->read(file->parent->pack, file, buf, size);
 }
 
 bool fs_seek(fs_file_t *file, const int64_t ofs) {
-    if (!file) return -1;
+    if (!file)
+        return -1;
     return file->parent->packer->seek(file->parent->pack, file, ofs);
 }
 
 int64_t fs_tell(fs_file_t *file) {
-    if (!file) return -1;
+    if (!file)
+        return -1;
     return file->parent->packer->tell(file->parent->pack, file);
 }
 
 int64_t fs_size(fs_file_t *file) {
-    if (!file) return -1;
+    if (!file)
+        return -1;
     return file->parent->packer->size(file->parent->pack, file);
 }
 
 bool fs_eof(fs_file_t *file) {
-    if (!file) return true;
+    if (!file)
+        return true;
     return file->parent->packer->eof(file->parent->pack, file);
 }
 
@@ -247,7 +260,7 @@ struct matchdata_s {
 };
 
 static bool match_walk(void *user, const char *path) {
-    struct matchdata_s *data = (struct matchdata_s *)user;
+    struct matchdata_s *data = (struct matchdata_s *) user;
     if (!strncmp(path, data->prefix, data->prefix_len)) {
         // found our lad, copy path to destination and terminate
         strncpy(data->dst, path, data->dst_len);
@@ -272,12 +285,13 @@ const char *fs_match(char *outname, const size_t outlen, const char *prefix) {
 }
 
 static bool enumerate_walk(void *user, const char *path) {
-    fs_pathlist_t *data = (fs_pathlist_t *)user;
+    fs_pathlist_t *data = (fs_pathlist_t *) user;
 
     if (data->listcap == data->numpaths) {
         data->listcap *= 2;
         char **newpaths = realloc(data->paths, data->listcap * sizeof(char *));
-        if (!newpaths) return false;
+        if (!newpaths)
+            return false;
         data->paths = newpaths;
     }
 
@@ -289,7 +303,8 @@ fs_pathlist_t fs_enumerate(const char *base, const bool recur) {
     char **paths = malloc(sizeof(char *) * 32);
     fs_pathlist_t pathlist = { paths, 0, 32 };
 
-    if (!paths) return pathlist;
+    if (!paths)
+        return pathlist;
 
     if (fs_walk(base, enumerate_walk, &pathlist, recur) == FS_WALK_INTERRUPTED)
         fs_pathlist_free(&pathlist);
@@ -298,7 +313,8 @@ fs_pathlist_t fs_enumerate(const char *base, const bool recur) {
 }
 
 void fs_pathlist_free(fs_pathlist_t *pathlist) {
-    if (!pathlist || !pathlist->paths) return;
+    if (!pathlist || !pathlist->paths)
+        return;
     for (int i = 0; i < pathlist->numpaths; ++i)
         free(pathlist->paths[i]);
     free(pathlist->paths);
@@ -328,7 +344,8 @@ const char *fs_readline(fs_file_t *file, char *dst, uint64_t size) {
 
 void *fs_load_file(const char *vpath, uint64_t *outsize) {
     fs_file_t *f = fs_open(vpath);
-    if (!f) return NULL;
+    if (!f)
+        return NULL;
 
     int64_t size = fs_size(f);
     if (size <= 0) {
@@ -350,7 +367,8 @@ void *fs_load_file(const char *vpath, uint64_t *outsize) {
         return NULL;
     }
 
-    if (outsize) *outsize = size;
+    if (outsize)
+        *outsize = size;
     return buf;
 }
 
@@ -360,18 +378,19 @@ const char *fs_get_write_path(const char *vpath) {
     return path;
 }
 
-const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path)  {
+const char *fs_convert_path(char *buf, const size_t bufsiz, const char *path) {
     // ! means "executable directory"
     if (path[0] == '!') {
         snprintf(buf, bufsiz, "%s%s", sys_exe_path(), path + 1);
     } else {
         strncpy(buf, path, bufsiz);
-        buf[bufsiz-1] = 0;
+        buf[bufsiz - 1] = 0;
     }
 
     // change all backslashes
     for (char *p = buf; *p; ++p)
-        if (*p == '\\') *p = '/';
+        if (*p == '\\')
+            *p = '/';
 
     return buf;
 }
@@ -401,7 +420,8 @@ bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur)
     bool ret = true;
 
     while ((ent = readdir(dir)) != NULL) {
-        if (ent->d_name[0] == 0 || ent->d_name[0] == '.') continue; // skip ./.. and hidden files
+        if (ent->d_name[0] == 0 || ent->d_name[0] == '.')
+            continue; // skip ./.. and hidden files
         snprintf(fullpath, sizeof(fullpath), "%s/%s", base, ent->d_name);
         if (fs_sys_dir_exists(fullpath)) {
             if (recur) {
@@ -426,7 +446,8 @@ fs_pathlist_t fs_sys_enumerate(const char *base, const bool recur) {
     char **paths = malloc(sizeof(char *) * 32);
     fs_pathlist_t pathlist = { paths, 0, 32 };
 
-    if (!paths) return pathlist;
+    if (!paths)
+        return pathlist;
 
     if (!fs_sys_walk(base, enumerate_walk, &pathlist, recur))
         fs_pathlist_free(&pathlist);
@@ -435,18 +456,19 @@ fs_pathlist_t fs_sys_enumerate(const char *base, const bool recur) {
 }
 
 bool fs_sys_mkdir(const char *name) {
-    #ifdef _WIN32
+#ifdef _WIN32
     return _mkdir(name) == 0;
-    #else
+#else
     return mkdir(name, 0777) == 0;
-    #endif
+#endif
 }
 
 bool fs_sys_copy_file(const char *oldname, const char *newname) {
     uint8_t buf[2048];
 
     FILE *fin = fopen(oldname, "rb");
-    if (!fin) return false;
+    if (!fin)
+        return false;
 
     FILE *fout = fopen(newname, "wb");
     if (!fout) {

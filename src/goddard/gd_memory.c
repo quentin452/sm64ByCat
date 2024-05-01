@@ -229,7 +229,7 @@ struct GMemBlock *gd_add_mem_to_heap(u32 size, void *addr, u8 permanence) {
     struct GMemBlock *newBlock;
     /* eight-byte align the new block's data stats */
     size = (size - 8) & ~7;
-    addr = (void *)(((uintptr_t) addr + 8) & ~7);
+    addr = (void *) (((uintptr_t) addr + 8) & ~7);
 
     newBlock = make_mem_block(G_MEM_BLOCK_FREE, permanence);
     newBlock->ptr = addr;

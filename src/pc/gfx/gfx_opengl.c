@@ -4,35 +4,35 @@
 #include <stdbool.h>
 
 #ifndef _LANGUAGE_C
-# define _LANGUAGE_C
+#define _LANGUAGE_C
 #endif
 #include <PR/gbi.h>
 
 #ifdef __MINGW32__
-# define FOR_WINDOWS 1
+#define FOR_WINDOWS 1
 #else
-# define FOR_WINDOWS 0
+#define FOR_WINDOWS 0
 #endif
 
 #if FOR_WINDOWS || defined(OSX_BUILD)
-# define GLEW_STATIC
-# include <GL/glew.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
 #endif
 
 #define GL_GLEXT_PROTOTYPES 1
 
 #ifdef WAPI_SDL2
-# include <SDL2/SDL.h>
-# ifdef USE_GLES
-#  include <SDL2/SDL_opengles2.h>
-# else
-#  include <SDL2/SDL_opengl.h>
-# endif
+#include <SDL2/SDL.h>
+#ifdef USE_GLES
+#include <SDL2/SDL_opengles2.h>
+#else
+#include <SDL2/SDL_opengl.h>
+#endif
 #elif defined(WAPI_SDL1)
-# include <SDL/SDL.h>
-# ifndef GLEW_STATIC
-#  include <SDL/SDL_opengl.h>
-# endif
+#include <SDL/SDL.h>
+#ifndef GLEW_STATIC
+#include <SDL/SDL_opengl.h>
+#endif
 #endif
 
 #include "../platform.h"
@@ -85,20 +85,22 @@ static void gfx_opengl_vertex_array_set_attribs(struct ShaderProgram *prg) {
 
     for (int i = 0; i < prg->num_attribs; i++) {
         glEnableVertexAttribArray(prg->attrib_locations[i]);
-        glVertexAttribPointer(prg->attrib_locations[i], prg->attrib_sizes[i], GL_FLOAT, GL_FALSE, num_floats * sizeof(float), (void *) (pos * sizeof(float)));
+        glVertexAttribPointer(prg->attrib_locations[i], prg->attrib_sizes[i], GL_FLOAT, GL_FALSE,
+                              num_floats * sizeof(float), (void *) (pos * sizeof(float)));
         pos += prg->attrib_sizes[i];
     }
 }
 
 static inline void gfx_opengl_set_shader_uniforms(struct ShaderProgram *prg) {
     if (prg->used_noise)
-        glUniform1f(prg->uniform_locations[4], (float)frame_count);
+        glUniform1f(prg->uniform_locations[4], (float) frame_count);
 }
 
 static inline void gfx_opengl_set_texture_uniforms(struct ShaderProgram *prg, const int tile) {
     if (prg->used_textures[tile] && opengl_tex[tile]) {
-        glUniform2f(prg->uniform_locations[tile*2 + 0], opengl_tex[tile]->size[0], opengl_tex[tile]->size[1]);
-        glUniform1i(prg->uniform_locations[tile*2 + 1], opengl_tex[tile]->filter);
+        glUniform2f(prg->uniform_locations[tile * 2 + 0], opengl_tex[tile]->size[0],
+                    opengl_tex[tile]->size[1]);
+        glUniform1i(prg->uniform_locations[tile * 2 + 1], opengl_tex[tile]->filter);
     }
 }
 
@@ -123,15 +125,18 @@ static void gfx_opengl_load_shader(struct ShaderProgram *new_prg) {
 }
 
 static void append_str(char *buf, size_t *len, const char *str) {
-    while (*str != '\0') buf[(*len)++] = *str++;
+    while (*str != '\0')
+        buf[(*len)++] = *str++;
 }
 
 static void append_line(char *buf, size_t *len, const char *str) {
-    while (*str != '\0') buf[(*len)++] = *str++;
+    while (*str != '\0')
+        buf[(*len)++] = *str++;
     buf[(*len)++] = '\n';
 }
 
-static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_alpha, bool inputs_have_alpha, bool hint_single_element) {
+static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_alpha,
+                                      bool inputs_have_alpha, bool hint_single_element) {
     if (!only_alpha) {
         switch (item) {
             case SHADER_0:
@@ -147,8 +152,10 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
             case SHADER_TEXEL0:
                 return with_alpha ? "texVal0" : "texVal0.rgb";
             case SHADER_TEXEL0A:
-                return hint_single_element ? "texVal0.a" :
-                    (with_alpha ? "vec4(texelVal0.a, texelVal0.a, texelVal0.a, texelVal0.a)" : "vec3(texelVal0.a, texelVal0.a, texelVal0.a)");
+                return hint_single_element
+                           ? "texVal0.a"
+                           : (with_alpha ? "vec4(texelVal0.a, texelVal0.a, texelVal0.a, texelVal0.a)"
+                                         : "vec3(texelVal0.a, texelVal0.a, texelVal0.a)");
             case SHADER_TEXEL1:
                 return with_alpha ? "texVal1" : "texVal1.rgb";
         }
@@ -174,30 +181,41 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
     }
 }
 
-static void append_formula(char *buf, size_t *len, uint8_t c[2][4], bool do_single, bool do_multiply, bool do_mix, bool with_alpha, bool only_alpha, bool opt_alpha) {
+static void append_formula(char *buf, size_t *len, uint8_t c[2][4], bool do_single, bool do_multiply,
+                           bool do_mix, bool with_alpha, bool only_alpha, bool opt_alpha) {
     if (do_single) {
-        append_str(buf, len, shader_item_to_str(c[only_alpha][3], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][3], with_alpha, only_alpha, opt_alpha, false));
     } else if (do_multiply) {
-        append_str(buf, len, shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, " * ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
     } else if (do_mix) {
         append_str(buf, len, "mix(");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][1], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][1], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, ", ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, ", ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
         append_str(buf, len, ")");
     } else {
         append_str(buf, len, "(");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][0], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, " - ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][1], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][1], with_alpha, only_alpha, opt_alpha, false));
         append_str(buf, len, ") * ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][2], with_alpha, only_alpha, opt_alpha, true));
         append_str(buf, len, " + ");
-        append_str(buf, len, shader_item_to_str(c[only_alpha][3], with_alpha, only_alpha, opt_alpha, false));
+        append_str(buf, len,
+                   shader_item_to_str(c[only_alpha][3], with_alpha, only_alpha, opt_alpha, false));
     }
 }
 
@@ -313,23 +331,32 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(uint32_t shad
 
     if (used_textures[0] || used_textures[1]) {
         if (configFiltering == 2) {
-            append_line(fs_buf, &fs_len, "#define TEX_OFFSET(off) texture2D(tex, texCoord - (off)/texSize)");
-            append_line(fs_buf, &fs_len, "vec4 filter3point(in sampler2D tex, in vec2 texCoord, in vec2 texSize) {");
+            append_line(fs_buf, &fs_len,
+                        "#define TEX_OFFSET(off) texture2D(tex, texCoord - (off)/texSize)");
+            append_line(fs_buf, &fs_len,
+                        "vec4 filter3point(in sampler2D tex, in vec2 texCoord, in vec2 texSize) {");
             append_line(fs_buf, &fs_len, "  vec2 offset = fract(texCoord*texSize - vec2(0.5));");
             append_line(fs_buf, &fs_len, "  offset -= step(1.0, offset.x + offset.y);");
             append_line(fs_buf, &fs_len, "  vec4 c0 = TEX_OFFSET(offset);");
-            append_line(fs_buf, &fs_len, "  vec4 c1 = TEX_OFFSET(vec2(offset.x - sign(offset.x), offset.y));");
-            append_line(fs_buf, &fs_len, "  vec4 c2 = TEX_OFFSET(vec2(offset.x, offset.y - sign(offset.y)));");
-            append_line(fs_buf, &fs_len, "  return c0 + abs(offset.x)*(c1-c0) + abs(offset.y)*(c2-c0);");
+            append_line(fs_buf, &fs_len,
+                        "  vec4 c1 = TEX_OFFSET(vec2(offset.x - sign(offset.x), offset.y));");
+            append_line(fs_buf, &fs_len,
+                        "  vec4 c2 = TEX_OFFSET(vec2(offset.x, offset.y - sign(offset.y)));");
+            append_line(fs_buf, &fs_len,
+                        "  return c0 + abs(offset.x)*(c1-c0) + abs(offset.y)*(c2-c0);");
             append_line(fs_buf, &fs_len, "}");
-            append_line(fs_buf, &fs_len, "vec4 sampleTex(in sampler2D tex, in vec2 uv, in vec2 texSize, in bool dofilter) {");
+            append_line(
+                fs_buf, &fs_len,
+                "vec4 sampleTex(in sampler2D tex, in vec2 uv, in vec2 texSize, in bool dofilter) {");
             append_line(fs_buf, &fs_len, "if (dofilter)");
             append_line(fs_buf, &fs_len, "return filter3point(tex, uv, texSize);");
             append_line(fs_buf, &fs_len, "else");
             append_line(fs_buf, &fs_len, "return texture2D(tex, uv);");
             append_line(fs_buf, &fs_len, "}");
         } else {
-            append_line(fs_buf, &fs_len, "vec4 sampleTex(in sampler2D tex, in vec2 uv, in vec2 texSize, in bool dofilter) {");
+            append_line(
+                fs_buf, &fs_len,
+                "vec4 sampleTex(in sampler2D tex, in vec2 uv, in vec2 texSize, in bool dofilter) {");
             append_line(fs_buf, &fs_len, "return texture2D(tex, uv);");
             append_line(fs_buf, &fs_len, "}");
         }
@@ -339,7 +366,8 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(uint32_t shad
         append_line(fs_buf, &fs_len, "uniform float frame_count;");
 
         append_line(fs_buf, &fs_len, "float random(in vec3 value) {");
-        append_line(fs_buf, &fs_len, "    float random = dot(sin(value), vec3(12.9898, 78.233, 37.719));");
+        append_line(fs_buf, &fs_len,
+                    "    float random = dot(sin(value), vec3(12.9898, 78.233, 37.719));");
         append_line(fs_buf, &fs_len, "    return fract(sin(random) * 143758.5453);");
         append_line(fs_buf, &fs_len, "}");
     }
@@ -347,10 +375,12 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(uint32_t shad
     append_line(fs_buf, &fs_len, "void main() {");
 
     if (used_textures[0]) {
-        append_line(fs_buf, &fs_len, "vec4 texVal0 = sampleTex(uTex0, vTexCoord, uTex0Size, uTex0Filter);");
+        append_line(fs_buf, &fs_len,
+                    "vec4 texVal0 = sampleTex(uTex0, vTexCoord, uTex0Size, uTex0Filter);");
     }
     if (used_textures[1]) {
-        append_line(fs_buf, &fs_len, "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter);");
+        append_line(fs_buf, &fs_len,
+                    "vec4 texVal1 = sampleTex(uTex1, vTexCoord, uTex1Size, uTex1Filter);");
     }
 
     append_str(fs_buf, &fs_len, opt_alpha ? "vec4 texel = " : "vec3 texel = ");
@@ -361,7 +391,8 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(uint32_t shad
         append_formula(fs_buf, &fs_len, c, do_single[1], do_multiply[1], do_mix[1], true, true, true);
         append_str(fs_buf, &fs_len, ")");
     } else {
-        append_formula(fs_buf, &fs_len, c, do_single[0], do_multiply[0], do_mix[0], opt_alpha, false, opt_alpha);
+        append_formula(fs_buf, &fs_len, c, do_single[0], do_multiply[0], do_mix[0], opt_alpha, false,
+                       opt_alpha);
     }
     append_line(fs_buf, &fs_len, ";");
 
@@ -377,8 +408,9 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(uint32_t shad
         }
     }
 
-    if (opt_alpha && opt_noise) 
-        append_line(fs_buf, &fs_len, "texel.a *= floor(random(floor(vec3(gl_FragCoord.xy, frame_count))) + 0.5);");
+    if (opt_alpha && opt_noise)
+        append_line(fs_buf, &fs_len,
+                    "texel.a *= floor(random(floor(vec3(gl_FragCoord.xy, frame_count))) + 0.5);");
 
     if (opt_alpha) {
         append_line(fs_buf, &fs_len, "gl_FragColor = texel;");
@@ -502,7 +534,8 @@ static struct ShaderProgram *gfx_opengl_lookup_shader(uint32_t shader_id) {
     return NULL;
 }
 
-static void gfx_opengl_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
+static void gfx_opengl_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs,
+                                       bool used_textures[2]) {
     *num_inputs = prg->num_inputs;
     used_textures[0] = prg->used_textures[0];
     used_textures[1] = prg->used_textures[1];
@@ -512,7 +545,8 @@ static GLuint gfx_opengl_new_texture(void) {
     if (num_textures >= tex_cache_size) {
         tex_cache_size += TEX_CACHE_STEP;
         tex_cache = realloc(tex_cache, sizeof(struct GLTexture) * tex_cache_size);
-        if (!tex_cache) sys_fatal("out of memory allocating texture cache");
+        if (!tex_cache)
+            sys_fatal("out of memory allocating texture cache");
         // invalidate these because they might be pointing to garbage now
         opengl_tex[0] = NULL;
         opengl_tex[1] = NULL;
@@ -522,11 +556,11 @@ static GLuint gfx_opengl_new_texture(void) {
 }
 
 static void gfx_opengl_select_texture(int tile, GLuint texture_id) {
-     opengl_tex[tile] = tex_cache + texture_id;
-     opengl_curtex = tile;
-     glActiveTexture(GL_TEXTURE0 + tile);
-     glBindTexture(GL_TEXTURE_2D, opengl_tex[tile]->gltex);
-     gfx_opengl_set_texture_uniforms(opengl_prg, tile);
+    opengl_tex[tile] = tex_cache + texture_id;
+    opengl_curtex = tile;
+    glActiveTexture(GL_TEXTURE0 + tile);
+    glBindTexture(GL_TEXTURE_2D, opengl_tex[tile]->gltex);
+    gfx_opengl_set_texture_uniforms(opengl_prg, tile);
 }
 
 static void gfx_opengl_upload_texture(const uint8_t *rgba32_buf, int width, int height) {
@@ -542,7 +576,8 @@ static uint32_t gfx_cm_to_opengl(uint32_t val) {
     return (val & G_TX_MIRROR) ? GL_MIRRORED_REPEAT : GL_REPEAT;
 }
 
-static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, uint32_t cms, uint32_t cmt) {
+static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, uint32_t cms,
+                                              uint32_t cmt) {
     const GLenum filter = linear_filter ? GL_LINEAR : GL_NEAREST;
     glActiveTexture(GL_TEXTURE0 + tile);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
@@ -595,14 +630,15 @@ static void gfx_opengl_set_use_alpha(bool use_alpha) {
 }
 
 static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
-    //printf("flushing %d tris\n", buf_vbo_num_tris);
+    // printf("flushing %d tris\n", buf_vbo_num_tris);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buf_vbo_len, buf_vbo, GL_STREAM_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, 3 * buf_vbo_num_tris);
 }
 
 static inline bool gl_get_version(int *major, int *minor, bool *is_es) {
-    const char *vstr = (const char *)glGetString(GL_VERSION);
-    if (!vstr || !vstr[0]) return false;
+    const char *vstr = (const char *) glGetString(GL_VERSION);
+    if (!vstr || !vstr[0])
+        return false;
 
     if (!strncmp(vstr, "OpenGL ES ", 10)) {
         vstr += 10;
@@ -624,19 +660,21 @@ static void gfx_opengl_init(void) {
 
     tex_cache_size = TEX_CACHE_STEP;
     tex_cache = calloc(tex_cache_size, sizeof(struct GLTexture));
-    if (!tex_cache) sys_fatal("out of memory allocating texture cache");
+    if (!tex_cache)
+        sys_fatal("out of memory allocating texture cache");
 
     // check GL version
     int vmajor, vminor;
     bool is_es = false;
     gl_get_version(&vmajor, &vminor, &is_es);
     if (vmajor < 2 && vminor < 1 && !is_es)
-        sys_fatal("OpenGL 2.1+ is required.\nReported version: %s%d.%d", is_es ? "ES" : "", vmajor, vminor);
+        sys_fatal("OpenGL 2.1+ is required.\nReported version: %s%d.%d", is_es ? "ES" : "", vmajor,
+                  vminor);
 
     glGenBuffers(1, &opengl_vbo);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, opengl_vbo);
-    
+
     glDepthFunc(GL_LEQUAL);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -664,28 +702,17 @@ static void gfx_opengl_shutdown(void) {
 }
 
 struct GfxRenderingAPI gfx_opengl_api = {
-    gfx_opengl_z_is_from_0_to_1,
-    gfx_opengl_unload_shader,
-    gfx_opengl_load_shader,
-    gfx_opengl_create_and_load_new_shader,
-    gfx_opengl_lookup_shader,
-    gfx_opengl_shader_get_info,
-    gfx_opengl_new_texture,
-    gfx_opengl_select_texture,
-    gfx_opengl_upload_texture,
-    gfx_opengl_set_sampler_parameters,
-    gfx_opengl_set_depth_test,
-    gfx_opengl_set_depth_mask,
-    gfx_opengl_set_zmode_decal,
-    gfx_opengl_set_viewport,
-    gfx_opengl_set_scissor,
-    gfx_opengl_set_use_alpha,
-    gfx_opengl_draw_triangles,
-    gfx_opengl_init,
-    gfx_opengl_on_resize,
-    gfx_opengl_start_frame,
-    gfx_opengl_end_frame,
-    gfx_opengl_finish_render,
+    gfx_opengl_z_is_from_0_to_1, gfx_opengl_unload_shader,
+    gfx_opengl_load_shader,      gfx_opengl_create_and_load_new_shader,
+    gfx_opengl_lookup_shader,    gfx_opengl_shader_get_info,
+    gfx_opengl_new_texture,      gfx_opengl_select_texture,
+    gfx_opengl_upload_texture,   gfx_opengl_set_sampler_parameters,
+    gfx_opengl_set_depth_test,   gfx_opengl_set_depth_mask,
+    gfx_opengl_set_zmode_decal,  gfx_opengl_set_viewport,
+    gfx_opengl_set_scissor,      gfx_opengl_set_use_alpha,
+    gfx_opengl_draw_triangles,   gfx_opengl_init,
+    gfx_opengl_on_resize,        gfx_opengl_start_frame,
+    gfx_opengl_end_frame,        gfx_opengl_finish_render,
     gfx_opengl_shutdown
 };
 

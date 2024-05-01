@@ -5,18 +5,12 @@
 
 #include "types.h"
 
-struct SurfaceNode
-{
+struct SurfaceNode {
     struct SurfaceNode *next;
     struct Surface *surface;
 };
 
-enum
-{
-    SPATIAL_PARTITION_FLOORS,
-    SPATIAL_PARTITION_CEILS,
-    SPATIAL_PARTITION_WALLS
-};
+enum { SPATIAL_PARTITION_FLOORS, SPATIAL_PARTITION_CEILS, SPATIAL_PARTITION_WALLS };
 
 typedef struct SurfaceNode SpatialPartitionCell[3];
 

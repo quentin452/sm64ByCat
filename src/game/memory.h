@@ -5,14 +5,13 @@
 
 #include "types.h"
 
-#define MEMORY_POOL_LEFT  0
+#define MEMORY_POOL_LEFT 0
 #define MEMORY_POOL_RIGHT 1
 
 #define GFX_POOL_SIZE (512 * 1024)
 #define DEFAULT_POOL_SIZE (0x165000 * 8)
 
-struct AllocOnlyPool
-{
+struct AllocOnlyPool {
     s32 totalSpace;
     s32 usedSpace;
     u8 *startPtr;

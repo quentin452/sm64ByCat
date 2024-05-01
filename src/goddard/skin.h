@@ -6,7 +6,7 @@
 #include "gd_types.h"
 
 // bss
-extern struct ObjNet* gGdSkinNet;   // @ 801BAAF0
+extern struct ObjNet *gGdSkinNet; // @ 801BAAF0
 
 // functions
 void reset_net(struct ObjNet *net);

@@ -24,8 +24,8 @@ extern f32 gSineTable[];
 extern f32 gCosineTable[];
 #endif
 
-#define sins(x) gSineTable[(u16) (x) >> 4]
-#define coss(x) gCosineTable[(u16) (x) >> 4]
+#define sins(x) gSineTable[(u16)(x) >> 4]
+#define coss(x) gCosineTable[(u16)(x) >> 4]
 
 #define min(a, b) ((a) <= (b) ? (a) : (b))
 #define max(a, b) ((a) > (b) ? (a) : (b))
@@ -71,7 +71,7 @@ void mtxf_to_mtx(Mtx *dest, Mat4 src);
 void mtxf_rotate_xy(Mtx *mtx, s16 angle);
 void get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);
 void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);
-void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32  dist, s16  pitch, s16  yaw);
+void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);
 s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec);
 f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec);
 s16 atan2s(f32 y, f32 x);

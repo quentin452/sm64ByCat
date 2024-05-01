@@ -23,281 +23,276 @@
  * Converts an angle in degrees to sm64's s16 angle units. For example, DEGREES(90) == 0x4000
  * This should be used mainly to make camera code clearer at first glance.
  */
-#define DEGREES(x) ((x) * 0x10000 / 360)
+#define DEGREES(x) ((x) *0x10000 / 360)
 
 #define LEVEL_AREA_INDEX(levelNum, areaNum) (((levelNum) << 4) + (areaNum))
 
 /**
  * Helper macro for defining which areas of a level should zoom out the camera when the game is paused.
- * Because a mask is used by two levels, the pattern will repeat when more than 4 areas are used by a level.
+ * Because a mask is used by two levels, the pattern will repeat when more than 4 areas are used by a
+ * level.
  */
-#define ZOOMOUT_AREA_MASK(level1Area1, level1Area2, level1Area3, level1Area4, \
-                          level2Area1, level2Area2, level2Area3, level2Area4) \
-    ((level2Area4) << 7 |                                                     \
-     (level2Area3) << 6 |                                                     \
-     (level2Area2) << 5 |                                                     \
-     (level2Area1) << 4 |                                                     \
-     (level1Area4) << 3 |                                                     \
-     (level1Area3) << 2 |                                                     \
-     (level1Area2) << 1 |                                                     \
-     (level1Area1) << 0)
+#define ZOOMOUT_AREA_MASK(level1Area1, level1Area2, level1Area3, level1Area4, level2Area1,             \
+                          level2Area2, level2Area3, level2Area4)                                       \
+    ((level2Area4) << 7 | (level2Area3) << 6 | (level2Area2) << 5 | (level2Area1) << 4                 \
+     | (level1Area4) << 3 | (level1Area3) << 2 | (level1Area2) << 1 | (level1Area1) << 0)
 
+#define AREA_BBH LEVEL_AREA_INDEX(LEVEL_BBH, 1)
+#define AREA_CCM_OUTSIDE LEVEL_AREA_INDEX(LEVEL_CCM, 1)
+#define AREA_CCM_SLIDE LEVEL_AREA_INDEX(LEVEL_CCM, 2)
+#define AREA_CASTLE_LOBBY LEVEL_AREA_INDEX(LEVEL_CASTLE, 1)
+#define AREA_CASTLE_TIPPY LEVEL_AREA_INDEX(LEVEL_CASTLE, 2)
+#define AREA_CASTLE_BASEMENT LEVEL_AREA_INDEX(LEVEL_CASTLE, 3)
+#define AREA_HMC LEVEL_AREA_INDEX(LEVEL_HMC, 1)
+#define AREA_SSL_OUTSIDE LEVEL_AREA_INDEX(LEVEL_SSL, 1)
+#define AREA_SSL_PYRAMID LEVEL_AREA_INDEX(LEVEL_SSL, 2)
+#define AREA_SSL_EYEROK LEVEL_AREA_INDEX(LEVEL_SSL, 3)
+#define AREA_BOB LEVEL_AREA_INDEX(LEVEL_BOB, 1)
+#define AREA_SL_OUTSIDE LEVEL_AREA_INDEX(LEVEL_SL, 1)
+#define AREA_SL_IGLOO LEVEL_AREA_INDEX(LEVEL_SL, 2)
+#define AREA_WDW_MAIN LEVEL_AREA_INDEX(LEVEL_WDW, 1)
+#define AREA_WDW_TOWN LEVEL_AREA_INDEX(LEVEL_WDW, 2)
+#define AREA_JRB_MAIN LEVEL_AREA_INDEX(LEVEL_JRB, 1)
+#define AREA_JRB_SHIP LEVEL_AREA_INDEX(LEVEL_JRB, 2)
+#define AREA_THI_HUGE LEVEL_AREA_INDEX(LEVEL_THI, 1)
+#define AREA_THI_TINY LEVEL_AREA_INDEX(LEVEL_THI, 2)
+#define AREA_THI_WIGGLER LEVEL_AREA_INDEX(LEVEL_THI, 3)
+#define AREA_TTC LEVEL_AREA_INDEX(LEVEL_TTC, 1)
+#define AREA_RR LEVEL_AREA_INDEX(LEVEL_RR, 1)
+#define AREA_CASTLE_GROUNDS LEVEL_AREA_INDEX(LEVEL_CASTLE_GROUNDS, 1)
+#define AREA_BITDW LEVEL_AREA_INDEX(LEVEL_BITDW, 1)
+#define AREA_VCUTM LEVEL_AREA_INDEX(LEVEL_VCUTM, 1)
+#define AREA_BITFS LEVEL_AREA_INDEX(LEVEL_BITFS, 1)
+#define AREA_SA LEVEL_AREA_INDEX(LEVEL_SA, 1)
+#define AREA_BITS LEVEL_AREA_INDEX(LEVEL_BITS, 1)
+#define AREA_LLL_OUTSIDE LEVEL_AREA_INDEX(LEVEL_LLL, 1)
+#define AREA_LLL_VOLCANO LEVEL_AREA_INDEX(LEVEL_LLL, 2)
+#define AREA_DDD_WHIRLPOOL LEVEL_AREA_INDEX(LEVEL_DDD, 1)
+#define AREA_DDD_SUB LEVEL_AREA_INDEX(LEVEL_DDD, 2)
+#define AREA_WF LEVEL_AREA_INDEX(LEVEL_WF, 1)
+#define AREA_ENDING LEVEL_AREA_INDEX(LEVEL_ENDING, 1)
+#define AREA_COURTYARD LEVEL_AREA_INDEX(LEVEL_CASTLE_COURTYARD, 1)
+#define AREA_PSS LEVEL_AREA_INDEX(LEVEL_PSS, 1)
+#define AREA_COTMC LEVEL_AREA_INDEX(LEVEL_COTMC, 1)
+#define AREA_TOTWC LEVEL_AREA_INDEX(LEVEL_TOTWC, 1)
+#define AREA_BOWSER_1 LEVEL_AREA_INDEX(LEVEL_BOWSER_1, 1)
+#define AREA_WMOTR LEVEL_AREA_INDEX(LEVEL_WMOTR, 1)
+#define AREA_BOWSER_2 LEVEL_AREA_INDEX(LEVEL_BOWSER_2, 1)
+#define AREA_BOWSER_3 LEVEL_AREA_INDEX(LEVEL_BOWSER_3, 1)
+#define AREA_TTM_OUTSIDE LEVEL_AREA_INDEX(LEVEL_TTM, 1)
 
-#define AREA_BBH                LEVEL_AREA_INDEX(LEVEL_BBH, 1)
-#define AREA_CCM_OUTSIDE        LEVEL_AREA_INDEX(LEVEL_CCM, 1)
-#define AREA_CCM_SLIDE          LEVEL_AREA_INDEX(LEVEL_CCM, 2)
-#define AREA_CASTLE_LOBBY       LEVEL_AREA_INDEX(LEVEL_CASTLE, 1)
-#define AREA_CASTLE_TIPPY       LEVEL_AREA_INDEX(LEVEL_CASTLE, 2)
-#define AREA_CASTLE_BASEMENT    LEVEL_AREA_INDEX(LEVEL_CASTLE, 3)
-#define AREA_HMC                LEVEL_AREA_INDEX(LEVEL_HMC, 1)
-#define AREA_SSL_OUTSIDE        LEVEL_AREA_INDEX(LEVEL_SSL, 1)
-#define AREA_SSL_PYRAMID        LEVEL_AREA_INDEX(LEVEL_SSL, 2)
-#define AREA_SSL_EYEROK         LEVEL_AREA_INDEX(LEVEL_SSL, 3)
-#define AREA_BOB                LEVEL_AREA_INDEX(LEVEL_BOB, 1)
-#define AREA_SL_OUTSIDE         LEVEL_AREA_INDEX(LEVEL_SL, 1)
-#define AREA_SL_IGLOO           LEVEL_AREA_INDEX(LEVEL_SL, 2)
-#define AREA_WDW_MAIN           LEVEL_AREA_INDEX(LEVEL_WDW, 1)
-#define AREA_WDW_TOWN           LEVEL_AREA_INDEX(LEVEL_WDW, 2)
-#define AREA_JRB_MAIN           LEVEL_AREA_INDEX(LEVEL_JRB, 1)
-#define AREA_JRB_SHIP           LEVEL_AREA_INDEX(LEVEL_JRB, 2)
-#define AREA_THI_HUGE           LEVEL_AREA_INDEX(LEVEL_THI, 1)
-#define AREA_THI_TINY           LEVEL_AREA_INDEX(LEVEL_THI, 2)
-#define AREA_THI_WIGGLER        LEVEL_AREA_INDEX(LEVEL_THI, 3)
-#define AREA_TTC                LEVEL_AREA_INDEX(LEVEL_TTC, 1)
-#define AREA_RR                 LEVEL_AREA_INDEX(LEVEL_RR, 1)
-#define AREA_CASTLE_GROUNDS     LEVEL_AREA_INDEX(LEVEL_CASTLE_GROUNDS, 1)
-#define AREA_BITDW              LEVEL_AREA_INDEX(LEVEL_BITDW, 1)
-#define AREA_VCUTM              LEVEL_AREA_INDEX(LEVEL_VCUTM, 1)
-#define AREA_BITFS              LEVEL_AREA_INDEX(LEVEL_BITFS, 1)
-#define AREA_SA                 LEVEL_AREA_INDEX(LEVEL_SA, 1)
-#define AREA_BITS               LEVEL_AREA_INDEX(LEVEL_BITS, 1)
-#define AREA_LLL_OUTSIDE        LEVEL_AREA_INDEX(LEVEL_LLL, 1)
-#define AREA_LLL_VOLCANO        LEVEL_AREA_INDEX(LEVEL_LLL, 2)
-#define AREA_DDD_WHIRLPOOL      LEVEL_AREA_INDEX(LEVEL_DDD, 1)
-#define AREA_DDD_SUB            LEVEL_AREA_INDEX(LEVEL_DDD, 2)
-#define AREA_WF                 LEVEL_AREA_INDEX(LEVEL_WF, 1)
-#define AREA_ENDING             LEVEL_AREA_INDEX(LEVEL_ENDING, 1)
-#define AREA_COURTYARD          LEVEL_AREA_INDEX(LEVEL_CASTLE_COURTYARD, 1)
-#define AREA_PSS                LEVEL_AREA_INDEX(LEVEL_PSS, 1)
-#define AREA_COTMC              LEVEL_AREA_INDEX(LEVEL_COTMC, 1)
-#define AREA_TOTWC              LEVEL_AREA_INDEX(LEVEL_TOTWC, 1)
-#define AREA_BOWSER_1           LEVEL_AREA_INDEX(LEVEL_BOWSER_1, 1)
-#define AREA_WMOTR              LEVEL_AREA_INDEX(LEVEL_WMOTR, 1)
-#define AREA_BOWSER_2           LEVEL_AREA_INDEX(LEVEL_BOWSER_2, 1)
-#define AREA_BOWSER_3           LEVEL_AREA_INDEX(LEVEL_BOWSER_3, 1)
-#define AREA_TTM_OUTSIDE        LEVEL_AREA_INDEX(LEVEL_TTM, 1)
-
-#define CAM_MODE_MARIO_ACTIVE           0x01
-#define CAM_MODE_LAKITU_WAS_ZOOMED_OUT  0x02
-#define CAM_MODE_MARIO_SELECTED         0x04
+#define CAM_MODE_MARIO_ACTIVE 0x01
+#define CAM_MODE_LAKITU_WAS_ZOOMED_OUT 0x02
+#define CAM_MODE_MARIO_SELECTED 0x04
 
 #define CAM_SELECTION_MARIO 1
 #define CAM_SELECTION_FIXED 2
 
-#define CAM_ANGLE_MARIO  1
+#define CAM_ANGLE_MARIO 1
 #define CAM_ANGLE_LAKITU 2
 
-#define CAMERA_MODE_NONE              0x00
-#define CAMERA_MODE_RADIAL            0x01
-#define CAMERA_MODE_OUTWARD_RADIAL    0x02
-#define CAMERA_MODE_BEHIND_MARIO      0x03
-#define CAMERA_MODE_CLOSE             0x04 // Inside Castle / Big Boo's Haunt
-#define CAMERA_MODE_C_UP              0x06
-#define CAMERA_MODE_WATER_SURFACE     0x08
-#define CAMERA_MODE_SLIDE_HOOT        0x09
-#define CAMERA_MODE_INSIDE_CANNON     0x0A
-#define CAMERA_MODE_BOSS_FIGHT        0x0B
+#define CAMERA_MODE_NONE 0x00
+#define CAMERA_MODE_RADIAL 0x01
+#define CAMERA_MODE_OUTWARD_RADIAL 0x02
+#define CAMERA_MODE_BEHIND_MARIO 0x03
+#define CAMERA_MODE_CLOSE 0x04 // Inside Castle / Big Boo's Haunt
+#define CAMERA_MODE_C_UP 0x06
+#define CAMERA_MODE_WATER_SURFACE 0x08
+#define CAMERA_MODE_SLIDE_HOOT 0x09
+#define CAMERA_MODE_INSIDE_CANNON 0x0A
+#define CAMERA_MODE_BOSS_FIGHT 0x0B
 #define CAMERA_MODE_PARALLEL_TRACKING 0x0C
-#define CAMERA_MODE_FIXED             0x0D
-#define CAMERA_MODE_8_DIRECTIONS      0x0E // AKA Parallel Camera, Bowser Courses & Rainbow Ride
-#define CAMERA_MODE_FREE_ROAM         0x10
-#define CAMERA_MODE_SPIRAL_STAIRS     0x11
-#define CAMERA_MODE_NEWCAM            0x12
+#define CAMERA_MODE_FIXED 0x0D
+#define CAMERA_MODE_8_DIRECTIONS 0x0E // AKA Parallel Camera, Bowser Courses & Rainbow Ride
+#define CAMERA_MODE_FREE_ROAM 0x10
+#define CAMERA_MODE_SPIRAL_STAIRS 0x11
+#define CAMERA_MODE_NEWCAM 0x12
 
-#define CAM_MOVE_RETURN_TO_MIDDLE       0x0001
-#define CAM_MOVE_ZOOMED_OUT             0x0002
-#define CAM_MOVE_ROTATE_RIGHT           0x0004
-#define CAM_MOVE_ROTATE_LEFT            0x0008
+#define CAM_MOVE_RETURN_TO_MIDDLE 0x0001
+#define CAM_MOVE_ZOOMED_OUT 0x0002
+#define CAM_MOVE_ROTATE_RIGHT 0x0004
+#define CAM_MOVE_ROTATE_LEFT 0x0008
 #define CAM_MOVE_ENTERED_ROTATE_SURFACE 0x0010
-#define CAM_MOVE_METAL_BELOW_WATER      0x0020
-#define CAM_MOVE_FIX_IN_PLACE           0x0040
-#define CAM_MOVE_UNKNOWN_8              0x0080
-#define CAM_MOVING_INTO_MODE            0x0100
-#define CAM_MOVE_STARTED_EXITING_C_UP   0x0200
-#define CAM_MOVE_UNKNOWN_11             0x0400
-#define CAM_MOVE_INIT_CAMERA            0x0800
-#define CAM_MOVE_ALREADY_ZOOMED_OUT     0x1000
-#define CAM_MOVE_C_UP_MODE              0x2000
-#define CAM_MOVE_SUBMERGED              0x4000
-#define CAM_MOVE_PAUSE_SCREEN           0x8000
+#define CAM_MOVE_METAL_BELOW_WATER 0x0020
+#define CAM_MOVE_FIX_IN_PLACE 0x0040
+#define CAM_MOVE_UNKNOWN_8 0x0080
+#define CAM_MOVING_INTO_MODE 0x0100
+#define CAM_MOVE_STARTED_EXITING_C_UP 0x0200
+#define CAM_MOVE_UNKNOWN_11 0x0400
+#define CAM_MOVE_INIT_CAMERA 0x0800
+#define CAM_MOVE_ALREADY_ZOOMED_OUT 0x1000
+#define CAM_MOVE_C_UP_MODE 0x2000
+#define CAM_MOVE_SUBMERGED 0x4000
+#define CAM_MOVE_PAUSE_SCREEN 0x8000
 
 #define CAM_MOVE_ROTATE /**/ (CAM_MOVE_ROTATE_RIGHT | CAM_MOVE_ROTATE_LEFT | CAM_MOVE_RETURN_TO_MIDDLE)
 /// These flags force the camera to move a certain way
-#define CAM_MOVE_RESTRICT /**/ (CAM_MOVE_ENTERED_ROTATE_SURFACE | CAM_MOVE_METAL_BELOW_WATER | CAM_MOVE_FIX_IN_PLACE | CAM_MOVE_UNKNOWN_8)
+#define CAM_MOVE_RESTRICT /**/                                                                         \
+    (CAM_MOVE_ENTERED_ROTATE_SURFACE | CAM_MOVE_METAL_BELOW_WATER | CAM_MOVE_FIX_IN_PLACE              \
+     | CAM_MOVE_UNKNOWN_8)
 
-#define CAM_SOUND_C_UP_PLAYED            0x01
-#define CAM_SOUND_MARIO_ACTIVE           0x02
-#define CAM_SOUND_NORMAL_ACTIVE          0x04
-#define CAM_SOUND_UNUSED_SELECT_MARIO    0x08
-#define CAM_SOUND_UNUSED_SELECT_FIXED    0x10
-#define CAM_SOUND_FIXED_ACTIVE           0x20
+#define CAM_SOUND_C_UP_PLAYED 0x01
+#define CAM_SOUND_MARIO_ACTIVE 0x02
+#define CAM_SOUND_NORMAL_ACTIVE 0x04
+#define CAM_SOUND_UNUSED_SELECT_MARIO 0x08
+#define CAM_SOUND_UNUSED_SELECT_FIXED 0x10
+#define CAM_SOUND_FIXED_ACTIVE 0x20
 
-#define CAM_FLAG_SMOOTH_MOVEMENT         0x0001
-#define CAM_FLAG_BLOCK_SMOOTH_MOVEMENT   0x0002
-#define CAM_FLAG_FRAME_AFTER_CAM_INIT    0x0004
-#define CAM_FLAG_CHANGED_PARTRACK_INDEX  0x0008
-#define CAM_FLAG_CCM_SLIDE_SHORTCUT      0x0010
-#define CAM_FLAG_CAM_NEAR_WALL           0x0020
-#define CAM_FLAG_SLEEPING                0x0040
-#define CAM_FLAG_UNUSED_7                0x0080
-#define CAM_FLAG_UNUSED_8                0x0100
-#define CAM_FLAG_COLLIDED_WITH_WALL      0x0200
-#define CAM_FLAG_START_TRANSITION        0x0400
-#define CAM_FLAG_TRANSITION_OUT_OF_C_UP  0x0800
-#define CAM_FLAG_BLOCK_AREA_PROCESSING   0x1000
-#define CAM_FLAG_UNUSED_13               0x2000
-#define CAM_FLAG_UNUSED_CUTSCENE_ACTIVE  0x4000
-#define CAM_FLAG_BEHIND_MARIO_POST_DOOR  0x8000
+#define CAM_FLAG_SMOOTH_MOVEMENT 0x0001
+#define CAM_FLAG_BLOCK_SMOOTH_MOVEMENT 0x0002
+#define CAM_FLAG_FRAME_AFTER_CAM_INIT 0x0004
+#define CAM_FLAG_CHANGED_PARTRACK_INDEX 0x0008
+#define CAM_FLAG_CCM_SLIDE_SHORTCUT 0x0010
+#define CAM_FLAG_CAM_NEAR_WALL 0x0020
+#define CAM_FLAG_SLEEPING 0x0040
+#define CAM_FLAG_UNUSED_7 0x0080
+#define CAM_FLAG_UNUSED_8 0x0100
+#define CAM_FLAG_COLLIDED_WITH_WALL 0x0200
+#define CAM_FLAG_START_TRANSITION 0x0400
+#define CAM_FLAG_TRANSITION_OUT_OF_C_UP 0x0800
+#define CAM_FLAG_BLOCK_AREA_PROCESSING 0x1000
+#define CAM_FLAG_UNUSED_13 0x2000
+#define CAM_FLAG_UNUSED_CUTSCENE_ACTIVE 0x4000
+#define CAM_FLAG_BEHIND_MARIO_POST_DOOR 0x8000
 
-#define CAM_STATUS_NONE   0
-#define CAM_STATUS_MARIO  1 << 0
+#define CAM_STATUS_NONE 0
+#define CAM_STATUS_MARIO 1 << 0
 #define CAM_STATUS_LAKITU 1 << 1
-#define CAM_STATUS_FIXED  1 << 2
+#define CAM_STATUS_FIXED 1 << 2
 #define CAM_STATUS_C_DOWN 1 << 3
-#define CAM_STATUS_C_UP   1 << 4
+#define CAM_STATUS_C_UP 1 << 4
 
-#define CAM_STATUS_MODE_GROUP   (CAM_STATUS_MARIO | CAM_STATUS_LAKITU | CAM_STATUS_FIXED)
+#define CAM_STATUS_MODE_GROUP (CAM_STATUS_MARIO | CAM_STATUS_LAKITU | CAM_STATUS_FIXED)
 #define CAM_STATUS_C_MODE_GROUP (CAM_STATUS_C_DOWN | CAM_STATUS_C_UP)
 
-#define SHAKE_ATTACK         1
-#define SHAKE_GROUND_POUND   2
-#define SHAKE_SMALL_DAMAGE   3
-#define SHAKE_MED_DAMAGE     4
-#define SHAKE_LARGE_DAMAGE   5
+#define SHAKE_ATTACK 1
+#define SHAKE_GROUND_POUND 2
+#define SHAKE_SMALL_DAMAGE 3
+#define SHAKE_MED_DAMAGE 4
+#define SHAKE_LARGE_DAMAGE 5
 #define SHAKE_HIT_FROM_BELOW 8
-#define SHAKE_FALL_DAMAGE    9
-#define SHAKE_SHOCK          10
+#define SHAKE_FALL_DAMAGE 9
+#define SHAKE_SHOCK 10
 
-#define SHAKE_ENV_EXPLOSION           1
+#define SHAKE_ENV_EXPLOSION 1
 #define SHAKE_ENV_BOWSER_THROW_BOUNCE 2
-#define SHAKE_ENV_BOWSER_JUMP         3
-#define SHAKE_ENV_UNUSED_5            5
-#define SHAKE_ENV_UNUSED_6            6
-#define SHAKE_ENV_UNUSED_7            7
-#define SHAKE_ENV_PYRAMID_EXPLODE     8
-#define SHAKE_ENV_JRB_SHIP_DRAIN      9
-#define SHAKE_ENV_FALLING_BITS_PLAT   10
+#define SHAKE_ENV_BOWSER_JUMP 3
+#define SHAKE_ENV_UNUSED_5 5
+#define SHAKE_ENV_UNUSED_6 6
+#define SHAKE_ENV_UNUSED_7 7
+#define SHAKE_ENV_PYRAMID_EXPLODE 8
+#define SHAKE_ENV_JRB_SHIP_DRAIN 9
+#define SHAKE_ENV_FALLING_BITS_PLAT 10
 
-#define SHAKE_FOV_SMALL     1
-#define SHAKE_FOV_UNUSED    2
-#define SHAKE_FOV_MEDIUM    3
-#define SHAKE_FOV_LARGE     4
+#define SHAKE_FOV_SMALL 1
+#define SHAKE_FOV_UNUSED 2
+#define SHAKE_FOV_MEDIUM 3
+#define SHAKE_FOV_LARGE 4
 
-#define SHAKE_POS_SMALL         1
-#define SHAKE_POS_MEDIUM        2
-#define SHAKE_POS_LARGE         3
-#define SHAKE_POS_BOWLING_BALL  4
+#define SHAKE_POS_SMALL 1
+#define SHAKE_POS_MEDIUM 2
+#define SHAKE_POS_LARGE 3
+#define SHAKE_POS_BOWLING_BALL 4
 
-#define CUTSCENE_DOOR_PULL            130
-#define CUTSCENE_DOOR_PUSH            131
-#define CUTSCENE_ENTER_CANNON         133
-#define CUTSCENE_ENTER_PAINTING       134
-#define CUTSCENE_DEATH_EXIT           135
-#define CUTSCENE_DOOR_WARP            139
-#define CUTSCENE_DOOR_PULL_MODE       140
-#define CUTSCENE_DOOR_PUSH_MODE       141
-#define CUTSCENE_INTRO_PEACH          142
-#define CUTSCENE_DANCE_ROTATE         143
-#define CUTSCENE_ENTER_BOWSER_ARENA   144
-#define CUTSCENE_0F_UNUSED            145 // Never activated, stub cutscene functions
-#define CUTSCENE_UNUSED_EXIT          147 // Never activated
-#define CUTSCENE_SLIDING_DOORS_OPEN   149
-#define CUTSCENE_PREPARE_CANNON       150
-#define CUTSCENE_UNLOCK_KEY_DOOR      151
-#define CUTSCENE_STANDING_DEATH       152
-#define CUTSCENE_DEATH_ON_STOMACH     153
-#define CUTSCENE_DEATH_ON_BACK        154
-#define CUTSCENE_QUICKSAND_DEATH      155
-#define CUTSCENE_SUFFOCATION_DEATH    156
-#define CUTSCENE_EXIT_BOWSER_SUCC     157
-#define CUTSCENE_EXIT_BOWSER_DEATH    158 // Never activated
-#define CUTSCENE_WATER_DEATH          159 // Not in cutscene switch
-#define CUTSCENE_EXIT_PAINTING_SUCC   160
-#define CUTSCENE_CAP_SWITCH_PRESS     161
-#define CUTSCENE_DIALOG               162
-#define CUTSCENE_RACE_DIALOG          163
-#define CUTSCENE_ENTER_PYRAMID_TOP    164
-#define CUTSCENE_DANCE_FLY_AWAY       165
-#define CUTSCENE_DANCE_CLOSEUP        166
-#define CUTSCENE_KEY_DANCE            167
-#define CUTSCENE_SSL_PYRAMID_EXPLODE  168 // Never activated
-#define CUTSCENE_EXIT_SPECIAL_SUCC    169
-#define CUTSCENE_NONPAINTING_DEATH    170
-#define CUTSCENE_READ_MESSAGE         171
-#define CUTSCENE_ENDING               172
-#define CUTSCENE_STAR_SPAWN           173
-#define CUTSCENE_GRAND_STAR           174
-#define CUTSCENE_DANCE_DEFAULT        175
-#define CUTSCENE_RED_COIN_STAR_SPAWN  176
-#define CUTSCENE_END_WAVING           177
-#define CUTSCENE_CREDITS              178
-#define CUTSCENE_EXIT_WATERFALL       179
-#define CUTSCENE_EXIT_FALL_WMOTR      180
-#define CUTSCENE_ENTER_POOL           181
+#define CUTSCENE_DOOR_PULL 130
+#define CUTSCENE_DOOR_PUSH 131
+#define CUTSCENE_ENTER_CANNON 133
+#define CUTSCENE_ENTER_PAINTING 134
+#define CUTSCENE_DEATH_EXIT 135
+#define CUTSCENE_DOOR_WARP 139
+#define CUTSCENE_DOOR_PULL_MODE 140
+#define CUTSCENE_DOOR_PUSH_MODE 141
+#define CUTSCENE_INTRO_PEACH 142
+#define CUTSCENE_DANCE_ROTATE 143
+#define CUTSCENE_ENTER_BOWSER_ARENA 144
+#define CUTSCENE_0F_UNUSED 145   // Never activated, stub cutscene functions
+#define CUTSCENE_UNUSED_EXIT 147 // Never activated
+#define CUTSCENE_SLIDING_DOORS_OPEN 149
+#define CUTSCENE_PREPARE_CANNON 150
+#define CUTSCENE_UNLOCK_KEY_DOOR 151
+#define CUTSCENE_STANDING_DEATH 152
+#define CUTSCENE_DEATH_ON_STOMACH 153
+#define CUTSCENE_DEATH_ON_BACK 154
+#define CUTSCENE_QUICKSAND_DEATH 155
+#define CUTSCENE_SUFFOCATION_DEATH 156
+#define CUTSCENE_EXIT_BOWSER_SUCC 157
+#define CUTSCENE_EXIT_BOWSER_DEATH 158 // Never activated
+#define CUTSCENE_WATER_DEATH 159       // Not in cutscene switch
+#define CUTSCENE_EXIT_PAINTING_SUCC 160
+#define CUTSCENE_CAP_SWITCH_PRESS 161
+#define CUTSCENE_DIALOG 162
+#define CUTSCENE_RACE_DIALOG 163
+#define CUTSCENE_ENTER_PYRAMID_TOP 164
+#define CUTSCENE_DANCE_FLY_AWAY 165
+#define CUTSCENE_DANCE_CLOSEUP 166
+#define CUTSCENE_KEY_DANCE 167
+#define CUTSCENE_SSL_PYRAMID_EXPLODE 168 // Never activated
+#define CUTSCENE_EXIT_SPECIAL_SUCC 169
+#define CUTSCENE_NONPAINTING_DEATH 170
+#define CUTSCENE_READ_MESSAGE 171
+#define CUTSCENE_ENDING 172
+#define CUTSCENE_STAR_SPAWN 173
+#define CUTSCENE_GRAND_STAR 174
+#define CUTSCENE_DANCE_DEFAULT 175
+#define CUTSCENE_RED_COIN_STAR_SPAWN 176
+#define CUTSCENE_END_WAVING 177
+#define CUTSCENE_CREDITS 178
+#define CUTSCENE_EXIT_WATERFALL 179
+#define CUTSCENE_EXIT_FALL_WMOTR 180
+#define CUTSCENE_ENTER_POOL 181
 
 /**
  * Stop the cutscene.
  */
-#define CUTSCENE_STOP         0x8000
+#define CUTSCENE_STOP 0x8000
 /**
  * Play the current cutscene shot indefinitely (until canceled).
  */
-#define CUTSCENE_LOOP         0x7FFF
+#define CUTSCENE_LOOP 0x7FFF
 
-#define HAND_CAM_SHAKE_OFF                  0
-#define HAND_CAM_SHAKE_CUTSCENE             1
-#define HAND_CAM_SHAKE_UNUSED               2
-#define HAND_CAM_SHAKE_HANG_OWL             3
-#define HAND_CAM_SHAKE_HIGH                 4
-#define HAND_CAM_SHAKE_STAR_DANCE           5
-#define HAND_CAM_SHAKE_LOW                  6
+#define HAND_CAM_SHAKE_OFF 0
+#define HAND_CAM_SHAKE_CUTSCENE 1
+#define HAND_CAM_SHAKE_UNUSED 2
+#define HAND_CAM_SHAKE_HANG_OWL 3
+#define HAND_CAM_SHAKE_HIGH 4
+#define HAND_CAM_SHAKE_STAR_DANCE 5
+#define HAND_CAM_SHAKE_LOW 6
 
-#define DOOR_DEFAULT         0
+#define DOOR_DEFAULT 0
 #define DOOR_LEAVING_SPECIAL 1
-#define DOOR_ENTER_LOBBY     2
+#define DOOR_ENTER_LOBBY 2
 
 // Might rename these to reflect what they are used for instead "SET_45" etc.
-#define CAM_FOV_SET_45      1
-#define CAM_FOV_DEFAULT     2
-#define CAM_FOV_APP_45      4
-#define CAM_FOV_SET_30      5
-#define CAM_FOV_APP_20      6
-#define CAM_FOV_BBH         7
-#define CAM_FOV_APP_80      9
-#define CAM_FOV_APP_30      10
-#define CAM_FOV_APP_60      11
-#define CAM_FOV_ZOOM_30     12
-#define CAM_FOV_SET_29      13
+#define CAM_FOV_SET_45 1
+#define CAM_FOV_DEFAULT 2
+#define CAM_FOV_APP_45 4
+#define CAM_FOV_SET_30 5
+#define CAM_FOV_APP_20 6
+#define CAM_FOV_BBH 7
+#define CAM_FOV_APP_80 9
+#define CAM_FOV_APP_30 10
+#define CAM_FOV_APP_60 11
+#define CAM_FOV_ZOOM_30 12
+#define CAM_FOV_SET_29 13
 
-#define CAM_EVENT_CANNON              1
-#define CAM_EVENT_SHOT_FROM_CANNON    2
-#define CAM_EVENT_UNUSED_3            3
-#define CAM_EVENT_BOWSER_INIT         4
-#define CAM_EVENT_DOOR_WARP           5
-#define CAM_EVENT_DOOR                6
-#define CAM_EVENT_BOWSER_JUMP         7
+#define CAM_EVENT_CANNON 1
+#define CAM_EVENT_SHOT_FROM_CANNON 2
+#define CAM_EVENT_UNUSED_3 3
+#define CAM_EVENT_BOWSER_INIT 4
+#define CAM_EVENT_DOOR_WARP 5
+#define CAM_EVENT_DOOR 6
+#define CAM_EVENT_BOWSER_JUMP 7
 #define CAM_EVENT_BOWSER_THROW_BOUNCE 8
-#define CAM_EVENT_START_INTRO         9
-#define CAM_EVENT_START_GRAND_STAR    10
-#define CAM_EVENT_START_ENDING        11
-#define CAM_EVENT_START_END_WAVING    12
-#define CAM_EVENT_START_CREDITS       13
+#define CAM_EVENT_START_INTRO 9
+#define CAM_EVENT_START_GRAND_STAR 10
+#define CAM_EVENT_START_ENDING 11
+#define CAM_EVENT_START_END_WAVING 12
+#define CAM_EVENT_START_CREDITS 13
 
 /**
  * A copy of player information that is relevant to the camera.
  */
-struct PlayerCameraState
-{
+struct PlayerCameraState {
     /**
      * Mario's action on this frame.
      */
@@ -318,8 +313,7 @@ struct PlayerCameraState
  * Struct containing info that is used when transition_next_state() is called. Stores the intermediate
  * distances and angular displacements from lakitu's goal position and focus.
  */
-struct TransitionInfo
-{
+struct TransitionInfo {
     /*0x00*/ s16 posPitch;
     /*0x02*/ s16 posYaw;
     /*0x04*/ f32 posDist;
@@ -328,15 +322,15 @@ struct TransitionInfo
     /*0x0C*/ f32 focDist;
     /*0x10*/ s32 framesLeft;
     /*0x14*/ Vec3f marioPos;
-    /*0x20*/ u8 pad; // for the structs to align, there has to be an extra unused variable here. type is unknown.
+    /*0x20*/ u8 pad; // for the structs to align, there has to be an extra unused variable here. type is
+                     // unknown.
 };
 
 /**
  * A point that's used in a spline, controls the direction to move the camera in
  * during the shake effect.
  */
-struct HandheldShakePoint
-{
+struct HandheldShakePoint {
     /*0x00*/ s8 index; // only set to -1
     /*0x04 (aligned)*/ u32 pad;
     /*0x08*/ Vec3s point;
@@ -360,8 +354,7 @@ typedef CameraEvent CutsceneShot;
 /**
  * Defines a bounding box which activates an event while Mario is inside
  */
-struct CameraTrigger
-{
+struct CameraTrigger {
     /**
      * The area this should be checked in, or -1 if it should run in every area of the level.
      *
@@ -389,8 +382,7 @@ struct CameraTrigger
  * A camera shot that is active for a number of frames.
  * Together, a sequence of shots makes up a cutscene.
  */
-struct Cutscene
-{
+struct Cutscene {
     /// The function that gets called.
     CutsceneShot shot;
     /// How long the shot lasts.
@@ -400,9 +392,9 @@ struct Cutscene
 /**
  * Info for the camera's field of view and the FOV shake effect.
  */
-struct CameraFOVStatus
-{
-    /// The current function being used to set the camera's field of view (before any fov shake is applied).
+struct CameraFOVStatus {
+    /// The current function being used to set the camera's field of view (before any fov shake is
+    /// applied).
     /*0x00*/ u8 fovFunc;
     /// The current field of view in degrees
     /*0x04*/ f32 fov;
@@ -426,8 +418,7 @@ struct CameraFOVStatus
 /**
  * Information for a control point in a spline segment.
  */
-struct CutsceneSplinePoint
-{
+struct CutsceneSplinePoint {
     /* The index of this point in the spline. Ignored except for -1, which ends the spline.
        An index of -1 should come four points after the start of the last segment. */
     s8 index;
@@ -441,8 +432,7 @@ struct CutsceneSplinePoint
  * Struct containing the nearest floor and ceiling to the player, as well as the previous floor and
  * ceiling. It also stores their distances from the player's position.
  */
-struct PlayerGeometry
-{
+struct PlayerGeometry {
     /*0x00*/ struct Surface *currFloor;
     /*0x04*/ f32 currFloorHeight;
     /*0x08*/ s16 currFloorType;
@@ -462,8 +452,7 @@ struct PlayerGeometry
 /**
  * Point used in transitioning between camera modes and C-Up.
  */
-struct LinearTransitionPoint
-{
+struct LinearTransitionPoint {
     Vec3f focus;
     Vec3f pos;
     f32 dist;
@@ -474,8 +463,7 @@ struct LinearTransitionPoint
 /**
  * Info about transitioning between camera modes.
  */
-struct ModeTransitionInfo
-{
+struct ModeTransitionInfo {
     s16 newMode;
     s16 lastMode;
     s16 max;
@@ -487,8 +475,7 @@ struct ModeTransitionInfo
 /**
  * A point in a path used by update_parallel_tracking_camera
  */
-struct ParallelTrackingPoint
-{
+struct ParallelTrackingPoint {
     /// Whether this point is the start of a path
     s16 startOfPath;
     /// Point used to define a line segment to follow
@@ -502,8 +489,7 @@ struct ParallelTrackingPoint
 /**
  * Stores the camera's info
  */
-struct CameraStoredInfo
-{
+struct CameraStoredInfo {
     /*0x00*/ Vec3f pos;
     /*0x0C*/ Vec3f focus;
     /*0x18*/ f32 panDist;
@@ -515,8 +501,7 @@ struct CameraStoredInfo
  *
  * See the sCutsceneVars[] array in camera.c for more details.
  */
-struct CutsceneVariable
-{
+struct CutsceneVariable {
     /// Perhaps an index
     s32 unused1;
     Vec3f point;
@@ -531,17 +516,16 @@ struct CutsceneVariable
  * update_lakitu, its pos and focus are used to calculate lakitu's next position and focus, which are
  * then used to render the game.
  */
-struct Camera
-{
+struct Camera {
     /*0x00*/ u8 mode; // What type of mode the camera uses (see defines above)
     /*0x01*/ u8 defMode;
     /**
      * Determines what direction Mario moves in when the analog stick is moved.
      *
-     * @warning This is NOT the camera's xz-rotation in world space. This is the angle calculated from the
-     *          camera's focus TO the camera's position, instead of the other way around like it should
-     *          be. It's effectively the opposite of the camera's actual yaw. Use
-     *          vec3f_get_dist_and_angle() if you need the camera's yaw.
+     * @warning This is NOT the camera's xz-rotation in world space. This is the angle calculated from
+     * the camera's focus TO the camera's position, instead of the other way around like it should be.
+     * It's effectively the opposite of the camera's actual yaw. Use vec3f_get_dist_and_angle() if you
+     * need the camera's yaw.
      */
     /*0x02*/ s16 yaw;
     /*0x04*/ Vec3f focus;
@@ -571,14 +555,15 @@ struct Camera
  *
  * @see update_lakitu()
  */
-struct LakituState
-{
+struct LakituState {
     /**
-     * Lakitu's position, which (when CAM_FLAG_SMOOTH_MOVEMENT is set), approaches his goalPos every frame.
+     * Lakitu's position, which (when CAM_FLAG_SMOOTH_MOVEMENT is set), approaches his goalPos every
+     * frame.
      */
     /*0x00*/ Vec3f curFocus;
     /**
-     * Lakitu's focus, which (when CAM_FLAG_SMOOTH_MOVEMENT is set), approaches his goalFocus every frame.
+     * Lakitu's focus, which (when CAM_FLAG_SMOOTH_MOVEMENT is set), approaches his goalFocus every
+     * frame.
      */
     /*0x0C*/ Vec3f curPos;
     /**
@@ -602,9 +587,9 @@ struct LakituState
     /*0x3E*/ u8 filler3E[10];
 
     /*0x48*/ f32 focusDistance; // unused
-    /*0x4C*/ s16 oldPitch; // unused
-    /*0x4E*/ s16 oldYaw;   // unused
-    /*0x50*/ s16 oldRoll;  // unused
+    /*0x4C*/ s16 oldPitch;      // unused
+    /*0x4E*/ s16 oldYaw;        // unused
+    /*0x50*/ s16 oldRoll;       // unused
 
     /// The angular offsets added to lakitu's pitch, yaw, and roll
     /*0x52*/ Vec3s shakeMagnitude;
@@ -659,7 +644,8 @@ struct LakituState
     u32 skipCameraInterpolationTimestamp;
 };
 
-// bss order hack to not affect BSS order. if possible, remove me, but it will be hard to match otherwise
+// bss order hack to not affect BSS order. if possible, remove me, but it will be hard to match
+// otherwise
 #ifndef INCLUDED_FROM_CAMERA_C
 // BSS
 extern s16 sSelectionFlags;
@@ -694,7 +680,8 @@ void stub_camera_3(UNUSED struct Camera *c);
 void vec3f_sub(Vec3f dst, Vec3f src);
 void object_pos_to_vec3f(Vec3f dst, struct Object *o);
 void vec3f_to_object_pos(struct Object *o, Vec3f src);
-s32 move_point_along_spline(Vec3f p, struct CutsceneSplinePoint spline[], s16 *splineSegment, f32 *progress);
+s32 move_point_along_spline(Vec3f p, struct CutsceneSplinePoint spline[], s16 *splineSegment,
+                            f32 *progress);
 s32 cam_select_alt_mode(s32 angle);
 s32 set_cam_angle(s32 mode);
 void set_handheld_shake(u8 mode);
@@ -751,7 +738,8 @@ u8 get_cutscene_from_mario_status(struct Camera *c);
 void warp_camera(f32 displacementX, f32 displacementY, f32 displacementZ);
 void approach_camera_height(struct Camera *c, f32 goal, f32 inc);
 void offset_rotated(Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);
-s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);
+s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos,
+                      Vec3f oldFoc, s16 yaw);
 void set_fixed_cam_axis_sa_lobby(UNUSED s16 preset);
 s16 camera_course_processing(struct Camera *c);
 void resolve_geometry_collisions(Vec3f pos, UNUSED Vec3f lastGood);
@@ -762,14 +750,15 @@ s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID);
 s16 cutscene_object_without_dialog(u8 cutscene, struct Object *o);
 s16 cutscene_object(u8 cutscene, struct Object *o);
 void play_cutscene(struct Camera *c);
-s32 cutscene_event(CameraEvent event, struct Camera * c, s16 start, s16 end);
+s32 cutscene_event(CameraEvent event, struct Camera *c, s16 start, s16 end);
 s32 cutscene_spawn_obj(u32 obj, s16 frame);
 void set_fov_shake(s16 amplitude, s16 decay, s16 shakeSpeed);
 
 void set_fov_function(u8 func);
 void cutscene_set_fov_shake_preset(u8 preset);
 void set_fov_shake_from_point_preset(u8 preset, f32 posX, f32 posY, f32 posZ);
-void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 yawOff, s16 pitchDiv, s16 yawDiv);
+void obj_rotate_towards_point(struct Object *o, Vec3f point, s16 pitchOff, s16 yawOff, s16 pitchDiv,
+                              s16 yawDiv);
 
 Gfx *geo_camera_fov(s32 callContext, struct GraphNode *g, UNUSED void *context);
 

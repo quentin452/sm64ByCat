@@ -103,10 +103,10 @@ const char *credits15[] = { "2PROGRESS MANAGEMENT", "KIMIYOSHI FUKUI", "KEIZO KA
 const char *credits16[] = { "5SCREEN TEXT WRITER", "TRANSLATION", "LESLIE SWAN", "MINA AKINO",
                             "HIRO YAMADA" }; // ...in order to make room for these 2 new lines
 #else // VERSION_EU
-const char *credits09[] = { "7SOUND COMPOSER", "SOUND EFFECTS", "SOUND PROGRAMMER", "KOJI KONDO",
-                            "YOJI INAGAKI", "HIDEAKI SHIMIZU" };
-const char *credits10[] = { "63-D ANIMATORS", "ADDITIONAL GRAPHICS", "YOSHIAKI KOIZUMI", "SATORU TAKIZAWA",
-                            "MASANAO ARIMOTO" };
+const char *credits09[] = { "7SOUND COMPOSER", "SOUND EFFECTS", "SOUND PROGRAMMER",
+                            "KOJI KONDO",      "YOJI INAGAKI",  "HIDEAKI SHIMIZU" };
+const char *credits10[] = { "63-D ANIMATORS", "ADDITIONAL GRAPHICS", "YOSHIAKI KOIZUMI",
+                            "SATORU TAKIZAWA", "MASANAO ARIMOTO" };
 const char *credits11[] = { "3TECHNICAL SUPPORT", "TAKAO SAWANO", "HIROHITO YOSHIMOTO", "HIROTO YADA" };
 const char *credits12[] = { "1TECHNICAL SUPPORT", "SGI N64 PROJECT STAFF" };
 const char *credits13[] = { "2PROGRESS MANAGEMENT", "KIMIYOSHI FUKUI", "KEIZO KATO" };
@@ -120,14 +120,13 @@ const char *credits16[] = { "4SCREEN TEXT WRITER", "GERMAN TRANSLATION", "THOMAS
 const char *credits17[] = { "4MARIO VOICE", "PEACH VOICE", "CHARLES MARTINET", "LESLIE SWAN" };
 const char *credits18[] = { "3SPECIAL THANKS TO", "EAD STAFF", "ALL NINTENDO PERSONNEL",
 #ifdef VERSION_US
-                           "MARIO CLUB STAFF" };
+                            "MARIO CLUB STAFF" };
 #else // VERSION_EU
-                           "SUPER MARIO CLUB STAFF" };
+                            "SUPER MARIO CLUB STAFF" };
 #endif
 const char *credits19[] = { "1PRODUCER", "SHIGERU MIYAMOTO" };
 const char *credits20[] = { "1EXECUTIVE PRODUCER", "HIROSHI YAMAUCHI" };
 #endif
-
 
 struct CreditsEntry sCreditsSequence[] = {
     { LEVEL_CASTLE_GROUNDS, 1, 1, -128, { 0, 8000, 0 }, NULL },
@@ -632,8 +631,8 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3) {
 
 // From Surface 0xD3 to 0xFC
 #define PAINTING_WARP_INDEX_START 0x00 // Value greater than or equal to Surface 0xD3
-#define PAINTING_WARP_INDEX_FA 0x2A    // THI Huge Painting index left
-#define PAINTING_WARP_INDEX_END 0x2D   // Value less than Surface 0xFD
+#define PAINTING_WARP_INDEX_FA 0x2A // THI Huge Painting index left
+#define PAINTING_WARP_INDEX_END 0x2D // Value less than Surface 0xFD
 
 /**
  * Check if Mario is above and close to a painting warp floor, and return the
@@ -706,7 +705,9 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
         switch (warpOp) {
             case WARP_OP_DEMO_NEXT:
             case WARP_OP_DEMO_END:
-                do {sDelayedWarpTimer = 20;} while (0);
+                do {
+                    sDelayedWarpTimer = 20;
+                } while (0);
                 sSourceWarpNodeId = WARP_NODE_F0;
                 gSavedCourseNum = COURSE_NONE;
                 val04 = FALSE;
@@ -1216,7 +1217,7 @@ s32 init_level(void) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
     }
-    
+
     if (gCurrDemoInput == NULL) {
         cancel_rumble();
     }
@@ -1266,7 +1267,8 @@ s32 lvl_init_from_save_file(UNUSED s16 arg0, s32 levelNum) {
 #endif
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
     sDelayedWarpOp = WARP_OP_NONE;
-    gShouldNotPlayCastleMusic = !save_file_exists(gCurrSaveFileNum - 1) && gCLIOpts.SkipIntro == 0 && configSkipIntro == 0;
+    gShouldNotPlayCastleMusic =
+        !save_file_exists(gCurrSaveFileNum - 1) && gCLIOpts.SkipIntro == 0 && configSkipIntro == 0;
 
     gCurrLevelNum = levelNum;
     gCurrCourseNum = COURSE_NONE;

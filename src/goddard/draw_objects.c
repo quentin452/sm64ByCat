@@ -357,7 +357,8 @@ void check_face_bad_vtx(struct ObjFace *face) {
             return;
         }
         if ((uintptr_t) vtx->gbiVerts == 0x3F800000) {
-            fatal_printf("bad2 %x,%d,%d,%d\n", (u32) (uintptr_t) vtx, vtx->scaleFactor, vtx->id, vtx->header.type);
+            fatal_printf("bad2 %x,%d,%d,%d\n", (u32)(uintptr_t) vtx, vtx->scaleFactor, vtx->id,
+                         vtx->header.type);
         }
     }
 }
@@ -696,17 +697,16 @@ void func_80179B64(struct ObjGroup *group) {
 }
 
 // plc again
-void func_80179B9C(struct GdVec3f *pos, struct ObjCamera *cam, struct ObjView *view)
-{
+void func_80179B9C(struct GdVec3f *pos, struct ObjCamera *cam, struct ObjView *view) {
     f32 aspect = GFX_DIMENSIONS_ASPECT_RATIO;
     aspect *= 0.75;
-    //func_80196430(pos, &cam->unkE8);
+    // func_80196430(pos, &cam->unkE8);
     gd_rotate_and_translate_vec3f(pos, &cam->unkE8);
 
     if (pos->z > -256.0f) {
         return;
     }
-    
+
     pos->x *= 256.0 / -pos->z / aspect;
     pos->y *= 256.0 / pos->z;
     pos->x += view->lowerRight.x / 2.0f;
@@ -778,9 +778,10 @@ void drawscene(enum SceneType process, struct ObjGroup *interactables, struct Ob
     restart_timer("draw1");
     set_gd_mtx_parameters(G_MTX_PROJECTION | G_MTX_MUL | G_MTX_PUSH);
     if (sUpdateViewState.view->unk38 == 1) {
-        gd_create_perspective_matrix(sUpdateViewState.view->clipping.z,
-                      sUpdateViewState.view->lowerRight.x / sUpdateViewState.view->lowerRight.y,
-                      sUpdateViewState.view->clipping.x, sUpdateViewState.view->clipping.y);
+        gd_create_perspective_matrix(
+            sUpdateViewState.view->clipping.z,
+            sUpdateViewState.view->lowerRight.x / sUpdateViewState.view->lowerRight.y,
+            sUpdateViewState.view->clipping.x, sUpdateViewState.view->clipping.y);
     } else {
         gd_create_ortho_matrix(
             -sUpdateViewState.view->lowerRight.x / 2.0, sUpdateViewState.view->lowerRight.x / 2.0,
@@ -1269,7 +1270,7 @@ void find_thisface_verts(struct ObjFace *face, struct ObjGroup *verts) {
             if (link->obj->type == OBJ_TYPE_VERTICES || link->obj->type == OBJ_TYPE_PARTICLES) {
                 // it seems that the vertices in a face are first pointer-sized indices
                 // to a given vertix or particle link in the second argument's group.
-                if (linkVtxIdx++ == (u32) (uintptr_t) face->vertices[i]) {
+                if (linkVtxIdx++ == (u32)(uintptr_t) face->vertices[i]) {
                     break;
                 }
             }

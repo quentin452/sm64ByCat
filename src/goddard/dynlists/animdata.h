@@ -2,7 +2,8 @@
 #define GD_ANIMDATA_H
 
 #include "../gd_types.h"
-#define END_ANIMDATA_INFO_ARR { -1, GD_ANIM_EMPTY, NULL }
+#define END_ANIMDATA_INFO_ARR                                                                          \
+    { -1, GD_ANIM_EMPTY, NULL }
 
 extern struct AnimDataInfo anim_mario_mustache_right[3];
 extern struct AnimDataInfo anim_mario_mustache_left[3];

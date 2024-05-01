@@ -10,11 +10,11 @@
 
 // FS_BASEDIR is usually defined in the build script
 #ifndef FS_BASEDIR
-# define FS_BASEDIR "res"
+#define FS_BASEDIR "res"
 #endif
 
 #ifndef FS_BASEPACK_PREFIX
-# define FS_BASEPACK_PREFIX "base"
+#define FS_BASEPACK_PREFIX "base"
 #endif
 
 #define FS_TEXTUREDIR "gfx"
@@ -60,28 +60,36 @@ typedef struct {
     void (*unmount)(void *pack);       // free pack
 
     // walks the specified directory inside this pack, calling walkfn for each file
-    // returns FS_WALK_SUCCESS if the directory was successfully opened and walk() didn't ever return false
-    // returns FS_WALK_INTERRUPTED if the traversal started but walk() returned false at some point
-    // if recur is true, will recurse into subfolders
-    fs_walk_result_t (*walk)(void *pack, const char *base, walk_fn_t walkfn, void *user, const bool recur);
+    // returns FS_WALK_SUCCESS if the directory was successfully opened and walk() didn't ever return
+    // false returns FS_WALK_INTERRUPTED if the traversal started but walk() returned false at some
+    // point if recur is true, will recurse into subfolders
+    fs_walk_result_t (*walk)(void *pack, const char *base, walk_fn_t walkfn, void *user,
+                             const bool recur);
 
-    bool (*is_file)(void *pack, const char *path); // returns true if `path` exists in this pack and is a file
-    bool (*is_dir)(void *pack, const char *path);  // returns true if `path` exists in this pack and is a directory
+    bool (*is_file)(void *pack,
+                    const char *path); // returns true if `path` exists in this pack and is a file
+    bool (*is_dir)(void *pack,
+                   const char *path); // returns true if `path` exists in this pack and is a directory
 
     // file I/O functions; paths are virtual
-    fs_file_t *(*open)(void *pack, const char *path); // opens a virtual file contained in this pack for reading, returns NULL in case of error
-    int64_t (*read)(void *pack, fs_file_t *file, void *buf, const uint64_t size); // returns -1 in case of error
+    fs_file_t *(*open)(void *pack, const char *path); // opens a virtual file contained in this pack for
+                                                      // reading, returns NULL in case of error
+    int64_t (*read)(void *pack, fs_file_t *file, void *buf,
+                    const uint64_t size);                         // returns -1 in case of error
     bool (*seek)(void *pack, fs_file_t *file, const int64_t ofs); // returns true if seek succeeded
-    int64_t (*tell)(void *pack, fs_file_t *file); // returns -1 in case of error, current virtual file position otherwise
-    int64_t (*size)(void *pack, fs_file_t *file); // returns -1 in case of error, size of the (uncompressed) file otherwise
-    bool (*eof)(void *pack, fs_file_t *file);     // returns true if there's nothing more to read
-    void (*close)(void *pack, fs_file_t *file);   // closes a virtual file previously opened with ->open()
+    int64_t (*tell)(
+        void *pack,
+        fs_file_t *file); // returns -1 in case of error, current virtual file position otherwise
+    int64_t (*size)(
+        void *pack,
+        fs_file_t *file); // returns -1 in case of error, size of the (uncompressed) file otherwise
+    bool (*eof)(void *pack, fs_file_t *file);   // returns true if there's nothing more to read
+    void (*close)(void *pack, fs_file_t *file); // closes a virtual file previously opened with ->open()
 } fs_packtype_t;
 
 // takes the supplied NULL-terminated list of read-only directories and mounts all the packs in them,
-// then mounts the directories themselves, then mounts all the packs in `gamedir`, then mounts `gamedir` itself,
-// then does the same with `userdir`
-// initializes the `fs_gamedir` and `fs_userdir` variables
+// then mounts the directories themselves, then mounts all the packs in `gamedir`, then mounts `gamedir`
+// itself, then does the same with `userdir` initializes the `fs_gamedir` and `fs_userdir` variables
 bool fs_init(const char **rodirs, const char *gamedir, const char *userdir);
 
 // mounts the pack at physical path `realpath` to the root of the filesystem
@@ -91,7 +99,8 @@ bool fs_mount(const char *realpath);
 // removes the pack at physical path from the virtual filesystem
 bool fs_unmount(const char *realpath);
 
-/* generalized filesystem functions that call matching packtype functions for each pack in the searchpath */
+/* generalized filesystem functions that call matching packtype functions for each pack in the
+ * searchpath */
 
 // FIXME: this can walk in unorthodox patterns, since it goes through mountpoints linearly
 fs_walk_result_t fs_walk(const char *base, walk_fn_t walkfn, void *user, const bool recur);

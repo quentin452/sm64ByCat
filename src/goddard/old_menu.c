@@ -70,7 +70,7 @@ void cat_grp_name_to_buf(struct ObjGroup *group) {
     char buf[0x100]; // sp18
 
     if (group->debugPrint == 1) {
-        sprintf(buf, "| %s %%x%d", group->name, (u32) (uintptr_t) group);
+        sprintf(buf, "| %s %%x%d", group->name, (u32)(uintptr_t) group);
         gd_strcat(sMenuStrBuf, buf); // gd_strcat?
     }
 }

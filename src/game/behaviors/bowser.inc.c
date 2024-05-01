@@ -33,9 +33,11 @@ s16 D_8032F50C[] = { 60, 0 };
 s16 D_8032F510[] = { 50, 0 };
 s8 D_8032F514[] = { 24, 42, 60, -1 };
 s16 sBowserDefeatedDialogText[3] = { DIALOG_119, DIALOG_120, DIALOG_121 };
-s16 D_8032F520[][3] = { { 1, 10, 40 },   { 0, 0, 74 },    { -1, -10, 114 },  { 1, -20, 134 },
-                        { -1, 20, 154 }, { 1, 40, 164 },  { -1, -40, 174 },  { 1, -80, 179 },
-                        { -1, 80, 184 }, { 1, 160, 186 }, { -1, -160, 186 }, { 1, 0, 0 }, };
+s16 D_8032F520[][3] = {
+    { 1, 10, 40 },   { 0, 0, 74 },    { -1, -10, 114 },  { 1, -20, 134 },
+    { -1, 20, 154 }, { 1, 40, 164 },  { -1, -40, 174 },  { 1, -80, 179 },
+    { -1, 80, 184 }, { 1, 160, 186 }, { -1, -160, 186 }, { 1, 0, 0 },
+};
 
 void bhv_bowser_tail_anchor_loop(void) {
     cur_obj_call_action_function(sBowserTailAnchorActions);
@@ -606,8 +608,7 @@ void bowser_act_charge_mario(void) {
             o->oBowserUnkF8 = 0;
             cur_obj_init_animation_with_sound(21);
             spawn_object_relative_with_scale(0, 100, -50, 0, 3.0f, o, MODEL_SMOKE, bhvWhitePuffSmoke2);
-            spawn_object_relative_with_scale(0, -100, -50, 0, 3.0f, o, MODEL_SMOKE,
-                                             bhvWhitePuffSmoke2);
+            spawn_object_relative_with_scale(0, -100, -50, 0, 3.0f, o, MODEL_SMOKE, bhvWhitePuffSmoke2);
             if (approach_f32_signed(&o->oForwardVel, 0, -1.0f))
                 o->oSubAction = 2;
             cur_obj_extend_animation_if_at_end();
@@ -642,8 +643,7 @@ s32 bowser_check_hit_mine(void) {
     return 0;
 }
 
-void bowser_act_thrown_dropped(void)
-{
+void bowser_act_thrown_dropped(void) {
     UNUSED s32 unused;
     if (o->oTimer < 2)
         o->oBowserUnkF8 = 0;
@@ -972,11 +972,26 @@ s32 bowser_check_fallen_off_stage(void) // bowser off stage?
     return 0;
 }
 
-void (*sBowserActions[])(void) = { bowser_act_default,  bowser_act_thrown_dropped,  bowser_act_jump_onto_stage,  bowser_act_dance,
-                                   bowser_act_dead,  bowser_act_text_wait,  bowser_act_intro_walk,  bowser_act_charge_mario,
-                                   bowser_act_spit_fire_into_sky,  bowser_act_spit_fire_onto_floor,  bowser_act_hit_edge, bowser_act_turn_from_edge,
-                                   bowser_act_hit_mine, bowser_act_jump, bowser_act_walk_to_mario, bowser_act_breath_fire,
-                                   bowser_act_teleport, bowser_act_jump_towards_mario, bowser_act_unused_slow_walk, bowser_act_ride_tilting_platform };
+void (*sBowserActions[])(void) = { bowser_act_default,
+                                   bowser_act_thrown_dropped,
+                                   bowser_act_jump_onto_stage,
+                                   bowser_act_dance,
+                                   bowser_act_dead,
+                                   bowser_act_text_wait,
+                                   bowser_act_intro_walk,
+                                   bowser_act_charge_mario,
+                                   bowser_act_spit_fire_into_sky,
+                                   bowser_act_spit_fire_onto_floor,
+                                   bowser_act_hit_edge,
+                                   bowser_act_turn_from_edge,
+                                   bowser_act_hit_mine,
+                                   bowser_act_jump,
+                                   bowser_act_walk_to_mario,
+                                   bowser_act_breath_fire,
+                                   bowser_act_teleport,
+                                   bowser_act_jump_towards_mario,
+                                   bowser_act_unused_slow_walk,
+                                   bowser_act_ride_tilting_platform };
 struct SoundState D_8032F5B8[] = { { 0, 0, 0, NO_SOUND },
                                    { 0, 0, 0, NO_SOUND },
                                    { 0, 0, 0, NO_SOUND },
@@ -1272,7 +1287,8 @@ Gfx *geo_bits_bowser_coloring(s32 run, struct GraphNode *node, UNUSED s32 a2) {
         if (sp24->oOpacity == 0xFF)
             sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | GRAPH_NODE_TYPE_FUNCTIONAL;
         else
-            sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
+            sp20->fnNode.node.flags =
+                (sp20->fnNode.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
         sp28 = sp2C = alloc_display_list(2 * sizeof(Gfx));
 
         if (sp24->oBowserUnk1B2 != 0) {
@@ -1338,8 +1354,7 @@ void falling_bowser_plat_act_2(void) {
         obj_mark_for_deletion(o);
 }
 
-void (*sFallingBowserPlatformActions[])(void) = { falling_bowser_plat_act_0,
-                                                  falling_bowser_plat_act_1,
+void (*sFallingBowserPlatformActions[])(void) = { falling_bowser_plat_act_0, falling_bowser_plat_act_1,
                                                   falling_bowser_plat_act_2 };
 
 struct ObjectHitbox sGrowingBowserFlameHitbox = {

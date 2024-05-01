@@ -226,7 +226,7 @@ void draw_profiler_mode_0(void) {
 
     // was thread 5 ran before thread 4? set the lower one to be the clockStart.
     clockStart = profiler->gameTimes[0] <= profiler->soundTimes[0] ? profiler->gameTimes[0]
-                                                                    : profiler->soundTimes[0];
+                                                                   : profiler->soundTimes[0];
 
     // set variables for duration of tasks.
     levelScriptDuration = profiler->gameTimes[1] - clockStart;
@@ -278,8 +278,7 @@ void draw_profiler_mode_0(void) {
 
     // draw render duration. (orange)
     clockStart += levelScriptDuration;
-    draw_profiler_bar(0, clockStart, clockStart + renderDuration, 212,
-                      GPACK_RGBA5551(255, 120, 40, 1));
+    draw_profiler_bar(0, clockStart, clockStart + renderDuration, 212, GPACK_RGBA5551(255, 120, 40, 1));
 
     // Draw bottom profilers.
 

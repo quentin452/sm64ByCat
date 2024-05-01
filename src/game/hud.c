@@ -68,7 +68,7 @@ void patch_interpolated_hud(void) {
         Mtx *mtx = alloc_display_list(sizeof(Mtx));
         guTranslate(mtx, (f32) sPowerMeterHUD.x, (f32) sPowerMeterHUD.y, 0);
         gSPMatrix(sPowerMeterDisplayListPos, VIRTUAL_TO_PHYSICAL(mtx),
-              G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
+                  G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
         sPowerMeterDisplayListPos = NULL;
     }
 }
@@ -89,11 +89,13 @@ void render_hud_tex_lut(s32 x, s32 y, u8 *texture) {
  */
 void render_hud_small_tex_lut(s32 x, s32 y, u8 *texture) {
     gDPSetTile(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0,
-                G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD);
+               G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR,
+               G_TX_NOMASK, G_TX_NOLOD);
     gDPTileSync(gDisplayListHead++);
-    gDPSetTile(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 2, 0, G_TX_RENDERTILE, 0,
-                G_TX_CLAMP, 3, G_TX_NOLOD, G_TX_CLAMP, 3, G_TX_NOLOD);
-    gDPSetTileSize(gDisplayListHead++, G_TX_RENDERTILE, 0, 0, (8 - 1) << G_TEXTURE_IMAGE_FRAC, (8 - 1) << G_TEXTURE_IMAGE_FRAC);
+    gDPSetTile(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 2, 0, G_TX_RENDERTILE, 0, G_TX_CLAMP, 3,
+               G_TX_NOLOD, G_TX_CLAMP, 3, G_TX_NOLOD);
+    gDPSetTileSize(gDisplayListHead++, G_TX_RENDERTILE, 0, 0, (8 - 1) << G_TEXTURE_IMAGE_FRAC,
+                   (8 - 1) << G_TEXTURE_IMAGE_FRAC);
     gDPPipeSync(gDisplayListHead++);
     gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, texture);
     gDPLoadSync(gDisplayListHead++);
@@ -114,7 +116,8 @@ void render_power_meter_health_segment(s16 numHealthWedges) {
     gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1,
                        (*healthLUT)[numHealthWedges - 1]);
     gDPLoadSync(gDisplayListHead++);
-    gDPLoadBlock(gDisplayListHead++, G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES));
+    gDPLoadBlock(gDisplayListHead++, G_TX_LOADTILE, 0, 0, 32 * 32 - 1,
+                 CALC_DXT(32, G_IM_SIZ_16b_BYTES));
     gSP1Triangle(gDisplayListHead++, 0, 1, 2, 0);
     gSP1Triangle(gDisplayListHead++, 0, 2, 3, 0);
 }
@@ -143,8 +146,7 @@ void render_dl_power_meter(s16 numHealthWedges) {
     sPowerMeterLastRenderTimestamp = gGlobalTimer;
     sPowerMeterDisplayListPos = gDisplayListHead;
 
-    gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx++),
-              G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
+    gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx++), G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
     gSPDisplayList(gDisplayListHead++, &dl_power_meter_base);
 
     if (numHealthWedges != 0) {
@@ -217,7 +219,8 @@ static void animate_power_meter_hiding(void) {
  */
 void handle_power_meter_actions(s16 numHealthWedges) {
     // Show power meter if health is not full, less than 8
-    if (numHealthWedges < 8 && sPowerMeterStoredHealth == 8 && sPowerMeterHUD.animation == POWER_METER_HIDDEN) {
+    if (numHealthWedges < 8 && sPowerMeterStoredHealth == 8
+        && sPowerMeterHUD.animation == POWER_METER_HIDDEN) {
         sPowerMeterHUD.animation = POWER_METER_EMPHASIZED;
         sPowerMeterHUD.y = 166;
     }
@@ -330,8 +333,8 @@ void render_hud_stars(void) {
     if (showX == 1) {
         print_text(GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(HUD_STARS_X) + 16, HUD_TOP_Y, "*"); // 'X' glyph
     }
-    print_text_fmt_int((showX * 14) + GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(HUD_STARS_X - 16),
-                       HUD_TOP_Y, "%d", gHudDisplay.stars);
+    print_text_fmt_int((showX * 14) + GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(HUD_STARS_X - 16), HUD_TOP_Y,
+                       "%d", gHudDisplay.stars);
 }
 
 /**
@@ -467,7 +470,7 @@ void render_hud(void) {
         guOrtho(mtx, -16.0f, SCREEN_WIDTH + 16, 0, SCREEN_HEIGHT, -10.0f, 10.0f, 1.0f);
         gSPPerspNormalize(gDisplayListHead++, 0xFFFF);
         gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx),
-                G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH);
+                  G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH);
 #else
         create_dl_ortho_matrix();
 #endif

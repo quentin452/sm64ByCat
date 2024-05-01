@@ -154,11 +154,14 @@ s32 act_idle(struct MarioState *m) {
             // and that he's gone through 10 cycles before sleeping.
             // actionTimer is used to track how many cycles have passed.
             if (++m->actionState == 3) {
-                f32 deltaYOfFloorBehindMario = m->pos[1] - find_floor_height_relative_polar(m, -0x8000, 60.0f);
-                if (deltaYOfFloorBehindMario < -24.0f || 24.0f < deltaYOfFloorBehindMario || m->floor->flags & SURFACE_FLAG_DYNAMIC) {
+                f32 deltaYOfFloorBehindMario =
+                    m->pos[1] - find_floor_height_relative_polar(m, -0x8000, 60.0f);
+                if (deltaYOfFloorBehindMario < -24.0f || 24.0f < deltaYOfFloorBehindMario
+                    || m->floor->flags & SURFACE_FLAG_DYNAMIC) {
                     m->actionState = 0;
                 } else {
-                    // If Mario hasn't turned his head 10 times yet, stay idle instead of going to sleep.
+                    // If Mario hasn't turned his head 10 times yet, stay idle instead of going to
+                    // sleep.
                     m->actionTimer++;
                     if (m->actionTimer < 10) {
                         m->actionState = 0;
@@ -944,9 +947,9 @@ s32 act_long_jump_land_stop(struct MarioState *m) {
     }
 
     landing_step(m,
-                  !m->marioObj->oMarioLongJumpIsSlow ? MARIO_ANIM_CROUCH_FROM_FAST_LONGJUMP
-                                                     : MARIO_ANIM_CROUCH_FROM_SLOW_LONGJUMP,
-                  ACT_CROUCHING);
+                 !m->marioObj->oMarioLongJumpIsSlow ? MARIO_ANIM_CROUCH_FROM_FAST_LONGJUMP
+                                                    : MARIO_ANIM_CROUCH_FROM_SLOW_LONGJUMP,
+                 ACT_CROUCHING);
     return 0;
 }
 

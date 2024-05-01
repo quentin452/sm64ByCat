@@ -26,6 +26,6 @@ const char *sys_file_extension(const char *fpath);
 const char *sys_file_name(const char *fpath);
 
 // shows an error message in some way and terminates the game
-void sys_fatal(const char *fmt, ...) __attribute__ ((noreturn));
+void sys_fatal(const char *fmt, ...) __attribute__((noreturn));
 
 #endif // _SM64_PLATFORM_H_

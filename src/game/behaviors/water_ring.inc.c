@@ -49,8 +49,8 @@ void water_ring_check_collection(f32 avgScale, struct Object *ringManager) {
     struct Object *ringSpawner;
 
     if (!is_point_close_to_object(o, gMarioObject->header.gfx.pos[0],
-                              gMarioObject->header.gfx.pos[1] + 80.0f, gMarioObject->header.gfx.pos[2],
-                              (avgScale + 0.2) * 120.0)) {
+                                  gMarioObject->header.gfx.pos[1] + 80.0f,
+                                  gMarioObject->header.gfx.pos[2], (avgScale + 0.2) * 120.0)) {
         o->oWaterRingMarioDistInFront = marioDistInFront;
         return;
     }

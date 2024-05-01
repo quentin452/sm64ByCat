@@ -16,7 +16,7 @@
 #define ZIP_EOCD_BUFSIZE 65578
 
 #define ZIP_LFH_SIG 0x04034b50
-#define ZIP_CDH_SIG  0x02014b50
+#define ZIP_CDH_SIG 0x02014b50
 #define ZIP_EOCD_SIG 0x06054b50
 
 typedef struct {
@@ -35,7 +35,7 @@ typedef struct {
     uint64_t uncomp_size;    // size of decompressed data
     uint16_t attr_int;       // internal attributes
     uint32_t attr_ext;       // external attributes
-    bool     ofs_fixed;      // if true, `ofs` points to the file data, otherwise to LFH
+    bool ofs_fixed;          // if true, `ofs` points to the file data, otherwise to LFH
 } zip_entry_t;
 
 typedef struct {
@@ -52,21 +52,24 @@ static int64_t zip_find_eocd(FILE *f, int64_t *outlen) {
     // get the total file size
     fseek(f, 0, SEEK_END);
     const int64_t fsize = ftell(f);
-    if (fsize <= 16) return -1; // probably not a zip
+    if (fsize <= 16)
+        return -1; // probably not a zip
 
     const int64_t rx = (fsize < ZIP_EOCD_BUFSIZE ? fsize : ZIP_EOCD_BUFSIZE);
     uint8_t *buf = malloc(rx);
-    if (!buf) return -1;
+    if (!buf)
+        return -1;
 
     // read that entire chunk and search for EOCD backwards from the end
     fseek(f, fsize - rx, SEEK_SET);
     if (fread(buf, rx, 1, f)) {
         for (int64_t i = rx - 8; i >= 0; --i) {
-            if ((buf[i + 0] == 0x50) && (buf[i + 1] == 0x4B) &&
-                (buf[i + 2] == 0x05) && (buf[i + 3] == 0x06)) {
+            if ((buf[i + 0] == 0x50) && (buf[i + 1] == 0x4B) && (buf[i + 2] == 0x05)
+                && (buf[i + 3] == 0x06)) {
                 // gotem
                 free(buf);
-                if (outlen) *outlen = fsize;
+                if (outlen)
+                    *outlen = fsize;
                 return fsize - rx + i;
             }
         }
@@ -95,27 +98,33 @@ static bool zip_parse_eocd(FILE *f, uint64_t *cdir_ofs, uint64_t *data_ofs, uint
 
     // find the EOCD and seek to it
     int64_t pos = zip_find_eocd(f, &fsize);
-    if (pos < 0) return false;
+    if (pos < 0)
+        return false;
     fseek(f, pos, SEEK_SET);
 
     // read it
-    if (!fread(&eocd, sizeof(eocd), 1, f)) return false;
+    if (!fread(&eocd, sizeof(eocd), 1, f))
+        return false;
 
     // double check the sig
-    if (LE_TO_HOST32(eocd.sig) != ZIP_EOCD_SIG) return false;
+    if (LE_TO_HOST32(eocd.sig) != ZIP_EOCD_SIG)
+        return false;
 
     // disks should all be 0
-    if (eocd.this_disk || eocd.cdir_disk) return false;
+    if (eocd.this_disk || eocd.cdir_disk)
+        return false;
 
     // total entry count should be the same as disk entry count
-    if (eocd.disk_entry_count != eocd.total_entry_count) return false;
+    if (eocd.disk_entry_count != eocd.total_entry_count)
+        return false;
 
     *count = LE_TO_HOST16(eocd.total_entry_count);
     *cdir_ofs = LE_TO_HOST32(eocd.cdir_ofs);
     eocd.cdir_size = LE_TO_HOST32(eocd.cdir_size);
 
     // end of central dir can't be before central dir
-    if ((uint64_t)pos < *cdir_ofs + eocd.cdir_size) return false;
+    if ((uint64_t) pos < *cdir_ofs + eocd.cdir_size)
+        return false;
 
     *data_ofs = (uint64_t)(pos - (*cdir_ofs + eocd.cdir_size));
     *cdir_ofs += *data_ofs;
@@ -147,7 +156,8 @@ static bool zip_fixup_offset(zip_file_t *zipfile) {
     zip_entry_t *ent = zipfile->entry;
 
     fseek(zipfile->fstream, ent->ofs, SEEK_SET);
-    if (!fread(&lfh, sizeof(lfh), 1, zipfile->fstream)) return false;
+    if (!fread(&lfh, sizeof(lfh), 1, zipfile->fstream))
+        return false;
 
     // we only need these two
     lfh.fname_len = LE_TO_HOST16(lfh.fname_len);
@@ -188,10 +198,12 @@ static zip_entry_t *zip_load_entry(FILE *f, fs_dirtree_t *tree, const uint64_t d
 
     memset(&zipent, 0, sizeof(zipent));
 
-    if (!fread(&cdh, sizeof(cdh), 1, f)) return NULL;
+    if (!fread(&cdh, sizeof(cdh), 1, f))
+        return NULL;
 
     // check cdir entry header signature
-    if (LE_TO_HOST32(cdh.sig) != ZIP_CDH_SIG) return NULL;
+    if (LE_TO_HOST32(cdh.sig) != ZIP_CDH_SIG)
+        return NULL;
 
     // byteswap and copy some important fields
     zipent.bits = LE_TO_HOST16(cdh.bits);
@@ -208,8 +220,12 @@ static zip_entry_t *zip_load_entry(FILE *f, fs_dirtree_t *tree, const uint64_t d
 
     // read the name
     char *name = calloc(1, cdh.fname_len + 1);
-    if (!name) return NULL;
-    if (!fread(name, cdh.fname_len, 1, f)) { free(name); return NULL; }
+    if (!name)
+        return NULL;
+    if (!fread(name, cdh.fname_len, 1, f)) {
+        free(name);
+        return NULL;
+    }
 
     // this is a directory if the name ends in a path separator
     bool is_dir = false;
@@ -220,9 +236,10 @@ static zip_entry_t *zip_load_entry(FILE *f, fs_dirtree_t *tree, const uint64_t d
     name[cdh.fname_len] = 0;
 
     // add to directory tree
-    zip_entry_t *retent = (zip_entry_t *)fs_dirtree_add(tree, name, is_dir);
+    zip_entry_t *retent = (zip_entry_t *) fs_dirtree_add(tree, name, is_dir);
     free(name);
-    if (!retent) return NULL;
+    if (!retent)
+        return NULL;
 
     // copy the data we read into the new entry
     zipent.tree = retent->tree;
@@ -238,7 +255,8 @@ static zip_entry_t *zip_load_entry(FILE *f, fs_dirtree_t *tree, const uint64_t d
     return retent;
 }
 
-static inline bool zip_load_entries(FILE *f, fs_dirtree_t *tree, const uint64_t cdir_ofs, const uint64_t data_ofs, const uint64_t count) {
+static inline bool zip_load_entries(FILE *f, fs_dirtree_t *tree, const uint64_t cdir_ofs,
+                                    const uint64_t data_ofs, const uint64_t count) {
     fseek(f, cdir_ofs, SEEK_SET);
     for (uint64_t i = 0; i < count; ++i) {
         if (!zip_load_entry(f, tree, data_ofs))
@@ -266,12 +284,15 @@ static void *pack_zip_mount(const char *realpath) {
     FILE *f = NULL;
 
     f = fopen(realpath, "rb");
-    if (!f) goto _fail;
+    if (!f)
+        goto _fail;
 
-    if (!is_zip(f)) goto _fail;
+    if (!is_zip(f))
+        goto _fail;
 
     pack = calloc(1, sizeof(zip_pack_t));
-    if (!pack) goto _fail;
+    if (!pack)
+        goto _fail;
 
     if (!zip_parse_eocd(f, &cdir_ofs, &data_ofs, &count))
         goto _fail;
@@ -288,26 +309,30 @@ static void *pack_zip_mount(const char *realpath) {
     return pack;
 
 _fail:
-    if (f) fclose(f);
-    if (pack) free(pack);
+    if (f)
+        fclose(f);
+    if (pack)
+        free(pack);
     return NULL;
 }
 
 static void pack_zip_unmount(void *pack) {
-    zip_pack_t *zip = (zip_pack_t *)pack;
+    zip_pack_t *zip = (zip_pack_t *) pack;
     fs_dirtree_free(&zip->tree);
-    if (zip->realpath) free((void *)zip->realpath);
-    if (zip->zipf) fclose(zip->zipf);
+    if (zip->realpath)
+        free((void *) zip->realpath);
+    if (zip->zipf)
+        fclose(zip->zipf);
     free(zip);
 }
 
 static bool pack_zip_is_file(void *pack, const char *fname) {
-    zip_entry_t *ent = (zip_entry_t *)fs_dirtree_find((fs_dirtree_t *)pack, fname);
+    zip_entry_t *ent = (zip_entry_t *) fs_dirtree_find((fs_dirtree_t *) pack, fname);
     return ent && !ent->tree.is_dir;
 }
 
 static bool pack_zip_is_dir(void *pack, const char *fname) {
-    zip_entry_t *ent = (zip_entry_t *)fs_dirtree_find((fs_dirtree_t *)pack, fname);
+    zip_entry_t *ent = (zip_entry_t *) fs_dirtree_find((fs_dirtree_t *) pack, fname);
     return ent && ent->tree.is_dir;
 }
 
@@ -316,25 +341,29 @@ static inline void pack_zip_close_zipfile(zip_file_t *zipfile) {
         inflateEnd(&zipfile->zstream);
         free(zipfile->buffer);
     }
-    if (zipfile->fstream) fclose(zipfile->fstream);
+    if (zipfile->fstream)
+        fclose(zipfile->fstream);
     free(zipfile);
 }
 
 static fs_file_t *pack_zip_open(void *pack, const char *vpath) {
     fs_file_t *fsfile = NULL;
     zip_file_t *zipfile = NULL;
-    zip_pack_t *zip = (zip_pack_t *)pack;
-    zip_entry_t *ent = (zip_entry_t *)fs_dirtree_find((fs_dirtree_t *)zip, vpath);
-    if (!ent || ent->tree.is_dir) goto _fail; // we're expecting a fucking file here
+    zip_pack_t *zip = (zip_pack_t *) pack;
+    zip_entry_t *ent = (zip_entry_t *) fs_dirtree_find((fs_dirtree_t *) zip, vpath);
+    if (!ent || ent->tree.is_dir)
+        goto _fail; // we're expecting a fucking file here
 
     zipfile = calloc(1, sizeof(zip_file_t));
-    if (!zipfile) goto _fail;
+    if (!zipfile)
+        goto _fail;
     zipfile->entry = ent;
 
     // obtain an additional file descriptor
     // fdopen(dup(fileno())) is not very portable and might not create separate state
     zipfile->fstream = fopen(zip->realpath, "rb");
-    if (!zipfile->fstream) goto _fail;
+    if (!zipfile->fstream)
+        goto _fail;
 
     // make ent->ofs point to the actual file data if it doesn't already
     if (!ent->ofs_fixed)
@@ -351,7 +380,8 @@ static fs_file_t *pack_zip_open(void *pack, const char *vpath) {
     }
 
     fsfile = malloc(sizeof(fs_file_t));
-    if (!fsfile) goto _fail;
+    if (!fsfile)
+        goto _fail;
     fsfile->handle = zipfile;
     fsfile->parent = NULL;
 
@@ -361,55 +391,63 @@ static fs_file_t *pack_zip_open(void *pack, const char *vpath) {
     return fsfile;
 
 _fail:
-    if (zipfile) pack_zip_close_zipfile(zipfile);
-    if (fsfile) free(fsfile);
+    if (zipfile)
+        pack_zip_close_zipfile(zipfile);
+    if (fsfile)
+        free(fsfile);
     return NULL;
 }
 
 static void pack_zip_close(UNUSED void *pack, fs_file_t *file) {
-    if (!file) return;
+    if (!file)
+        return;
 
-    zip_file_t *zipfile = (zip_file_t *)file->handle;
-    if (zipfile) pack_zip_close_zipfile(zipfile);
+    zip_file_t *zipfile = (zip_file_t *) file->handle;
+    if (zipfile)
+        pack_zip_close_zipfile(zipfile);
 
     free(file);
 }
 
 static int64_t pack_zip_read(UNUSED void *pack, fs_file_t *file, void *buf, const uint64_t size) {
-    zip_file_t *zipfile = (zip_file_t *)file->handle;
+    zip_file_t *zipfile = (zip_file_t *) file->handle;
     zip_entry_t *ent = zipfile->entry;
 
     int64_t avail = ent->uncomp_size - zipfile->uncomp_pos;
-    int64_t max_read = ((int64_t)size > avail) ? avail : (int64_t)size;
+    int64_t max_read = ((int64_t) size > avail) ? avail : (int64_t) size;
     int64_t rx = 0;
     int err = 0;
 
-    if (max_read == 0) return 0;
+    if (max_read == 0)
+        return 0;
 
     if (ent->comptype == 0) {
         // no compression, just read
         rx = fread(buf, 1, size, zipfile->fstream);
     } else {
         zipfile->zstream.next_out = buf;
-        zipfile->zstream.avail_out = (unsigned int)max_read;
+        zipfile->zstream.avail_out = (unsigned int) max_read;
         while (rx < max_read) {
-            const uint32_t before = (uint32_t)zipfile->zstream.total_out;
+            const uint32_t before = (uint32_t) zipfile->zstream.total_out;
             // check if we ran out of compressed bytes and read more if we did
             if (zipfile->zstream.avail_in == 0) {
                 int32_t comp_rx = ent->comp_size - zipfile->comp_pos;
                 if (comp_rx > 0) {
-                    if (comp_rx > ZIP_BUFSIZE) comp_rx = ZIP_BUFSIZE;
+                    if (comp_rx > ZIP_BUFSIZE)
+                        comp_rx = ZIP_BUFSIZE;
                     comp_rx = fread(zipfile->buffer, 1, comp_rx, zipfile->fstream);
-                    if (comp_rx == 0) break;
-                    zipfile->comp_pos += (uint32_t)comp_rx;
+                    if (comp_rx == 0)
+                        break;
+                    zipfile->comp_pos += (uint32_t) comp_rx;
                     zipfile->zstream.next_in = zipfile->buffer;
-                    zipfile->zstream.avail_in = (unsigned int)comp_rx;
+                    zipfile->zstream.avail_in = (unsigned int) comp_rx;
                 }
             }
             // inflate
             err = inflate(&zipfile->zstream, Z_SYNC_FLUSH);
             rx += zipfile->zstream.total_out - before;
-            if (err != Z_OK) break;
+            if (err != Z_OK)
+                break;
         }
     }
 
@@ -418,11 +456,12 @@ static int64_t pack_zip_read(UNUSED void *pack, fs_file_t *file, void *buf, cons
 }
 
 static bool pack_zip_seek(UNUSED void *pack, fs_file_t *file, const int64_t ofs) {
-    zip_file_t *zipfile = (zip_file_t *)file->handle;
+    zip_file_t *zipfile = (zip_file_t *) file->handle;
     zip_entry_t *ent = zipfile->entry;
     uint8_t buf[512];
 
-    if (ofs > (int64_t)ent->uncomp_size) return false;
+    if (ofs > (int64_t) ent->uncomp_size)
+        return false;
 
     if (ent->comptype == 0) {
         if (fseek(zipfile->fstream, ofs + ent->ofs, SEEK_SET) == 0)
@@ -446,7 +485,8 @@ static bool pack_zip_seek(UNUSED void *pack, fs_file_t *file, const int64_t ofs)
         // continue decoding the stream until we hit the new offset
         while (zipfile->uncomp_pos != ofs) {
             uint32_t max_read = (uint32_t)(ofs - zipfile->uncomp_pos);
-            if (max_read > sizeof(buf)) max_read = sizeof(buf);
+            if (max_read > sizeof(buf))
+                max_read = sizeof(buf);
             if (pack_zip_read(pack, file, buf, max_read) != max_read)
                 return false;
         }
@@ -456,31 +496,21 @@ static bool pack_zip_seek(UNUSED void *pack, fs_file_t *file, const int64_t ofs)
 }
 
 static int64_t pack_zip_tell(UNUSED void *pack, fs_file_t *file) {
-    return ((zip_file_t *)file->handle)->uncomp_pos;
+    return ((zip_file_t *) file->handle)->uncomp_pos;
 }
 
 static int64_t pack_zip_size(UNUSED void *pack, fs_file_t *file) {
-    zip_file_t *zipfile = (zip_file_t *)file->handle;
+    zip_file_t *zipfile = (zip_file_t *) file->handle;
     return zipfile->entry->uncomp_size;
 }
 
 static bool pack_zip_eof(UNUSED void *pack, fs_file_t *file) {
-    zip_file_t *zipfile = (zip_file_t *)file->handle;
+    zip_file_t *zipfile = (zip_file_t *) file->handle;
     return zipfile->uncomp_pos >= zipfile->entry->uncomp_size;
 }
 
 fs_packtype_t fs_packtype_zip = {
-    "zip",
-    pack_zip_mount,
-    pack_zip_unmount,
-    fs_dirtree_walk,
-    pack_zip_is_file,
-    pack_zip_is_dir,
-    pack_zip_open,
-    pack_zip_read,
-    pack_zip_seek,
-    pack_zip_tell,
-    pack_zip_size,
-    pack_zip_eof,
-    pack_zip_close,
+    "zip",           pack_zip_mount, pack_zip_unmount, fs_dirtree_walk, pack_zip_is_file,
+    pack_zip_is_dir, pack_zip_open,  pack_zip_read,    pack_zip_seek,   pack_zip_tell,
+    pack_zip_size,   pack_zip_eof,   pack_zip_close,
 };

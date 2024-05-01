@@ -79,7 +79,8 @@ void format_integer(s32 n, s32 base, char *dest, s32 *totalLength, u8 width, s8 
 
         // Add leading pad to fit width.
         if (width > numDigits) {
-            for (len = 0; len < width - numDigits; len++) dest[len] = pad;
+            for (len = 0; len < width - numDigits; len++)
+                dest[len] = pad;
 
             // Needs 1 length to print negative prefix.
             if (negative == TRUE) {
@@ -111,7 +112,8 @@ void format_integer(s32 n, s32 base, char *dest, s32 *totalLength, u8 width, s8 
     {
         numDigits = 1;
         if (width > numDigits) {
-            for (len = 0; len < width - numDigits; len++) dest[len] = pad;
+            for (len = 0; len < width - numDigits; len++)
+                dest[len] = pad;
         }
         dest[len] = '0';
     }
@@ -177,8 +179,8 @@ void print_text_fmt_int(s32 x, s32 y, const char *str, s32 n) {
     s32 srcIndex = 0;
 
     // Don't continue if there is no memory to do so.
-    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool,
-                                                        sizeof(struct TextLabel))) == NULL) {
+    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool, sizeof(struct TextLabel)))
+        == NULL) {
         return;
     }
 
@@ -228,8 +230,8 @@ void print_text(s32 x, s32 y, const char *str) {
     s32 srcIndex = 0;
 
     // Don't continue if there is no memory to do so.
-    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool,
-                                                        sizeof(struct TextLabel))) == NULL) {
+    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool, sizeof(struct TextLabel)))
+        == NULL) {
         return;
     }
 
@@ -261,8 +263,8 @@ void print_text_centered(s32 x, s32 y, const char *str) {
     s32 srcIndex = 0;
 
     // Don't continue if there is no memory to do so.
-    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool,
-                                                        sizeof(struct TextLabel))) == NULL) {
+    if ((sTextLabels[sTextLabelsCount] = mem_pool_alloc(gEffectsMemoryPool, sizeof(struct TextLabel)))
+        == NULL) {
         return;
     }
 
@@ -398,7 +400,8 @@ void render_text_labels(void) {
 
     guOrtho(mtx, 0.0f, SCREEN_WIDTH, 0.0f, SCREEN_HEIGHT, -10.0f, 10.0f, 1.0f);
     gSPPerspNormalize((Gfx *) (gDisplayListHead++), 0xFFFF);
-    gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
+    gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx),
+              G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     gSPDisplayList(gDisplayListHead++, dl_hud_img_begin);
 
     for (i = 0; i < sTextLabelsCount; i++) {

@@ -15,7 +15,7 @@ static void tas_init(void) {
 
 static void tas_read(OSContPad *pad) {
     if (fp != NULL) {
-        uint8_t bytes[4] = {0};
+        uint8_t bytes[4] = { 0 };
         fread(bytes, 1, 4, fp);
         pad->button = (bytes[0] << 8) | bytes[1];
         pad->stick_x = bytes[2];
@@ -34,13 +34,8 @@ static u32 tas_rawkey(void) {
     return VK_INVALID;
 }
 
-struct ControllerAPI controller_recorded_tas = {
-    VK_INVALID,
-    tas_init,
-    tas_read,
-    tas_rawkey,
-    NULL, // no rumble_play
-    NULL, // no rumble_stop
-    NULL, // no rebinding
-    tas_shutdown
-};
+struct ControllerAPI controller_recorded_tas = { VK_INVALID,  tas_init, tas_read, tas_rawkey,
+                                                 NULL, // no rumble_play
+                                                 NULL, // no rumble_stop
+                                                 NULL, // no rebinding
+                                                 tas_shutdown };

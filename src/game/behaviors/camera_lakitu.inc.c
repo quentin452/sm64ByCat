@@ -115,7 +115,9 @@ static void camera_lakitu_intro_act_show_dialog(void) {
                     }
                 }
             }
-        } else if (cur_obj_update_dialog_with_cutscene(2, DIALOG_UNK2_FLAG_0, CUTSCENE_DIALOG, DIALOG_034) != 0) {
+        } else if (cur_obj_update_dialog_with_cutscene(2, DIALOG_UNK2_FLAG_0, CUTSCENE_DIALOG,
+                                                       DIALOG_034)
+                   != 0) {
             o->oCameraLakituFinishedDialog = TRUE;
         }
     }
@@ -165,8 +167,8 @@ void bhv_camera_lakitu_update(void) {
                 o->oHomeZ = gLakituState.curFocus[2];
 
                 o->oFaceAngleYaw = -cur_obj_angle_to_home();
-                o->oFaceAnglePitch = atan2s(cur_obj_lateral_dist_to_home(),
-                                            o->oPosY - gLakituState.curFocus[1]);
+                o->oFaceAnglePitch =
+                    atan2s(cur_obj_lateral_dist_to_home(), o->oPosY - gLakituState.curFocus[1]);
 
                 o->oPosX = (f32) 0x875C3D / 0x800 + val0C;
             }

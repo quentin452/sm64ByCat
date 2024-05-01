@@ -11,14 +11,12 @@
 #define EEPROM_SIZE 0x200
 #define NUM_SAVE_FILES 4
 
-struct SaveBlockSignature
-{
+struct SaveBlockSignature {
     u16 magic;
     u16 chksum;
 };
 
-struct SaveFile
-{
+struct SaveFile {
     // Location of lost cap.
     // Note: the coordinates get set, but are never actually used, since the
     // cap can always be found in a fixed spot within the course
@@ -38,15 +36,9 @@ struct SaveFile
     struct SaveBlockSignature signature;
 };
 
-enum SaveFileIndex {
-    SAVE_FILE_A,
-    SAVE_FILE_B,
-    SAVE_FILE_C,
-    SAVE_FILE_D
-};
+enum SaveFileIndex { SAVE_FILE_A, SAVE_FILE_B, SAVE_FILE_C, SAVE_FILE_D };
 
-struct MainMenuSaveData
-{
+struct MainMenuSaveData {
     // Each save file has a 2 bit "age" for each course. The higher this value,
     // the older the high score is. This is used for tie-breaking when displaying
     // on the high score screen.
@@ -66,8 +58,7 @@ struct MainMenuSaveData
     struct SaveBlockSignature signature;
 };
 
-struct SaveBuffer
-{
+struct SaveBuffer {
     // Each of the four save files has two copies. If one is bad, the other is used as a backup.
     struct SaveFile files[NUM_SAVE_FILES][2];
     // The main menu data has two copies. If one is bad, the other is used as a backup.
@@ -83,27 +74,27 @@ extern u8 gSpecialTripleJump;
 extern s8 gLevelToCourseNumTable[];
 
 // game progress flags
-#define SAVE_FLAG_FILE_EXISTS            /* 0x000001 */ (1 << 0)
-#define SAVE_FLAG_HAVE_WING_CAP          /* 0x000002 */ (1 << 1)
-#define SAVE_FLAG_HAVE_METAL_CAP         /* 0x000004 */ (1 << 2)
-#define SAVE_FLAG_HAVE_VANISH_CAP        /* 0x000008 */ (1 << 3)
-#define SAVE_FLAG_HAVE_KEY_1             /* 0x000010 */ (1 << 4)
-#define SAVE_FLAG_HAVE_KEY_2             /* 0x000020 */ (1 << 5)
+#define SAVE_FLAG_FILE_EXISTS /* 0x000001 */ (1 << 0)
+#define SAVE_FLAG_HAVE_WING_CAP /* 0x000002 */ (1 << 1)
+#define SAVE_FLAG_HAVE_METAL_CAP /* 0x000004 */ (1 << 2)
+#define SAVE_FLAG_HAVE_VANISH_CAP /* 0x000008 */ (1 << 3)
+#define SAVE_FLAG_HAVE_KEY_1 /* 0x000010 */ (1 << 4)
+#define SAVE_FLAG_HAVE_KEY_2 /* 0x000020 */ (1 << 5)
 #define SAVE_FLAG_UNLOCKED_BASEMENT_DOOR /* 0x000040 */ (1 << 6)
 #define SAVE_FLAG_UNLOCKED_UPSTAIRS_DOOR /* 0x000080 */ (1 << 7)
-#define SAVE_FLAG_DDD_MOVED_BACK         /* 0x000100 */ (1 << 8)
-#define SAVE_FLAG_MOAT_DRAINED           /* 0x000200 */ (1 << 9)
-#define SAVE_FLAG_UNLOCKED_PSS_DOOR      /* 0x000400 */ (1 << 10)
-#define SAVE_FLAG_UNLOCKED_WF_DOOR       /* 0x000800 */ (1 << 11)
-#define SAVE_FLAG_UNLOCKED_CCM_DOOR      /* 0x001000 */ (1 << 12)
-#define SAVE_FLAG_UNLOCKED_JRB_DOOR      /* 0x002000 */ (1 << 13)
-#define SAVE_FLAG_UNLOCKED_BITDW_DOOR    /* 0x004000 */ (1 << 14)
-#define SAVE_FLAG_UNLOCKED_BITFS_DOOR    /* 0x008000 */ (1 << 15)
-#define SAVE_FLAG_CAP_ON_GROUND          /* 0x010000 */ (1 << 16)
-#define SAVE_FLAG_CAP_ON_KLEPTO          /* 0x020000 */ (1 << 17)
-#define SAVE_FLAG_CAP_ON_UKIKI           /* 0x040000 */ (1 << 18)
-#define SAVE_FLAG_CAP_ON_MR_BLIZZARD     /* 0x080000 */ (1 << 19)
-#define SAVE_FLAG_UNLOCKED_50_STAR_DOOR  /* 0x100000 */ (1 << 20)
+#define SAVE_FLAG_DDD_MOVED_BACK /* 0x000100 */ (1 << 8)
+#define SAVE_FLAG_MOAT_DRAINED /* 0x000200 */ (1 << 9)
+#define SAVE_FLAG_UNLOCKED_PSS_DOOR /* 0x000400 */ (1 << 10)
+#define SAVE_FLAG_UNLOCKED_WF_DOOR /* 0x000800 */ (1 << 11)
+#define SAVE_FLAG_UNLOCKED_CCM_DOOR /* 0x001000 */ (1 << 12)
+#define SAVE_FLAG_UNLOCKED_JRB_DOOR /* 0x002000 */ (1 << 13)
+#define SAVE_FLAG_UNLOCKED_BITDW_DOOR /* 0x004000 */ (1 << 14)
+#define SAVE_FLAG_UNLOCKED_BITFS_DOOR /* 0x008000 */ (1 << 15)
+#define SAVE_FLAG_CAP_ON_GROUND /* 0x010000 */ (1 << 16)
+#define SAVE_FLAG_CAP_ON_KLEPTO /* 0x020000 */ (1 << 17)
+#define SAVE_FLAG_CAP_ON_UKIKI /* 0x040000 */ (1 << 18)
+#define SAVE_FLAG_CAP_ON_MR_BLIZZARD /* 0x080000 */ (1 << 19)
+#define SAVE_FLAG_UNLOCKED_50_STAR_DOOR /* 0x100000 */ (1 << 20)
 
 // Variable for setting a warp checkpoint.
 
@@ -151,12 +142,7 @@ void check_if_should_set_warp_checkpoint(struct WarpNode *warpNode);
 s32 check_warp_checkpoint(struct WarpNode *warpNode);
 
 #ifdef VERSION_EU
-enum EuLanguages {
-    LANGUAGE_ENGLISH,
-    LANGUAGE_FRENCH,
-    LANGUAGE_GERMAN,
-    LANGUAGE_MAX
-};
+enum EuLanguages { LANGUAGE_ENGLISH, LANGUAGE_FRENCH, LANGUAGE_GERMAN, LANGUAGE_MAX };
 
 void eu_set_language(u16 language);
 u16 eu_get_language(void);

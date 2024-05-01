@@ -14,24 +14,24 @@
 
 // Thanks Microsoft for being non posix compliant
 #if defined(_WIN32)
-# include <windows.h>
-# define DISCORDLIBEXT ".dll"
-# define dlopen(lib, flag) LoadLibrary(TEXT(lib))
-# define dlerror() ""
-# define dlsym(handle, func) (void *)GetProcAddress(handle, func)
-# define dlclose(handle) FreeLibrary(handle)
+#include <windows.h>
+#define DISCORDLIBEXT ".dll"
+#define dlopen(lib, flag) LoadLibrary(TEXT(lib))
+#define dlerror() ""
+#define dlsym(handle, func) (void *) GetProcAddress(handle, func)
+#define dlclose(handle) FreeLibrary(handle)
 #elif defined(__APPLE__)
-# include <dlfcn.h>
-# define DISCORDLIBEXT ".dylib"
+#include <dlfcn.h>
+#define DISCORDLIBEXT ".dylib"
 #elif defined(__linux__) || defined(__FreeBSD__) // lets make the bold assumption for FreeBSD
-# include <dlfcn.h>
-# define DISCORDLIBEXT ".so"
+#include <dlfcn.h>
+#define DISCORDLIBEXT ".so"
 #else
-# error Unknown System
+#error Unknown System
 #endif
 
 #define DISCORDLIB DISCORDLIBFILE DISCORDLIBEXT
-#define DISCORD_APP_ID  "709083908708237342"
+#define DISCORD_APP_ID "709083908708237342"
 #define DISCORD_UPDATE_RATE 5
 
 extern s16 gCurrCourseNum;
@@ -44,7 +44,7 @@ static time_t lastUpdatedTime;
 static DiscordRichPresence discordRichPresence;
 static bool initd = false;
 
-static void* handle;
+static void *handle;
 
 void (*Discord_Initialize)(const char *, DiscordEventHandlers *, int, const char *);
 void (*Discord_Shutdown)(void);
@@ -65,46 +65,46 @@ static char act[188];
 static char smallImageKey[5];
 static char largeImageKey[5];
 
-static const char charset[0xFF+1] = {
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 7
-    ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', // 15
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', // 23
-    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', // 31
-    'w', 'x', 'y', 'z', ' ', ' ', ' ', ' ', // 39
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 49
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 55
+static const char charset[0xFF + 1] = {
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 7
+    ' ', ' ', 'a', 'b', 'c', 'd', 'e',  'f', // 15
+    'g', 'h', 'i', 'j', 'k', 'l', 'm',  'n', // 23
+    'o', 'p', 'q', 'r', 's', 't', 'u',  'v', // 31
+    'w', 'x', 'y', 'z', ' ', ' ', ' ',  ' ', // 39
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 49
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 55
     ' ', ' ', ' ', ' ', ' ', ' ', '\'', ' ', // 63
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 71
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 79
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 87
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 95
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 103
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ',', // 111
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 119
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 127
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 135
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 143
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 151
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', '-', // 159
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 167
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 175
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 183
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 192
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 199
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 207
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 215
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 223
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 231
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', // 239
-    ' ', ' ', '!', ' ', ' ', ' ', ' ', ' ', // 247
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '  // 255
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 71
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 79
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 87
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 95
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 103
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ',', // 111
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 119
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 127
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 135
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 143
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 151
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  '-', // 159
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 167
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 175
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 183
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 192
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 199
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 207
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 215
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 223
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 231
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' ', // 239
+    ' ', ' ', '!', ' ', ' ', ' ', ' ',  ' ', // 247
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ',  ' '  // 255
 };
 
-static void convertstring(const u8 *str, char* output) {
+static void convertstring(const u8 *str, char *output) {
     s32 strPos = 0;
     bool capitalizeChar = true;
 
-    while (str[strPos] != 0xFF)  {
+    while (str[strPos] != 0xFF) {
         if (str[strPos] < 0xFF) {
             output[strPos] = charset[str[strPos]];
 
@@ -122,7 +122,8 @@ static void convertstring(const u8 *str, char* output) {
         switch (output[strPos]) {
             case ' ':
                 if (str[strPos] != 158)
-                    fprintf(stdout, "Unknown Character (%i)\n", str[strPos]); // inform that an unknown char was found
+                    fprintf(stdout, "Unknown Character (%i)\n",
+                            str[strPos]); // inform that an unknown char was found
             case '-':
                 capitalizeChar = true;
                 break;
@@ -137,7 +138,7 @@ static void convertstring(const u8 *str, char* output) {
     output[strPos] = '\0';
 }
 
-static void on_ready(UNUSED const DiscordUser* user) {
+static void on_ready(UNUSED const DiscordUser *user) {
     discord_reset();
 }
 
@@ -205,14 +206,15 @@ static void set_state(void) {
                         break;
                 }
 #endif
-                u8 *actName = actName = segmented_to_virtual(actNameTbl[(gCurrCourseNum - 1) * 6 + gCurrActNum - 1]);
+                u8 *actName = actName =
+                    segmented_to_virtual(actNameTbl[(gCurrCourseNum - 1) * 6 + gCurrActNum - 1]);
 
                 convertstring(actName, act);
             } else {
                 act[0] = '\0';
                 gCurrActNum = 0;
             }
-        } else { 
+        } else {
             act[0] = '\0';
         }
 
@@ -223,7 +225,7 @@ static void set_state(void) {
 void set_logo(void) {
     if (lastCourseNum)
         snprintf(largeImageKey, sizeof(largeImageKey), "%d", lastCourseNum);
-    else 
+    else
         strcpy(largeImageKey, "0");
 
     /*
@@ -234,14 +236,16 @@ void set_logo(void) {
     */
 
     discordRichPresence.largeImageKey = largeImageKey;
-    //discordRichPresence.largeImageText = "";
-    //discordRichPresence.smallImageKey = smallImageKey;
-    //discordRichPresence.smallImageText = "";
+    // discordRichPresence.largeImageText = "";
+    // discordRichPresence.smallImageKey = smallImageKey;
+    // discordRichPresence.smallImageText = "";
 }
 
 void discord_update_rich_presence(void) {
-    if (!configDiscordRPC || !initd) return;
-    if (time(NULL) < lastUpdatedTime + DISCORD_UPDATE_RATE) return;
+    if (!configDiscordRPC || !initd)
+        return;
+    if (time(NULL) < lastUpdatedTime + DISCORD_UPDATE_RATE)
+        return;
 
     lastUpdatedTime = time(NULL);
 
@@ -282,7 +286,7 @@ void discord_init(void) {
 }
 
 void discord_reset(void) {
-    memset( &discordRichPresence, 0, sizeof( discordRichPresence ) );
+    memset(&discordRichPresence, 0, sizeof(discordRichPresence));
 
     set_state();
     set_details();

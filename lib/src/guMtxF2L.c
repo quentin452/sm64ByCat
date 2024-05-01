@@ -20,4 +20,3 @@ void guMtxIdentF(float mf[4][4]) {
 void guMtxIdent(Mtx *m) {
     guMtxIdentF(m->m);
 }
-

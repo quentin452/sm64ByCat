@@ -3,7 +3,7 @@
 
 #include "platform.h"
 
-struct PCCLIOptions  {
+struct PCCLIOptions {
     unsigned int SkipIntro;
     unsigned int FullScreen;
     unsigned int PoolSize;
@@ -14,6 +14,6 @@ struct PCCLIOptions  {
 
 extern struct PCCLIOptions gCLIOpts;
 
-void parse_cli_opts(int argc, char* argv[]);
+void parse_cli_opts(int argc, char *argv[]);
 
 #endif // _CLIOPTS_H

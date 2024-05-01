@@ -10,18 +10,18 @@
 // types
 /// Properties types used in [gd_setproperty](@ref gd_setproperty); most are stubbed out.
 enum GdProperty {
-    GD_PROP_OVERLAY       = 4,
-    GD_PROP_LIGHTING      = 11,
-    GD_PROP_AMB_COLOUR    = 12,
+    GD_PROP_OVERLAY = 4,
+    GD_PROP_LIGHTING = 11,
+    GD_PROP_AMB_COLOUR = 12,
     GD_PROP_DIFUSE_COLOUR = 13,
-    GD_PROP_LIGHT_DIR     = 15,
-    GD_PROP_CULLING       = 16,
-    GD_PROP_STUB17        = 17,
-    GD_PROP_STUB18        = 18,
-    GD_PROP_STUB19        = 19,
-    GD_PROP_STUB20        = 20,
-    GD_PROP_STUB21        = 21,
-    GD_PROP_ZBUF_FN       = 22
+    GD_PROP_LIGHT_DIR = 15,
+    GD_PROP_CULLING = 16,
+    GD_PROP_STUB17 = 17,
+    GD_PROP_STUB18 = 18,
+    GD_PROP_STUB19 = 19,
+    GD_PROP_STUB20 = 20,
+    GD_PROP_STUB21 = 21,
+    GD_PROP_ZBUF_FN = 22
 };
 
 // data
@@ -64,7 +64,8 @@ void translate_mtx_gddl(f32 x, f32 y, f32 z);
 void translate_load_mtx_gddl(f32 x, f32 y, f32 z);
 void func_8019F258(f32 x, f32 y, f32 z);
 void func_8019F2C4(f32 arg0, s8 arg1);
-void func_8019F318(struct ObjCamera *cam, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6, f32 arg7);
+void func_8019F318(struct ObjCamera *cam, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6,
+                   f32 arg7);
 void check_tri_display(s32 vtxcount);
 Vtx *make_vtx_if_new(f32 x, f32 y, f32 z, f32 alpha);
 void func_8019FEF0(void);
@@ -76,9 +77,10 @@ void set_light_id(s32 index);
 void set_light_num(s32 n);
 s32 create_mtl_gddl(s32 mtlType);
 void branch_to_gddl(s32 dlNum);
-void func_801A0478(s32, struct ObjCamera *, struct GdVec3f *, struct GdVec3f *, struct GdVec3f *, struct GdColour *);
-void func_801A0478(s32 idx, struct ObjCamera *cam, UNUSED struct GdVec3f *arg2, UNUSED struct GdVec3f *arg3,
-                   struct GdVec3f *arg4, struct GdColour *colour);
+void func_801A0478(s32, struct ObjCamera *, struct GdVec3f *, struct GdVec3f *, struct GdVec3f *,
+                   struct GdColour *);
+void func_801A0478(s32 idx, struct ObjCamera *cam, UNUSED struct GdVec3f *arg2,
+                   UNUSED struct GdVec3f *arg3, struct GdVec3f *arg4, struct GdColour *colour);
 s32 func_801A086C(s32 id, struct GdColour *colour, s32 material);
 void set_Vtx_norm_buf_1(struct GdVec3f *norm);
 void set_Vtx_norm_buf_2(struct GdVec3f *norm);
@@ -95,19 +97,21 @@ void gd_create_perspective_matrix(f32 fovy, f32 aspect, f32 near, f32 far);
 s32 setup_view_buffers(const char *name, struct ObjView *view, UNUSED s32 ulx, UNUSED s32 uly,
                        UNUSED s32 lrx, UNUSED s32 lry);
 void gd_init_controllers(void);
-void func_801A43DC(struct GdObj *obj); //apply to OBJ_TYPE_VIEWS
-void *func_801A43F0(UNUSED const char *menufmt, ...);   // TUI code..? query_user? doesn't actually return anything... maybe it returned a "menu *"?
-void func_801A4410(void *arg0);  // function looks like it got various controller/input attributes..?
-void func_801A4424(void *arg0);  // TUI stuff?
+void func_801A43DC(struct GdObj *obj); // apply to OBJ_TYPE_VIEWS
+void *func_801A43F0(
+    UNUSED const char *menufmt,
+    ...); // TUI code..? query_user? doesn't actually return anything... maybe it returned a "menu *"?
+void func_801A4410(void *arg0); // function looks like it got various controller/input attributes..?
+void func_801A4424(void *arg0); // TUI stuff?
 void func_801A4438(f32 x, f32 y, f32 z);
 void func_801A48C4(u32 arg0);
 void func_801A48D8(UNUSED char *s);
 void set_active_view(struct ObjView *v);
 void func_801A520C(void);
 void gd_init(void);
-void func_801A5998(s8 *arg0);    /* convert LE bytes to BE word? */
+void func_801A5998(s8 *arg0); /* convert LE bytes to BE word? */
 void func_801A59AC(UNUSED void *arg0);
-void func_801A59C0(UNUSED s8 *arg0);    /* convert LE bytes to BE f32? */
+void func_801A59C0(UNUSED s8 *arg0); /* convert LE bytes to BE f32? */
 void init_pick_buf(s16 *buf, s32 len);
 void store_in_pickbuf(s16 data);
 s32 get_cur_pickbuf_offset(UNUSED s16 *arg0);

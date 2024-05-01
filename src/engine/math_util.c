@@ -50,8 +50,7 @@ void *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b) {
 }
 
 /// Multiply vector 'dest' by a
-void *vec3f_mul(Vec3f dest, f32 a)
-{
+void *vec3f_mul(Vec3f dest, f32 a) {
     dest[0] *= a;
     dest[1] *= a;
     dest[2] *= a;
@@ -150,15 +149,13 @@ void *vec3f_normalize(Vec3f dest) {
 }
 
 /// Get length of vector 'a'
-f32 vec3f_length(Vec3f a)
-{
-	return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+f32 vec3f_length(Vec3f a) {
+    return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
 }
 
 /// Get dot product of vectors 'a' and 'b'
-f32 vec3f_dot(Vec3f a, Vec3f b)
-{
-	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+f32 vec3f_dot(Vec3f a, Vec3f b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
 #pragma GCC diagnostic pop
@@ -182,10 +179,12 @@ void mtxf_identity(Mat4 mtx) {
     register f32 *dest;
     // Note: These loops need to be on one line to match on PAL
     // initialize everything except the first and last cells to 0
-    for (dest = (f32 *) mtx + 1, i = 0; i < 14; dest++, i++) *dest = 0;
+    for (dest = (f32 *) mtx + 1, i = 0; i < 14; dest++, i++)
+        *dest = 0;
 
     // initialize the diagonal cells to 1
-    for (dest = (f32 *) mtx, i = 0; i < 4; dest += 5, i++) *dest = 1;
+    for (dest = (f32 *) mtx, i = 0; i < 4; dest += 5, i++)
+        *dest = 1;
 }
 
 /**

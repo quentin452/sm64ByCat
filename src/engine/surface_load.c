@@ -587,7 +587,6 @@ u32 get_area_terrain_size(s16 *data) {
     return data - startPos;
 }
 
-
 /**
  * Process the level file, loading in vertices, surfaces, some objects, and environmental
  * boxes (water, gas, JRB fog).

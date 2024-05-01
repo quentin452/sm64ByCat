@@ -58,8 +58,8 @@ void note_set_vel_pan_reverb(struct Note *note, f32 velocity, u8 pan, u8 reverb)
     velocity = MAX(0.0f, velocity);
     velocity = MIN(32767.f, velocity);
 
-    sub->targetVolLeft =  ((s32) (velocity * volLeft) & 0xffff) >> 5;
-    sub->targetVolRight = ((s32) (velocity * volRight) & 0xffff) >> 5;
+    sub->targetVolLeft = ((s32)(velocity * volLeft) & 0xffff) >> 5;
+    sub->targetVolRight = ((s32)(velocity * volRight) & 0xffff) >> 5;
 
     if (sub->reverbVol != reverb) {
         sub->reverbVol = reverb;
@@ -98,7 +98,7 @@ void note_set_resampling_rate(struct Note *note, f32 resamplingRateInput) {
             resamplingRate = resamplingRateInput * 0.5f;
         }
     }
-    note->noteSubEu.resamplingRateFixedPoint = (s32) (resamplingRate * 32768.0f);
+    note->noteSubEu.resamplingRateFixedPoint = (s32)(resamplingRate * 32768.0f);
 }
 
 struct AudioBankSound *instrument_get_audio_bank_sound(struct Instrument *instrument, s32 semitone) {
@@ -134,10 +134,10 @@ struct Instrument *get_instrument_inner(s32 bankId, s32 instId) {
 
     if (((uintptr_t) gBankLoadedPool.persistent.pool.start <= (uintptr_t) inst
          && (uintptr_t) inst <= (uintptr_t)(gBankLoadedPool.persistent.pool.start
-                    + gBankLoadedPool.persistent.pool.size))
+                                            + gBankLoadedPool.persistent.pool.size))
         || ((uintptr_t) gBankLoadedPool.temporary.pool.start <= (uintptr_t) inst
             && (uintptr_t) inst <= (uintptr_t)(gBankLoadedPool.temporary.pool.start
-                                   + gBankLoadedPool.temporary.pool.size))) {
+                                               + gBankLoadedPool.temporary.pool.size))) {
         return inst;
     }
 
@@ -252,13 +252,13 @@ void process_notes(void) {
                 continue;
             } else if (playbackState->parentLayer->seqChannel->seqPlayer->muted) {
                 if ((playbackState->parentLayer->seqChannel->muteBehavior
-                    & (MUTE_BEHAVIOR_STOP_SCRIPT | MUTE_BEHAVIOR_STOP_NOTES))) {
+                     & (MUTE_BEHAVIOR_STOP_SCRIPT | MUTE_BEHAVIOR_STOP_NOTES))) {
                     goto c;
                 }
             }
             goto d;
             if (1) {
-                c:
+            c:
                 seq_channel_layer_note_release(playbackState->parentLayer);
                 audio_list_remove(&note->listItem);
                 audio_list_push_front(&note->listItem.pool->decaying, &note->listItem);
@@ -267,7 +267,7 @@ void process_notes(void) {
         } else if (playbackState->priority >= NOTE_PRIORITY_MIN) {
             continue;
         }
-        d:
+    d:
         if (playbackState->priority != NOTE_PRIORITY_DISABLED) {
             noteSubEu = &note->noteSubEu;
             if (playbackState->priority == NOTE_PRIORITY_STOPPING || noteSubEu->finished) {
@@ -329,7 +329,7 @@ void process_notes(void) {
             note_set_resampling_rate(note, frequency);
             note_set_vel_pan_reverb(note, velocity, pan, reverb);
             noteSubEu->bookOffset = bookOffset;
-            skip:;
+        skip:;
         }
 #else
         if (note->priority != NOTE_PRIORITY_DISABLED) {
@@ -425,7 +425,8 @@ void seq_channel_layer_decay_release_internal(struct SequenceChannelLayer *seqLa
 
     if (note->parentLayer != seqLayer) {
 #ifdef VERSION_EU
-        if (note->parentLayer == NO_LAYER && note->wantedParentLayer == NO_LAYER && note->prevParentLayer == seqLayer && target != ADSR_STATE_DECAY) {
+        if (note->parentLayer == NO_LAYER && note->wantedParentLayer == NO_LAYER
+            && note->prevParentLayer == seqLayer && target != ADSR_STATE_DECAY) {
             note->adsr.fadeOutVel = gAudioBufferParameters.updatesPerFrameInv;
             note->adsr.action |= ADSR_ACTION_RELEASE;
         }
@@ -455,11 +456,14 @@ void seq_channel_layer_decay_release_internal(struct SequenceChannelLayer *seqLa
             note->adsr.action |= ADSR_ACTION_DECAY;
 #ifdef VERSION_EU
             if (seqLayer->adsr.releaseRate == 0) {
-                note->adsr.fadeOutVel = seqLayer->seqChannel->adsr.releaseRate * gAudioBufferParameters.unkUpdatesPerFrameScaled;
+                note->adsr.fadeOutVel = seqLayer->seqChannel->adsr.releaseRate
+                                        * gAudioBufferParameters.unkUpdatesPerFrameScaled;
             } else {
-                note->adsr.fadeOutVel = seqLayer->adsr.releaseRate * gAudioBufferParameters.unkUpdatesPerFrameScaled;
+                note->adsr.fadeOutVel =
+                    seqLayer->adsr.releaseRate * gAudioBufferParameters.unkUpdatesPerFrameScaled;
             }
-            note->adsr.sustain = (FLOAT_CAST(seqLayer->seqChannel->adsr.sustain) * note->adsr.current) / 256.0f;
+            note->adsr.sustain =
+                (FLOAT_CAST(seqLayer->seqChannel->adsr.sustain) * note->adsr.current) / 256.0f;
 #else
             if (seqLayer->adsr.releaseRate == 0) {
                 note->adsr.fadeOutVel = seqLayer->seqChannel->adsr.releaseRate * 24;
@@ -484,7 +488,6 @@ void seq_channel_layer_note_decay(struct SequenceChannelLayer *seqLayer) {
 void seq_channel_layer_note_release(struct SequenceChannelLayer *seqLayer) {
     seq_channel_layer_decay_release_internal(seqLayer, ADSR_STATE_RELEASE);
 }
-
 
 #ifdef VERSION_EU
 s32 build_synthetic_wave(struct Note *note, struct SequenceChannelLayer *seqLayer, s32 waveId) {
@@ -588,7 +591,9 @@ void init_synthetic_wave(struct Note *note, struct SequenceChannelLayer *seqLaye
     }
     sampleCountIndex = note->sampleCountIndex;
     waveSampleCountIndex = build_synthetic_wave(note, seqLayer, waveId);
-    note->synthesisState.samplePosInt = note->synthesisState.samplePosInt * euUnknownData_8030194c[waveSampleCountIndex] / euUnknownData_8030194c[sampleCountIndex];
+    note->synthesisState.samplePosInt = note->synthesisState.samplePosInt
+                                        * euUnknownData_8030194c[waveSampleCountIndex]
+                                        / euUnknownData_8030194c[sampleCountIndex];
 #else
     s32 sampleCount = note->sampleCount;
     build_synthetic_wave(note, seqLayer);
@@ -900,9 +905,9 @@ struct Note *alloc_note(struct SequenceChannelLayer *seqLayer) {
         ret = seqLayer->note;
         if (ret != NULL && ret->prevParentLayer == seqLayer
 #ifdef VERSION_EU
-                && ret->wantedParentLayer == NO_LAYER
+            && ret->wantedParentLayer == NO_LAYER
 #endif
-                ) {
+        ) {
             note_release_and_take_ownership(ret, seqLayer);
             audio_list_remove(&ret->listItem);
 #ifdef VERSION_EU
@@ -1001,7 +1006,6 @@ void reclaim_notes(void) {
 }
 #endif
 
-
 void note_init_all(void) {
     struct Note *note;
     s32 i;
@@ -1040,7 +1044,8 @@ void note_init_all(void) {
         note->portamento.cur = 0.0f;
         note->portamento.speed = 0.0f;
 #ifdef VERSION_EU
-        note->synthesisState.synthesisBuffers = soundAlloc(&gNotesAndBuffersPool, sizeof(struct NoteSynthesisBuffers));
+        note->synthesisState.synthesisBuffers =
+            soundAlloc(&gNotesAndBuffersPool, sizeof(struct NoteSynthesisBuffers));
 #else
         note->synthesisBuffers = soundAlloc(&gNotesAndBuffersPool, sizeof(struct NoteSynthesisBuffers));
 #endif

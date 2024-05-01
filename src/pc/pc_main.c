@@ -71,8 +71,9 @@ static bool inited = false;
 
 #include "game/display.h" // for gGlobalTimer
 void send_display_list(struct SPTask *spTask) {
-    if (!inited) return;
-    gfx_run((Gfx *)spTask->task.t.data_ptr);
+    if (!inited)
+        return;
+    gfx_run((Gfx *) spTask->task.t.data_ptr);
 }
 
 #ifdef VERSION_EU
@@ -105,17 +106,18 @@ static inline void patch_interpolations(void) {
 void produce_one_frame(void) {
     gfx_start_frame();
 
-    const f32 master_mod = (f32)configMasterVolume / 127.0f;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * master_mod);
+    const f32 master_mod = (f32) configMasterVolume / 127.0f;
+    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32) configMusicVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32) configSfxVolume / 127.0f * master_mod);
+    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32) configEnvVolume / 127.0f * master_mod);
 
     game_loop_one_iteration();
     thread6_rumble_loop(NULL);
 
     int samples_left = audio_api->buffered();
-    u32 num_audio_samples = samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-    //printf("Audio samples: %d %u\n", samples_left, num_audio_samples);
+    u32 num_audio_samples =
+        samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
+    // printf("Audio samples: %d %u\n", samples_left, num_audio_samples);
     s16 audio_buffer[SAMPLES_HIGH * 2 * 2];
     for (int i = 0; i < 2; i++) {
         /*if (audio_cnt-- == 0) {
@@ -124,9 +126,9 @@ void produce_one_frame(void) {
         u32 num_audio_samples = audio_cnt < 2 ? 528 : 544;*/
         create_next_audio_buffer(audio_buffer + i * (num_audio_samples * 2), num_audio_samples);
     }
-    //printf("Audio samples before submitting: %d\n", audio_api->buffered());
+    // printf("Audio samples before submitting: %d\n", audio_api->buffered());
 
-    audio_api->play((u8 *)audio_buffer, 2 * num_audio_samples * 4);
+    audio_api->play((u8 *) audio_buffer, 2 * num_audio_samples * 4);
 
     gfx_end_frame();
 
@@ -138,7 +140,8 @@ void produce_one_frame(void) {
 
 void audio_shutdown(void) {
     if (audio_api) {
-        if (audio_api->shutdown) audio_api->shutdown();
+        if (audio_api->shutdown)
+            audio_api->shutdown();
         audio_api = NULL;
     }
 }
@@ -166,9 +169,7 @@ static void em_main_loop(void) {
 }
 
 static void request_anim_frame(void (*func)(double time)) {
-    EM_ASM(requestAnimationFrame(function(time) {
-        dynCall("vd", $0, [time]);
-    }), func);
+    EM_ASM(requestAnimationFrame(function(time) { dynCall("vd", $0, [time]); }), func);
 }
 
 static void on_anim_frame(double time) {
@@ -209,49 +210,49 @@ void main_func(void) {
 
     const size_t poolsize = gCLIOpts.PoolSize ? gCLIOpts.PoolSize : DEFAULT_POOL_SIZE;
     u64 *pool = malloc(poolsize);
-    if (!pool) sys_fatal("Could not alloc %u bytes for main pool.\n", poolsize);
+    if (!pool)
+        sys_fatal("Could not alloc %u bytes for main pool.\n", poolsize);
     main_pool_init(pool, pool + poolsize / sizeof(pool[0]));
     gEffectsMemoryPool = mem_pool_init(0x4000, MEMORY_POOL_LEFT);
 
-    #if defined(WAPI_SDL1) || defined(WAPI_SDL2)
+#if defined(WAPI_SDL1) || defined(WAPI_SDL2)
     wm_api = &gfx_sdl;
-    #elif defined(WAPI_DXGI)
+#elif defined(WAPI_DXGI)
     wm_api = &gfx_dxgi;
-    #else
-    #error No window API!
-    #endif
+#else
+#error No window API!
+#endif
 
-    #if defined(RAPI_D3D11)
+#if defined(RAPI_D3D11)
     rendering_api = &gfx_direct3d11_api;
-    # define RAPI_NAME "DirectX 11"
-    #elif defined(RAPI_D3D12)
+#define RAPI_NAME "DirectX 11"
+#elif defined(RAPI_D3D12)
     rendering_api = &gfx_direct3d12_api;
-    # define RAPI_NAME "DirectX 12"
-    #elif defined(RAPI_GL) || defined(RAPI_GL_LEGACY)
+#define RAPI_NAME "DirectX 12"
+#elif defined(RAPI_GL) || defined(RAPI_GL_LEGACY)
     rendering_api = &gfx_opengl_api;
-    # ifdef USE_GLES
-    #  define RAPI_NAME "OpenGL ES"
-    # else
-    #  define RAPI_NAME "OpenGL"
-    # endif
-    #else
-    #error No rendering API!
-    #endif
+#ifdef USE_GLES
+#define RAPI_NAME "OpenGL ES"
+#else
+#define RAPI_NAME "OpenGL"
+#endif
+#else
+#error No rendering API!
+#endif
 
-    char window_title[96] =
-    "Super Mario 64 EX (" RAPI_NAME ")"
-    #ifdef NIGHTLY
-    " nightly " GIT_HASH
-    #endif
-    ;
+    char window_title[96] = "Super Mario 64 EX (" RAPI_NAME ")"
+#ifdef NIGHTLY
+                            " nightly " GIT_HASH
+#endif
+        ;
 
     gfx_init(wm_api, rendering_api, window_title);
     wm_api->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up);
 
-    #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
-    if (audio_api == NULL && audio_sdl.init()) 
+#if defined(AAPI_SDL1) || defined(AAPI_SDL2)
+    if (audio_api == NULL && audio_sdl.init())
         audio_api = &audio_sdl;
-    #endif
+#endif
 
     if (audio_api == NULL) {
         audio_api = &audio_null;

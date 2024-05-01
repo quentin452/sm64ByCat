@@ -357,7 +357,8 @@ s32 envfx_init_bubble(s32 mode) {
             break;
     }
 
-    gEnvFxBuffer = mem_pool_alloc(gEffectsMemoryPool, sBubbleParticleCount * sizeof(struct EnvFxParticle));
+    gEnvFxBuffer =
+        mem_pool_alloc(gEffectsMemoryPool, sBubbleParticleCount * sizeof(struct EnvFxParticle));
     if (!gEnvFxBuffer) {
         return 0;
     }
@@ -391,30 +392,54 @@ void envfx_bubbles_update_switch(s32 mode, Vec3s camTo, Vec3s vertex1, Vec3s ver
     switch (mode) {
         case ENVFX_FLOWERS:
             envfx_update_flower(camTo);
-            vertex1[0] = 50;  vertex1[1] = 0;  vertex1[2] = 0;
-            vertex2[0] = 0;   vertex2[1] = 75; vertex2[2] = 0;
-            vertex3[0] = -50; vertex3[1] = 0;  vertex3[2] = 0;
+            vertex1[0] = 50;
+            vertex1[1] = 0;
+            vertex1[2] = 0;
+            vertex2[0] = 0;
+            vertex2[1] = 75;
+            vertex2[2] = 0;
+            vertex3[0] = -50;
+            vertex3[1] = 0;
+            vertex3[2] = 0;
             break;
 
         case ENVFX_LAVA_BUBBLES:
             envfx_update_lava(camTo);
-            vertex1[0] = 100;  vertex1[1] = 0;   vertex1[2] = 0;
-            vertex2[0] = 0;    vertex2[1] = 150; vertex2[2] = 0;
-            vertex3[0] = -100; vertex3[1] = 0;   vertex3[2] = 0;
+            vertex1[0] = 100;
+            vertex1[1] = 0;
+            vertex1[2] = 0;
+            vertex2[0] = 0;
+            vertex2[1] = 150;
+            vertex2[2] = 0;
+            vertex3[0] = -100;
+            vertex3[1] = 0;
+            vertex3[2] = 0;
             break;
 
         case ENVFX_WHIRLPOOL_BUBBLES:
             envfx_update_whirlpool();
-            vertex1[0] = 40;  vertex1[1] = 0;  vertex1[2] = 0;
-            vertex2[0] = 0;   vertex2[1] = 60; vertex2[2] = 0;
-            vertex3[0] = -40; vertex3[1] = 0;  vertex3[2] = 0;
+            vertex1[0] = 40;
+            vertex1[1] = 0;
+            vertex1[2] = 0;
+            vertex2[0] = 0;
+            vertex2[1] = 60;
+            vertex2[2] = 0;
+            vertex3[0] = -40;
+            vertex3[1] = 0;
+            vertex3[2] = 0;
             break;
 
         case ENVFX_JETSTREAM_BUBBLES:
             envfx_update_jetstream();
-            vertex1[0] = 40;  vertex1[1] = 0;  vertex1[2] = 0;
-            vertex2[0] = 0;   vertex2[1] = 60; vertex2[2] = 0;
-            vertex3[0] = -40; vertex3[1] = 0;  vertex3[2] = 0;
+            vertex1[0] = 40;
+            vertex1[1] = 0;
+            vertex1[2] = 0;
+            vertex2[0] = 0;
+            vertex2[1] = 60;
+            vertex2[2] = 0;
+            vertex3[0] = -40;
+            vertex3[1] = 0;
+            vertex3[2] = 0;
             break;
     }
 }
@@ -568,9 +593,12 @@ Gfx *envfx_update_bubble_particles(s32 mode, UNUSED Vec3s marioPos, Vec3s camFro
                 Vtx *v = &interpolatedVertBuf[j * 3 + k];
                 v->v = gBubbleTempVtx[k];
                 if (gGlobalTimer != gEnvFxBuffer[i + j].spawnTimestamp && mode != ENVFX_LAVA_BUBBLES) {
-                    v->v.ob[0] = (sPrevBubblePositions[i + j][0] + gEnvFxBuffer[i + j].xPos) / 2.0f + interpolatedVertices[k][0];
-                    v->v.ob[1] = (sPrevBubblePositions[i + j][1] + gEnvFxBuffer[i + j].yPos) / 2.0f + interpolatedVertices[k][1];
-                    v->v.ob[2] = (sPrevBubblePositions[i + j][2] + gEnvFxBuffer[i + j].zPos) / 2.0f + interpolatedVertices[k][2];
+                    v->v.ob[0] = (sPrevBubblePositions[i + j][0] + gEnvFxBuffer[i + j].xPos) / 2.0f
+                                 + interpolatedVertices[k][0];
+                    v->v.ob[1] = (sPrevBubblePositions[i + j][1] + gEnvFxBuffer[i + j].yPos) / 2.0f
+                                 + interpolatedVertices[k][1];
+                    v->v.ob[2] = (sPrevBubblePositions[i + j][2] + gEnvFxBuffer[i + j].zPos) / 2.0f
+                                 + interpolatedVertices[k][2];
                 } else {
                     v->v.ob[0] = gEnvFxBuffer[i + j].xPos + interpolatedVertices[k][0];
                     v->v.ob[1] = gEnvFxBuffer[i + j].yPos + interpolatedVertices[k][1];
@@ -579,7 +607,8 @@ Gfx *envfx_update_bubble_particles(s32 mode, UNUSED Vec3s marioPos, Vec3s camFro
             }
         }
         gSPVertex(sGfxCursor++, VIRTUAL_TO_PHYSICAL(interpolatedVertBuf), 15, 0);
-        append_bubble_vertex_buffer(&sGfxSaved[i / 5], i, vertex1, vertex2, vertex3, (Vtx *) gBubbleTempVtx);
+        append_bubble_vertex_buffer(&sGfxSaved[i / 5], i, vertex1, vertex2, vertex3,
+                                    (Vtx *) gBubbleTempVtx);
         gSP1Triangle(sGfxCursor++, 0, 1, 2, 0);
         gSP1Triangle(sGfxCursor++, 3, 4, 5, 0);
         gSP1Triangle(sGfxCursor++, 6, 7, 8, 0);

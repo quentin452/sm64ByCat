@@ -11,14 +11,13 @@
  * Flags for gTimeStopState. These control which objects are processed each frame
  * and also track some miscellaneous info.
  */
-#define TIME_STOP_UNKNOWN_0         (1 << 0)
-#define TIME_STOP_ENABLED           (1 << 1)
-#define TIME_STOP_DIALOG            (1 << 2)
-#define TIME_STOP_MARIO_AND_DOORS   (1 << 3)
-#define TIME_STOP_ALL_OBJECTS       (1 << 4)
+#define TIME_STOP_UNKNOWN_0 (1 << 0)
+#define TIME_STOP_ENABLED (1 << 1)
+#define TIME_STOP_DIALOG (1 << 2)
+#define TIME_STOP_MARIO_AND_DOORS (1 << 3)
+#define TIME_STOP_ALL_OBJECTS (1 << 4)
 #define TIME_STOP_MARIO_OPENED_DOOR (1 << 5)
-#define TIME_STOP_ACTIVE            (1 << 6)
-
+#define TIME_STOP_ACTIVE (1 << 6)
 
 /**
  * The maximum number of objects that can be loaded at once.
@@ -34,8 +33,7 @@
  * Every object is categorized into an object list, which controls the order
  * they are processed and which objects they can collide with.
  */
-enum ObjectList
-{
+enum ObjectList {
     OBJ_LIST_PLAYER,      //  (0) Mario
     OBJ_LIST_UNUSED_1,    //  (1) (unused)
     OBJ_LIST_DESTRUCTIVE, //  (2) things that can be used to destroy other objects, like
@@ -62,7 +60,6 @@ enum ObjectList
                           //      gets exhausted.
     NUM_OBJ_LISTS
 };
-
 
 extern struct ObjectNode gObjectListArray[];
 
@@ -120,13 +117,11 @@ extern s16 gNumRoomedObjectsNotInMarioRoom;
 extern s16 gWDWWaterLevelChanging;
 extern s16 gMarioOnMerryGoRound;
 
-
 void bhv_mario_update(void);
 void set_object_respawn_info_bits(struct Object *obj, u8 bits);
 void unload_objects_from_area(UNUSED s32 unused, s32 areaIndex);
 void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo);
 void clear_objects(void);
 void update_objects(UNUSED s32 unused);
-
 
 #endif // OBJECT_LIST_PROCESSOR_H

@@ -63,7 +63,7 @@ static size_t sndqueue_read(void *buf, size_t len) {
     if (qhead == NULL)
         qtail = NULL;
 
-    return (size_t)(ptr - (Uint8*)buf);
+    return (size_t)(ptr - (Uint8 *) buf);
 }
 
 static inline sndpacket_t *alloc_sndpacket(void) {
@@ -73,7 +73,8 @@ static inline sndpacket_t *alloc_sndpacket(void) {
         qpool = packet->next;
     } else {
         packet = malloc(sizeof(sndpacket_t) + SNDPACKETLEN);
-        if (!packet) return NULL;
+        if (!packet)
+            return NULL;
     }
 
     packet->datalen = 0;
@@ -120,8 +121,9 @@ static int sndqueue_push(const void *data, size_t len) {
 static void audio_drain(void *user, Uint8 *buf, int len) {
     const size_t tx = sndqueue_read(buf, len);
     buf += tx;
-    len -= (int)tx;
-    if (len > 0) memset(buf, aspec.silence, len);
+    len -= (int) tx;
+    if (len > 0)
+        memset(buf, aspec.silence, len);
 }
 
 static bool audio_sdl_init(void) {
@@ -169,7 +171,7 @@ static void audio_sdl_play(const uint8_t *buf, size_t len) {
     SDL_UnlockAudio();
 }
 
-static void audio_sdl_shutdown(void)  {
+static void audio_sdl_shutdown(void) {
     if (SDL_WasInit(SDL_INIT_AUDIO)) {
         if (was_init) {
             SDL_CloseAudio();
@@ -179,12 +181,7 @@ static void audio_sdl_shutdown(void)  {
     }
 }
 
-struct AudioAPI audio_sdl = {
-    audio_sdl_init,
-    audio_sdl_buffered,
-    audio_sdl_get_desired_buffered,
-    audio_sdl_play,
-    audio_sdl_shutdown
-};
+struct AudioAPI audio_sdl = { audio_sdl_init, audio_sdl_buffered, audio_sdl_get_desired_buffered,
+                              audio_sdl_play, audio_sdl_shutdown };
 
 #endif

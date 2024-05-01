@@ -20,7 +20,7 @@
 #define DEFINE_LEVEL(textname, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) textname,
 
 static char gLevelSelect_StageNamesText[64][16] = {
-    #include "levels/level_defines.h"
+#include "levels/level_defines.h"
 };
 #undef STUB_LEVEL
 #undef DEFINE_LEVEL
@@ -72,20 +72,20 @@ int run_press_start_demo_timer(s32 timer) {
 extern int gDemoInputListID_2;
 extern int gPressedStart;
 
-int start_demo(int timer)
-{
-	gCurrDemoInput = NULL;
-	gPressedStart = 0;
+int start_demo(int timer) {
+    gCurrDemoInput = NULL;
+    gPressedStart = 0;
     // start the mario demo animation for the demo list.
-    //func_80278AD4(&gDemo, gDemoInputListID_2);
+    // func_80278AD4(&gDemo, gDemoInputListID_2);
 
     // if the next demo sequence ID is the count limit, reset it back to
     // the first sequence.
 
-    if((++gDemoInputListID_2) == gDemo.animDmaTable->count)
+    if ((++gDemoInputListID_2) == gDemo.animDmaTable->count)
         gDemoInputListID_2 = 0;
 
-    gCurrDemoInput = ((struct DemoInput *) gDemo.targetAnim) + 1; // add 1 (+4) to the pointer to skip the demoID.
+    gCurrDemoInput =
+        ((struct DemoInput *) gDemo.targetAnim) + 1; // add 1 (+4) to the pointer to skip the demoID.
     timer = (s8)((struct DemoInput *) gDemo.targetAnim)->timer; // TODO: see if making timer s8 matches
     gCurrSaveFileNum = 1;
     gCurrActNum = 6;
@@ -157,7 +157,6 @@ s16 level_select_input_loop(void) {
     return 0;
 }
 
-
 int intro_default(void) {
     s32 sp1C = 0;
 
@@ -172,7 +171,7 @@ int intro_default(void) {
     if (gPlayer1Controller->buttonPressed & START_BUTTON) {
         play_sound(SOUND_MENU_STAR_SOUND, gDefaultSoundArgs);
         sp1C = 100 + gDebugLevelSelect;
-#ifndef VERSION_JP        
+#ifndef VERSION_JP
         D_U_801A7C34 = 1;
 #endif
     }

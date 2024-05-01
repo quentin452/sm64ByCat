@@ -70,19 +70,19 @@ static void controller_sdl_bind(void) {
     num_joy_binds = 0;
     num_mouse_binds = 0;
 
-    controller_add_binds(A_BUTTON,     configKeyA);
-    controller_add_binds(B_BUTTON,     configKeyB);
-    controller_add_binds(Z_TRIG,       configKeyZ);
-    controller_add_binds(STICK_UP,     configKeyStickUp);
-    controller_add_binds(STICK_LEFT,   configKeyStickLeft);
-    controller_add_binds(STICK_DOWN,   configKeyStickDown);
-    controller_add_binds(STICK_RIGHT,  configKeyStickRight);
-    controller_add_binds(U_CBUTTONS,   configKeyCUp);
-    controller_add_binds(L_CBUTTONS,   configKeyCLeft);
-    controller_add_binds(D_CBUTTONS,   configKeyCDown);
-    controller_add_binds(R_CBUTTONS,   configKeyCRight);
-    controller_add_binds(L_TRIG,       configKeyL);
-    controller_add_binds(R_TRIG,       configKeyR);
+    controller_add_binds(A_BUTTON, configKeyA);
+    controller_add_binds(B_BUTTON, configKeyB);
+    controller_add_binds(Z_TRIG, configKeyZ);
+    controller_add_binds(STICK_UP, configKeyStickUp);
+    controller_add_binds(STICK_LEFT, configKeyStickLeft);
+    controller_add_binds(STICK_DOWN, configKeyStickDown);
+    controller_add_binds(STICK_RIGHT, configKeyStickRight);
+    controller_add_binds(U_CBUTTONS, configKeyCUp);
+    controller_add_binds(L_CBUTTONS, configKeyCLeft);
+    controller_add_binds(D_CBUTTONS, configKeyCDown);
+    controller_add_binds(R_CBUTTONS, configKeyCRight);
+    controller_add_binds(L_TRIG, configKeyL);
+    controller_add_binds(R_TRIG, configKeyR);
     controller_add_binds(START_BUTTON, configKeyStart);
 }
 
@@ -118,10 +118,12 @@ static void controller_sdl_init(void) {
 }
 
 static SDL_Haptic *controller_sdl_init_haptics(const int joy) {
-    if (!haptics_enabled) return NULL;
+    if (!haptics_enabled)
+        return NULL;
 
     SDL_Haptic *hap = SDL_HapticOpen(joy);
-    if (!hap) return NULL;
+    if (!hap)
+        return NULL;
 
     if (SDL_HapticRumbleSupported(hap) != SDL_TRUE) {
         SDL_HapticClose(hap);
@@ -140,7 +142,8 @@ static SDL_Haptic *controller_sdl_init_haptics(const int joy) {
 static inline void update_button(const int i, const bool new) {
     const bool pressed = !joy_buttons[i] && new;
     joy_buttons[i] = new;
-    if (pressed) last_joybutton = i;
+    if (pressed)
+        last_joybutton = i;
 }
 
 static void controller_sdl_read(OSContPad *pad) {
@@ -148,12 +151,12 @@ static void controller_sdl_read(OSContPad *pad) {
         return;
     }
 
-//#ifdef BETTERCAMERA
+    //#ifdef BETTERCAMERA
     if (newcam_mouse == 1 && sCurrPlayMode != 2)
         SDL_SetRelativeMouseMode(SDL_TRUE);
     else
         SDL_SetRelativeMouseMode(SDL_FALSE);
-//#endif
+    //#endif
 
     u32 mouse = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
 
@@ -237,10 +240,14 @@ static void controller_sdl_read(OSContPad *pad) {
     else if (ystick == STICK_UP)
         pad->stick_y = 127;
 
-    if (rightx < -0x4000) pad->button |= L_CBUTTONS;
-    if (rightx > 0x4000) pad->button |= R_CBUTTONS;
-    if (righty < -0x4000) pad->button |= U_CBUTTONS;
-    if (righty > 0x4000) pad->button |= D_CBUTTONS;
+    if (rightx < -0x4000)
+        pad->button |= L_CBUTTONS;
+    if (rightx > 0x4000)
+        pad->button |= R_CBUTTONS;
+    if (righty < -0x4000)
+        pad->button |= U_CBUTTONS;
+    if (righty > 0x4000)
+        pad->button |= D_CBUTTONS;
 
     uint32_t magnitude_sq = (uint32_t)(leftx * leftx) + (uint32_t)(lefty * lefty);
     uint32_t stickDeadzoneActual = configStickDeadzone * DEADZONE_STEP;
@@ -307,15 +314,9 @@ static void controller_sdl_shutdown(void) {
     init_ok = false;
 }
 
-struct ControllerAPI controller_sdl = {
-    VK_BASE_SDL_GAMEPAD,
-    controller_sdl_init,
-    controller_sdl_read,
-    controller_sdl_rawkey,
-    controller_sdl_rumble_play,
-    controller_sdl_rumble_stop,
-    controller_sdl_bind,
-    controller_sdl_shutdown
-};
+struct ControllerAPI controller_sdl = { VK_BASE_SDL_GAMEPAD,        controller_sdl_init,
+                                        controller_sdl_read,        controller_sdl_rawkey,
+                                        controller_sdl_rumble_play, controller_sdl_rumble_stop,
+                                        controller_sdl_bind,        controller_sdl_shutdown };
 
 #endif // CAPI_SDL2

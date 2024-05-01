@@ -4,16 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-enum {
-    CC_0,
-    CC_TEXEL0,
-    CC_TEXEL1,
-    CC_PRIM,
-    CC_SHADE,
-    CC_ENV,
-    CC_TEXEL0A,
-    CC_LOD
-};
+enum { CC_0, CC_TEXEL0, CC_TEXEL1, CC_PRIM, CC_SHADE, CC_ENV, CC_TEXEL0A, CC_LOD };
 
 enum {
     SHADER_0,

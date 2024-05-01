@@ -53,8 +53,7 @@ void unused_init_free_list(struct LinkedList *usedList, struct LinkedList **pFre
  * freeList is empty.
  * Appears to have been replaced by try_allocate_object.
  */
-struct LinkedList *unused_try_allocate(struct LinkedList *destList,
-                                       struct LinkedList *freeList) {
+struct LinkedList *unused_try_allocate(struct LinkedList *destList, struct LinkedList *freeList) {
     struct LinkedList *node = freeList->next;
 
     if (node != NULL) {
@@ -248,7 +247,8 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     }
 #else
     // -O2 needs everything until = on the same line
-    for (i = 0; i < 0x50; i++) obj->rawData.asS32[i] = 0;
+    for (i = 0; i < 0x50; i++)
+        obj->rawData.asS32[i] = 0;
 #endif
 
     obj->unused1 = 0;

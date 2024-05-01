@@ -13,30 +13,25 @@ static struct ObjectHitbox sBowlingBallHitbox = {
 };
 
 static Trajectory sThiHugeMetalBallTraj[] = {
-    TRAJECTORY_POS(0, /*pos*/ -4786,   101, -2166),
-    TRAJECTORY_POS(1, /*pos*/ -5000,    81, -2753),
-    TRAJECTORY_POS(2, /*pos*/ -5040,    33, -3846),
-    TRAJECTORY_POS(3, /*pos*/ -4966,    38, -4966),
-    TRAJECTORY_POS(4, /*pos*/ -4013,  -259, -4893),
+    TRAJECTORY_POS(0, /*pos*/ -4786, 101, -2166),
+    TRAJECTORY_POS(1, /*pos*/ -5000, 81, -2753),
+    TRAJECTORY_POS(2, /*pos*/ -5040, 33, -3846),
+    TRAJECTORY_POS(3, /*pos*/ -4966, 38, -4966),
+    TRAJECTORY_POS(4, /*pos*/ -4013, -259, -4893),
     TRAJECTORY_POS(5, /*pos*/ -2573, -1019, -4780),
     TRAJECTORY_POS(6, /*pos*/ -1053, -1399, -4806),
-    TRAJECTORY_POS(7, /*pos*/   760, -1637, -4833),
-    TRAJECTORY_POS(8, /*pos*/  2866, -2047, -4886),
-    TRAJECTORY_POS(9, /*pos*/  3386, -6546, -4833),
+    TRAJECTORY_POS(7, /*pos*/ 760, -1637, -4833),
+    TRAJECTORY_POS(8, /*pos*/ 2866, -2047, -4886),
+    TRAJECTORY_POS(9, /*pos*/ 3386, -6546, -4833),
     TRAJECTORY_END(),
 };
 
 static Trajectory sThiTinyMetalBallTraj[] = {
-    TRAJECTORY_POS(0, /*pos*/ -1476,    29,  -680),
-    TRAJECTORY_POS(1, /*pos*/ -1492,    14, -1072),
-    TRAJECTORY_POS(2, /*pos*/ -1500,     3, -1331),
-    TRAJECTORY_POS(3, /*pos*/ -1374,   -17, -1527),
-    TRAJECTORY_POS(4, /*pos*/ -1178,   -83, -1496),
-    TRAJECTORY_POS(5, /*pos*/  -292,  -424, -1425),
-    TRAJECTORY_POS(6, /*pos*/   250,  -491, -1433),
-    TRAJECTORY_POS(7, /*pos*/   862,  -613, -1449),
-    TRAJECTORY_POS(8, /*pos*/  1058, -1960, -1449),
-    TRAJECTORY_END(),
+    TRAJECTORY_POS(0, /*pos*/ -1476, 29, -680),    TRAJECTORY_POS(1, /*pos*/ -1492, 14, -1072),
+    TRAJECTORY_POS(2, /*pos*/ -1500, 3, -1331),    TRAJECTORY_POS(3, /*pos*/ -1374, -17, -1527),
+    TRAJECTORY_POS(4, /*pos*/ -1178, -83, -1496),  TRAJECTORY_POS(5, /*pos*/ -292, -424, -1425),
+    TRAJECTORY_POS(6, /*pos*/ 250, -491, -1433),   TRAJECTORY_POS(7, /*pos*/ 862, -613, -1449),
+    TRAJECTORY_POS(8, /*pos*/ 1058, -1960, -1449), TRAJECTORY_END(),
 };
 
 void bhv_bowling_ball_init(void) {
@@ -191,7 +186,8 @@ void bhv_generic_bowling_ball_spawner_loop(void) {
 
     if ((o->oTimer & o->oBBallSpawnerPeriodMinus1) == 0) /* Modulus */
     {
-        if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, o->oBBallSpawnerMaxSpawnDist)) {
+        if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ,
+                                            o->oBBallSpawnerMaxSpawnDist)) {
             if ((s32)(random_float() * o->oBBallSpawnerSpawnOdds) == 0) {
                 bowlingBall = spawn_object(o, MODEL_BOWLING_BALL, bhvBowlingBall);
                 bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;

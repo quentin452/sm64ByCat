@@ -13,34 +13,45 @@
 #define NUM_CAP_ON 4
 
 const char *sav_flags[NUM_FLAGS] = {
-    "file_exists", "wing_cap", "metal_cap", "vanish_cap", "key_1", "key_2",
-    "basement_door", "upstairs_door", "ddd_moved_back", "moat_drained",
-    "pps_door", "wf_door", "ccm_door", "jrb_door", "bitdw_door",
-    "bitfs_door", "", "", "", "", "50star_door"    // 4 Cap flags are processed in their own section
+    "file_exists",
+    "wing_cap",
+    "metal_cap",
+    "vanish_cap",
+    "key_1",
+    "key_2",
+    "basement_door",
+    "upstairs_door",
+    "ddd_moved_back",
+    "moat_drained",
+    "pps_door",
+    "wf_door",
+    "ccm_door",
+    "jrb_door",
+    "bitdw_door",
+    "bitfs_door",
+    "",
+    "",
+    "",
+    "",
+    "50star_door" // 4 Cap flags are processed in their own section
 };
 
-const char *sav_courses[NUM_COURSES] = {
-    "bob", "wf", "jrb", "ccm", "bbh", "hmc", "lll",
-    "ssl", "ddd", "sl", "wdw", "ttm", "thi", "ttc", "rr"
-};
+const char *sav_courses[NUM_COURSES] = { "bob", "wf", "jrb", "ccm", "bbh", "hmc", "lll", "ssl",
+                                         "ddd", "sl", "wdw", "ttm", "thi", "ttc", "rr" };
 
 const char *sav_bonus_courses[NUM_BONUS_COURSES] = {
-    "bitdw", "bitfs", "bits", "pss", "cotmc",
-    "totwc", "vcutm", "wmotr", "sa", "hub"    // hub is Castle Grounds
+    "bitdw", "bitfs", "bits",  "pss", "cotmc",
+    "totwc", "vcutm", "wmotr", "sa",  "hub" // hub is Castle Grounds
 };
 
-const char *cap_on_types[NUM_CAP_ON] = {
-    "ground", "klepto", "ukiki", "mrblizzard"
-};
+const char *cap_on_types[NUM_CAP_ON] = { "ground", "klepto", "ukiki", "mrblizzard" };
 
-const char *sound_modes[3] = {
-    "stereo", "mono", "headset"
-};
+const char *sound_modes[3] = { "stereo", "mono", "headset" };
 
 /* Get current timestamp string */
-static void get_timestamp(char* buffer) {
+static void get_timestamp(char *buffer) {
     time_t timer;
-    struct tm* tm_info;
+    struct tm *tm_info;
 
     timer = time(NULL);
     tm_info = localtime(&timer);
@@ -76,7 +87,7 @@ static u32 int_to_bin(u32 n) {
  * Write SaveFile and MainMenuSaveData structs to a text-based savefile
  */
 static s32 write_text_save(s32 fileIndex) {
-    FILE* file;
+    FILE *file;
     struct SaveFile *savedata;
     struct MainMenuSaveData *menudata;
     char filename[SYS_MAX_PATH] = { 0 };
@@ -103,26 +114,23 @@ static s32 write_text_save(s32 fileIndex) {
     menudata = &gSaveBuffer.menuData[0];
     fprintf(file, "\n[menu]\n");
     fprintf(file, "coin_score_age = %d\n", menudata->coinScoreAges[fileIndex]);
-    
+
     if (menudata->soundMode == 0) {
-        fprintf(file, "sound_mode = %s\n", sound_modes[0]);  // stereo
-    }
-    else if (menudata->soundMode == 3) {
-        fprintf(file, "sound_mode = %s\n", sound_modes[1]);  // mono
-    }
-    else if (menudata->soundMode == 1) {
-        fprintf(file, "sound_mode = %s\n", sound_modes[2]);  // headset
-    }
-    else {
+        fprintf(file, "sound_mode = %s\n", sound_modes[0]); // stereo
+    } else if (menudata->soundMode == 3) {
+        fprintf(file, "sound_mode = %s\n", sound_modes[1]); // mono
+    } else if (menudata->soundMode == 1) {
+        fprintf(file, "sound_mode = %s\n", sound_modes[2]); // headset
+    } else {
         printf("Undefined sound mode!");
         return -1;
     }
-    
+
     fprintf(file, "\n[flags]\n");
     for (i = 1; i < NUM_FLAGS; i++) {
         if (strcmp(sav_flags[i], "")) {
             flags = save_file_get_flags();
-            flags = (flags & (1 << i));     // Get 'star' flag bit
+            flags = (flags & (1 << i)); // Get 'star' flag bit
             flags = (flags) ? 1 : 0;
 
             fprintf(file, "%s = %d\n", sav_flags[i], flags);
@@ -134,16 +142,16 @@ static s32 write_text_save(s32 fileIndex) {
         stars = save_file_get_star_flags(fileIndex, i);
         coins = save_file_get_course_coin_score(fileIndex, i);
         cannonFlag = save_file_get_cannon_flags(fileIndex, i);
-        starFlags = int_to_bin(stars);      // 63 -> 111111
-            
-        fprintf(file, "%s = \"%d, %07d, %d\"\n", sav_courses[i], coins, starFlags,cannonFlag);
+        starFlags = int_to_bin(stars); // 63 -> 111111
+
+        fprintf(file, "%s = \"%d, %07d, %d\"\n", sav_courses[i], coins, starFlags, cannonFlag);
     }
 
     fprintf(file, "\n[bonus]\n");
     for (i = 0; i < NUM_BONUS_COURSES; i++) {
         char *format;
 
-        if (i == NUM_BONUS_COURSES-1) {
+        if (i == NUM_BONUS_COURSES - 1) {
             // Process Castle Grounds
             stars = save_file_get_star_flags(fileIndex, -1);
             format = "%05d";
@@ -153,7 +161,7 @@ static s32 write_text_save(s32 fileIndex) {
             format = "%02d";
         } else {
             // Process bonus courses
-            stars = save_file_get_star_flags(fileIndex, i+15);
+            stars = save_file_get_star_flags(fileIndex, i + 15);
             format = "%d";
         }
 
@@ -166,8 +174,8 @@ static s32 write_text_save(s32 fileIndex) {
     fprintf(file, "\n[cap]\n");
     for (i = 0; i < NUM_CAP_ON; i++) {
         flags = save_file_get_flags();
-        bit = (1 << (i+16));        // Determine current flag
-        flags = (flags & bit);      // Get 'cap' flag bit
+        bit = (1 << (i + 16)); // Determine current flag
+        flags = (flags & bit); // Get 'cap' flag bit
         flags = (flags) ? 1 : 0;
         if (flags) {
             fprintf(file, "type = %s\n", cap_on_types[i]);
@@ -176,7 +184,7 @@ static s32 write_text_save(s32 fileIndex) {
     }
 
     savedata = &gSaveBuffer.files[fileIndex][0];
-    switch(savedata->capLevel) {
+    switch (savedata->capLevel) {
         case COURSE_SSL:
             fprintf(file, "level = %s\n", "ssl");
             break;
@@ -196,7 +204,7 @@ static s32 write_text_save(s32 fileIndex) {
     // Backup is nessecary for saving recent progress after gameover
     bcopy(&gSaveBuffer.files[fileIndex][0], &gSaveBuffer.files[fileIndex][1],
           sizeof(gSaveBuffer.files[fileIndex][1]));
-    
+
     fclose(file);
     return 1;
 }
@@ -208,10 +216,10 @@ static s32 read_text_save(s32 fileIndex) {
     char filename[SYS_MAX_PATH] = { 0 };
     const char *value;
     ini_t *savedata;
-    
+
     u32 i, flag, coins, stars, starFlags, cannonFlag;
     u32 capArea;
-    
+
     if (snprintf(filename, sizeof(filename), FILENAME_FORMAT, fs_writepath, fileIndex) < 0)
         return -1;
 
@@ -223,31 +231,28 @@ static s32 read_text_save(s32 fileIndex) {
     }
 
     ini_sget(savedata, "menu", "coin_score_age", "%d",
-                &gSaveBuffer.menuData[0].coinScoreAges[fileIndex]);
-    
+             &gSaveBuffer.menuData[0].coinScoreAges[fileIndex]);
+
     value = ini_get(savedata, "menu", "sound_mode");
     if (value) {
         if (strcmp(value, sound_modes[0]) == 0) {
-            gSaveBuffer.menuData[0].soundMode = 0;  // stereo
+            gSaveBuffer.menuData[0].soundMode = 0; // stereo
+        } else if (strcmp(value, sound_modes[1]) == 0) {
+            gSaveBuffer.menuData[0].soundMode = 3; // mono
+        } else if (strcmp(value, sound_modes[2]) == 0) {
+            gSaveBuffer.menuData[0].soundMode = 1; // headset
         }
-        else if (strcmp(value, sound_modes[1]) == 0) {
-            gSaveBuffer.menuData[0].soundMode = 3;  // mono
-        }
-        else if (strcmp(value, sound_modes[2]) == 0) {
-            gSaveBuffer.menuData[0].soundMode = 1;  // headset
-        }
-    }
-    else {
+    } else {
         printf("Invalid 'menu:sound_mode' flag!\n");
         return -1;
     }
-    
+
     for (i = 1; i < NUM_FLAGS; i++) {
         value = ini_get(savedata, "flags", sav_flags[i]);
         if (value) {
-            flag = value[0] - '0';  // Flag should be 0 or 1
+            flag = value[0] - '0'; // Flag should be 0 or 1
             if (flag) {
-                flag = 1 << i;      // Flags defined in 'save_file' header
+                flag = 1 << i; // Flags defined in 'save_file' header
                 gSaveBuffer.files[fileIndex][0].flags |= flag;
             }
         }
@@ -256,10 +261,10 @@ static s32 read_text_save(s32 fileIndex) {
     for (i = 0; i < NUM_COURSES; i++) {
         value = ini_get(savedata, "courses", sav_courses[i]);
         if (value) {
-            sscanf(value, "%d, %d, %d", &coins, &stars, &cannonFlag); 
-            starFlags = bin_to_int(stars);      // 111111 -> 63
-            cannonFlag <<= 7; //Shifts the bit to the most significant bit.
-            save_file_set_star_flags(fileIndex, i+1, cannonFlag); //
+            sscanf(value, "%d, %d, %d", &coins, &stars, &cannonFlag);
+            starFlags = bin_to_int(stars); // 111111 -> 63
+            cannonFlag <<= 7;              // Shifts the bit to the most significant bit.
+            save_file_set_star_flags(fileIndex, i + 1, cannonFlag); //
             save_file_set_star_flags(fileIndex, i, starFlags);
             gSaveBuffer.files[fileIndex][0].courseCoinScores[i] = coins;
         }
@@ -279,7 +284,7 @@ static s32 read_text_save(s32 fileIndex) {
                 save_file_set_star_flags(fileIndex, 18, starFlags);
             } else {
                 // Process bonus courses
-                save_file_set_star_flags(fileIndex, i+15, starFlags);
+                save_file_set_star_flags(fileIndex, i + 15, starFlags);
             }
         }
     }
@@ -294,43 +299,39 @@ static s32 read_text_save(s32 fileIndex) {
             }
         }
     }
-    
+
     value = ini_get(savedata, "cap", "level");
     if (value) {
         if (strcmp(value, "ssl") == 0) {
             gSaveBuffer.files[fileIndex][0].capLevel = COURSE_SSL; // ssl
-        }
-        else if (strcmp(value, "sl") == 0) {
+        } else if (strcmp(value, "sl") == 0) {
             gSaveBuffer.files[fileIndex][0].capLevel = COURSE_SL; // sl
-        }
-        else if (strcmp(value, "ttm") == 0) {
+        } else if (strcmp(value, "ttm") == 0) {
             gSaveBuffer.files[fileIndex][0].capLevel = COURSE_TTM; // ttm
-        }
-        else {
+        } else {
             printf("Invalid 'cap:level' flag!\n");
             return -1;
         }
     }
-    
+
     value = ini_get(savedata, "cap", "area");
     if (value) {
         sscanf(value, "%d", &capArea);
         if (capArea > 1 && capArea < 2) {
             printf("Invalid 'cap:area' flag: %d!\n", capArea);
             return -1;
-        }
-        else {
-            gSaveBuffer.files[fileIndex][0].capArea = capArea; 
+        } else {
+            gSaveBuffer.files[fileIndex][0].capArea = capArea;
         }
     }
-    
+
     // Good, file exists for gSaveBuffer
     gSaveBuffer.files[fileIndex][0].flags |= SAVE_FLAG_FILE_EXISTS;
 
     // Backup is nessecary for saving recent progress after gameover
     bcopy(&gSaveBuffer.files[fileIndex][0], &gSaveBuffer.files[fileIndex][1],
           sizeof(gSaveBuffer.files[fileIndex][1]));
-    
+
     ini_free(savedata);
     return 0;
 }

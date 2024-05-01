@@ -6,10 +6,9 @@
 #include "types.h"
 
 #define LEVEL_BOUNDARY_MAX 0x2000
-#define CELL_SIZE          0x400
+#define CELL_SIZE 0x400
 
-struct WallCollisionData
-{
+struct WallCollisionData {
     /*0x00*/ f32 x, y, z;
     /*0x0C*/ f32 offsetY;
     /*0x10*/ f32 radius;
@@ -18,8 +17,7 @@ struct WallCollisionData
     /*0x18*/ struct Surface *walls[4];
 };
 
-struct FloorGeometry
-{
+struct FloorGeometry {
     f32 unused[4]; // possibly position data?
     f32 normalX;
     f32 normalY;

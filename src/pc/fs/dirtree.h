@@ -27,6 +27,7 @@ fs_dirtree_entry_t *fs_dirtree_add(fs_dirtree_t *tree, char *name, const bool is
 fs_dirtree_entry_t *fs_dirtree_find(fs_dirtree_t *tree, const char *name);
 
 // the first arg is void* so this could be used in walk() methods of various packtypes
-fs_walk_result_t fs_dirtree_walk(void *tree, const char *base, walk_fn_t walkfn, void *user, const bool recur);
+fs_walk_result_t fs_dirtree_walk(void *tree, const char *base, walk_fn_t walkfn, void *user,
+                                 const bool recur);
 
 #endif // _SM64_DIRTREE_H_

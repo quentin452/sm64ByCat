@@ -17,8 +17,8 @@ static void sequence_channel_process_sound(struct SequenceChannel *seqChannel, s
     s32 i;
 
     if (seqChannel->changes.as_bitfields.volume || recalculateVolume) {
-        channelVolume = seqChannel->volume * seqChannel->volumeScale *
-            seqChannel->seqPlayer->appliedFadeVolume * seqChannel->seqPlayer->volumeScale;
+        channelVolume = seqChannel->volume * seqChannel->volumeScale
+                        * seqChannel->seqPlayer->appliedFadeVolume * seqChannel->seqPlayer->volumeScale;
         if (seqChannel->seqPlayer->muted && (seqChannel->muteBehavior & MUTE_BEHAVIOR_SOFTEN) != 0) {
             channelVolume = seqChannel->seqPlayer->muteVolumeScale * channelVolume;
         }
@@ -35,7 +35,8 @@ static void sequence_channel_process_sound(struct SequenceChannel *seqChannel, s
             if (layer->notePropertiesNeedInit) {
                 layer->noteFreqScale = layer->freqScale * seqChannel->freqScale;
                 layer->noteVelocity = layer->velocitySquare * seqChannel->appliedVolume;
-                layer->notePan = (seqChannel->pan + layer->pan * (0x80 - seqChannel->panChannelWeight)) >> 7;
+                layer->notePan =
+                    (seqChannel->pan + layer->pan * (0x80 - seqChannel->panChannelWeight)) >> 7;
                 layer->notePropertiesNeedInit = FALSE;
             } else {
                 if (seqChannel->changes.as_bitfields.freqScale) {
@@ -45,7 +46,8 @@ static void sequence_channel_process_sound(struct SequenceChannel *seqChannel, s
                     layer->noteVelocity = layer->velocitySquare * seqChannel->appliedVolume;
                 }
                 if (seqChannel->changes.as_bitfields.pan) {
-                    layer->notePan = (seqChannel->pan + layer->pan * (0x80 - seqChannel->panChannelWeight)) >> 7;
+                    layer->notePan =
+                        (seqChannel->pan + layer->pan * (0x80 - seqChannel->panChannelWeight)) >> 7;
                 }
             }
         }
@@ -59,8 +61,8 @@ static void sequence_channel_process_sound(struct SequenceChannel *seqChannel) {
     f32 panFromChannel;
     s32 i;
 
-    channelVolume = seqChannel->volume * seqChannel->volumeScale *
-        seqChannel->seqPlayer->fadeVolume * seqChannel->seqPlayer->volumeScale;
+    channelVolume = seqChannel->volume * seqChannel->volumeScale * seqChannel->seqPlayer->fadeVolume
+                    * seqChannel->seqPlayer->volumeScale;
     if (seqChannel->seqPlayer->muted && (seqChannel->muteBehavior & MUTE_BEHAVIOR_SOFTEN) != 0) {
         channelVolume *= seqChannel->seqPlayer->muteVolumeScale;
     }
@@ -219,8 +221,8 @@ f32 get_vibrato_freq_scale(struct VibratoState *vib) {
         if (vib->extentChangeTimer == 1) {
             vib->extent = (s32) vib->seqChannel->vibratoExtentTarget;
         } else {
-            vib->extent +=
-                ((s32) vib->seqChannel->vibratoExtentTarget - vib->extent) / (s32) vib->extentChangeTimer;
+            vib->extent += ((s32) vib->seqChannel->vibratoExtentTarget - vib->extent)
+                           / (s32) vib->extentChangeTimer;
         }
 
         vib->extentChangeTimer--;
@@ -234,7 +236,8 @@ f32 get_vibrato_freq_scale(struct VibratoState *vib) {
         if (vib->rateChangeTimer == 1) {
             vib->rate = (s32) vib->seqChannel->vibratoRateTarget;
         } else {
-            vib->rate += ((s32) vib->seqChannel->vibratoRateTarget - vib->rate) / (s32) vib->rateChangeTimer;
+            vib->rate +=
+                ((s32) vib->seqChannel->vibratoRateTarget - vib->rate) / (s32) vib->rateChangeTimer;
         }
 
         vib->rateChangeTimer--;

@@ -5,7 +5,7 @@
 
 #define CONFIGFILE_DEFAULT "sm64config.txt"
 
-#define MAX_BINDS  3
+#define MAX_BINDS 3
 #define MAX_VOLUME 127
 
 typedef struct {
@@ -40,22 +40,22 @@ extern unsigned int configKeyStickRight[];
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 #ifdef EXTERNAL_DATA
-extern bool         configPrecacheRes;
+extern bool configPrecacheRes;
 #endif
 extern unsigned int configCameraXSens;
 extern unsigned int configCameraYSens;
 extern unsigned int configCameraAggr;
 extern unsigned int configCameraPan;
 extern unsigned int configCameraDegrade;
-extern bool         configCameraInvertX;
-extern bool         configCameraInvertY;
-extern bool         configEnableCamera;
-extern bool         configCameraMouse;
-extern bool         configCameraAnalog;
-extern bool         configHUD;
-extern bool         configSkipIntro;
+extern bool configCameraInvertX;
+extern bool configCameraInvertY;
+extern bool configEnableCamera;
+extern bool configCameraMouse;
+extern bool configCameraAnalog;
+extern bool configHUD;
+extern bool configSkipIntro;
 #ifdef DISCORDRPC
-extern bool         configDiscordRPC;
+extern bool configDiscordRPC;
 #endif
 
 void configfile_load(const char *filename);

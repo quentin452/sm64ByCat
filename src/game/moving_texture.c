@@ -109,8 +109,8 @@ s16 gMovtexCounterPrev = 0;
 
 // Vertex colors for rectangles. Used to give mist a tint
 #define MOVTEX_VTX_COLOR_DEFAULT 0 // no tint (white vertex colors)
-#define MOVTEX_VTX_COLOR_YELLOW 1  // used for Hazy Maze Cave toxic haze
-#define MOVTEX_VTX_COLOR_RED 2     // used for Shifting Sand Land around the Tox box maze
+#define MOVTEX_VTX_COLOR_YELLOW 1 // used for Hazy Maze Cave toxic haze
+#define MOVTEX_VTX_COLOR_RED 2 // used for Shifting Sand Land around the Tox box maze
 
 s8 gMovtexVtxColor = MOVTEX_VTX_COLOR_DEFAULT;
 

@@ -1,6 +1,5 @@
 #include <PR/ultratypes.h>
 
-
 #ifdef VERSION_EU
 #include "prevent_bss_reordering.h"
 #endif
@@ -138,7 +137,7 @@ void func_8018EBE8(struct ObjJoint *self) {
         }
     }
 
-    set_cur_dynobj((struct GdObj *)self);
+    set_cur_dynobj((struct GdObj *) self);
     sp5C = d_get_rot_mtx_ptr();
     sp44.x = (*sp5C)[3][0];
     sp44.y = (*sp5C)[3][1];

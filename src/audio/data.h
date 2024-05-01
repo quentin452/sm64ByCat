@@ -103,7 +103,7 @@ extern u16 gUnused80226E98[0x10];
 
 extern u32 gAudioRandom;
 
-//make my life easier
+// make my life easier
 #ifdef VERSION_EU
 #define UNUSED_COUNT_80333EE8 24
 #define AUDIO_HEAP_SIZE 0x2c500
@@ -113,6 +113,5 @@ extern u32 gAudioRandom;
 #define AUDIO_HEAP_SIZE 0x31150
 #define D_80333EF0_VAL 0x2500
 #endif
-
 
 #endif // AUDIO_DATA_H

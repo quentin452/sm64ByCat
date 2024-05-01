@@ -20,123 +20,119 @@
 
 #define COPT 0
 #if COPT
-#define M64_READ_U8(state, dst) \
-    dst = m64_read_u8(state);
+#define M64_READ_U8(state, dst) dst = m64_read_u8(state);
 #else
-#define M64_READ_U8(state, dst) \
-{                               \
-    u8 * _ptr_pc;               \
-    u8  _pc;                    \
-    _ptr_pc = (*state).pc;      \
-    ((*state).pc)++;            \
-    _pc = *_ptr_pc;             \
-    dst = _pc;                  \
-}
-#endif
-
-
-#if COPT
-#define M64_READ_S16(state, dst) \
-    dst = m64_read_s16(state);
-#else
-#define M64_READ_S16(state, dst)    \
-{                                   \
-    s16 _ret;                       \
-    _ret = *(*state).pc << 8;       \
-    ((*state).pc)++;                \
-    _ret = *(*state).pc | _ret;     \
-    ((*state).pc)++;                \
-    dst = _ret;                     \
-}
-#endif
-#if COPT
-#define M64_READ_COMPRESSED_U16(state, dst) \
-    dst = m64_read_compressed_u16(state);
-#else
-#define M64_READ_COMPRESSED_U16(state, dst) \
-{                                           \
-    u16 ret = *(state->pc++);               \
-    if (ret & 0x80) {                       \
-        ret = (ret << 8) & 0x7f00;          \
-        ret = *(state->pc++) | ret;         \
-    }                                       \
-    dst = ret;                              \
-}
+#define M64_READ_U8(state, dst)                                                                        \
+    {                                                                                                  \
+        u8 *_ptr_pc;                                                                                   \
+        u8 _pc;                                                                                        \
+        _ptr_pc = (*state).pc;                                                                         \
+        ((*state).pc)++;                                                                               \
+        _pc = *_ptr_pc;                                                                                \
+        dst = _pc;                                                                                     \
+    }
 #endif
 
 #if COPT
-#define GET_INSTRUMENT(seqChannel, instId, _instOut, _adsr, dst, l) \
+#define M64_READ_S16(state, dst) dst = m64_read_s16(state);
+#else
+#define M64_READ_S16(state, dst)                                                                       \
+    {                                                                                                  \
+        s16 _ret;                                                                                      \
+        _ret = *(*state).pc << 8;                                                                      \
+        ((*state).pc)++;                                                                               \
+        _ret = *(*state).pc | _ret;                                                                    \
+        ((*state).pc)++;                                                                               \
+        dst = _ret;                                                                                    \
+    }
+#endif
+#if COPT
+#define M64_READ_COMPRESSED_U16(state, dst) dst = m64_read_compressed_u16(state);
+#else
+#define M64_READ_COMPRESSED_U16(state, dst)                                                            \
+    {                                                                                                  \
+        u16 ret = *(state->pc++);                                                                      \
+        if (ret & 0x80) {                                                                              \
+            ret = (ret << 8) & 0x7f00;                                                                 \
+            ret = *(state->pc++) | ret;                                                                \
+        }                                                                                              \
+        dst = ret;                                                                                     \
+    }
+#endif
+
+#if COPT
+#define GET_INSTRUMENT(seqChannel, instId, _instOut, _adsr, dst, l)                                    \
     dst = get_instrument(seqChannel, instId, _instOut, _adsr);
 #else
-#define GET_INSTRUMENT(seqChannel, instId, _instOut, _adsr, dst, l) \
-{ \
-struct AdsrSettings *adsr = _adsr; \
-struct Instrument **instOut = _instOut;\
-    u8 _instId = instId; \
-    struct Instrument *inst; \
-    UNUSED u32 pad; \
-        /* copt inlines instId here  */ \
-    if (instId >= gCtlEntries[(*seqChannel).bankId].numInstruments) { \
-        _instId = gCtlEntries[(*seqChannel).bankId].numInstruments; \
-        if (_instId == 0) { \
-            dst = 0; \
-            goto ret ## l; \
-        } \
-        _instId--; \
-    } \
-    inst = gCtlEntries[(*seqChannel).bankId].instruments[_instId]; \
-    if (inst == NULL) { \
-        while (_instId != 0xff) { \
-            inst = gCtlEntries[(*seqChannel).bankId].instruments[_instId]; \
-            if (inst != NULL) { \
-                goto gi ## l; \
-            } \
-            _instId--; \
-        } \
-        gi ## l:; \
-    } \
-    if (((uintptr_t) gBankLoadedPool.persistent.pool.start <= (uintptr_t) inst \
-         && (uintptr_t) inst <= (uintptr_t)(gBankLoadedPool.persistent.pool.start \
-                                          + gBankLoadedPool.persistent.pool.size)) \
-        || ((uintptr_t) gBankLoadedPool.temporary.pool.start <= (uintptr_t) inst \
-            && (uintptr_t) inst <= (uintptr_t)(gBankLoadedPool.temporary.pool.start \
-                                             + gBankLoadedPool.temporary.pool.size))) { \
-        (*adsr).envelope = (*inst).envelope; \
-        (*adsr).releaseRate = (*inst).releaseRate; \
-        *instOut = inst; \
-        _instId++; \
-        goto ret ## l; \
-    } \
-    gAudioErrorFlags = _instId + 0x20000; \
-    *instOut = NULL; \
-    ret ## l: ; \
-}
+#define GET_INSTRUMENT(seqChannel, instId, _instOut, _adsr, dst, l)                                    \
+    {                                                                                                  \
+        struct AdsrSettings *adsr = _adsr;                                                             \
+        struct Instrument **instOut = _instOut;                                                        \
+        u8 _instId = instId;                                                                           \
+        struct Instrument *inst;                                                                       \
+        UNUSED u32 pad;                                                                                \
+        /* copt inlines instId here  */                                                                \
+        if (instId >= gCtlEntries[(*seqChannel).bankId].numInstruments) {                              \
+            _instId = gCtlEntries[(*seqChannel).bankId].numInstruments;                                \
+            if (_instId == 0) {                                                                        \
+                dst = 0;                                                                               \
+                goto ret##l;                                                                           \
+            }                                                                                          \
+            _instId--;                                                                                 \
+        }                                                                                              \
+        inst = gCtlEntries[(*seqChannel).bankId].instruments[_instId];                                 \
+        if (inst == NULL) {                                                                            \
+            while (_instId != 0xff) {                                                                  \
+                inst = gCtlEntries[(*seqChannel).bankId].instruments[_instId];                         \
+                if (inst != NULL) {                                                                    \
+                    goto gi##l;                                                                        \
+                }                                                                                      \
+                _instId--;                                                                             \
+            }                                                                                          \
+            gi##l:;                                                                                    \
+        }                                                                                              \
+        if (((uintptr_t) gBankLoadedPool.persistent.pool.start <= (uintptr_t) inst                     \
+             && (uintptr_t) inst <= (uintptr_t)(gBankLoadedPool.persistent.pool.start                  \
+                                                + gBankLoadedPool.persistent.pool.size))               \
+            || ((uintptr_t) gBankLoadedPool.temporary.pool.start <= (uintptr_t) inst                   \
+                && (uintptr_t) inst <= (uintptr_t)(gBankLoadedPool.temporary.pool.start                \
+                                                   + gBankLoadedPool.temporary.pool.size))) {          \
+            (*adsr).envelope = (*inst).envelope;                                                       \
+            (*adsr).releaseRate = (*inst).releaseRate;                                                 \
+            *instOut = inst;                                                                           \
+            _instId++;                                                                                 \
+            goto ret##l;                                                                               \
+        }                                                                                              \
+        gAudioErrorFlags = _instId + 0x20000;                                                          \
+        *instOut = NULL;                                                                               \
+        ret##l:;                                                                                       \
+    }
 #endif
 
 #ifdef VERSION_EU
-    #define PORTAMENTO_TGT_NOTE cmd
-    #define DRUM_INDEX          cmd
-    #define SEMITONE            cmd
-    #define USED_SEMITONE       vel
+#define PORTAMENTO_TGT_NOTE cmd
+#define DRUM_INDEX cmd
+#define SEMITONE cmd
+#define USED_SEMITONE vel
 #else
-    #define PORTAMENTO_TGT_NOTE portamentoTargetNote
-    #define DRUM_INDEX          cmdSemitone
-    #define SEMITONE            cmdSemitone
-    #define USED_SEMITONE       usedSemitone
+#define PORTAMENTO_TGT_NOTE portamentoTargetNote
+#define DRUM_INDEX cmdSemitone
+#define SEMITONE cmdSemitone
+#define USED_SEMITONE usedSemitone
 #endif
 
 void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
-    struct SequencePlayer *seqPlayer; // sp5C, t4
+    struct SequencePlayer *seqPlayer;   // sp5C, t4
     struct SequenceChannel *seqChannel; // sp58, t5
-    struct M64ScriptState *state; // v0
-    struct Portamento *portamento; // v0
-    struct AudioBankSound *sound; // v0
-    struct Instrument *instrument; // v1
+    struct M64ScriptState *state;       // v0
+    struct Portamento *portamento;      // v0
+    struct AudioBankSound *sound;       // v0
+    struct Instrument *instrument;      // v1
     struct Drum *drum;
     UNUSED s32 pad[1];
-    u8 sameSound; // sp3F
+    u8 sameSound;           // sp3F
     UNUSED u8 allocNewNote; // sp3D, t0
-    u8 cmd; // a0 sp3E, EU s2
+    u8 cmd;                 // a0 sp3E, EU s2
     UNUSED u8 loBits;
     u16 sp3A; // t2, a0, a1
     UNUSED s32 pad2[1];
@@ -146,18 +142,18 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
     f32 sp24;
     u8 temp8;
     UNUSED u8 semitone; // v0
-    s32 usedSemitone; // a1
+    s32 usedSemitone;   // a1
     f32 temp_f12;
     f32 temp_f2;
     s32 temp_a0_5;
     UNUSED u8 drumIndex; // t0
-    UNUSED s32 cmdBase; // t1
+    UNUSED s32 cmdBase;  // t1
     u8 temp_a0_6;
     u8 portamentoTargetNote; // t7
-    UNUSED s32 bankId; // a3
-    u8 instId; // v0
-    u8 cmdSemitone; // v1
-    f32 tuning; // f0
+    UNUSED s32 bankId;       // a3
+    u8 instId;               // v0
+    u8 cmdSemitone;          // v1
+    f32 tuning;              // f0
 
     // inlined copt var that gets pulled out to the rest of the function
     unsigned char _Kqi6;
@@ -188,8 +184,8 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
         seq_channel_layer_note_decay(layer);
     }
 
-    if (PORTAMENTO_MODE(layer->portamento) == PORTAMENTO_MODE_1 ||
-        PORTAMENTO_MODE(layer->portamento) == PORTAMENTO_MODE_2) {
+    if (PORTAMENTO_MODE(layer->portamento) == PORTAMENTO_MODE_1
+        || PORTAMENTO_MODE(layer->portamento) == PORTAMENTO_MODE_2) {
         layer->portamento.mode = 0;
     }
 
@@ -197,13 +193,13 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
     seqPlayer = (*(seqChannel)).seqPlayer;
     for (;;) {
         state = &layer->scriptState;
-        //M64_READ_U8(state, cmd);
+        // M64_READ_U8(state, cmd);
         // manually inlined because we need _Kqi6 :(
         {
             u8 *_ptr_pc;
             _ptr_pc = (*state).pc;
             ((*state).pc)++;
-            //cmd = *_ptr_pc;
+            // cmd = *_ptr_pc;
 
             _Kqi6 = *_ptr_pc;
             cmd = _Kqi6;
@@ -213,8 +209,7 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
             break;
         }
 
-        switch (_Kqi6)
-        {
+        switch (_Kqi6) {
             case 0xff: // layer_end; function return or end of script
                 if (state->depth == 0) {
                     // N.B. this function call is *not* inlined even though it's
@@ -272,7 +267,7 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
             case 0xc4: // layer_somethingon
             case 0xc5: // layer_somethingoff
                 //! copt needs a ternary:
-                //layer->continuousNotes = (cmd == 0xc4) ? TRUE : FALSE;
+                // layer->continuousNotes = (cmd == 0xc4) ? TRUE : FALSE;
                 if (cmd == 0xc4) {
                     temp8 = TRUE;
                 } else {
@@ -297,7 +292,8 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
             case 0xc7: // layer_portamento
                 M64_READ_U8(state, (*layer).portamento.mode);
                 M64_READ_U8(state, PORTAMENTO_TGT_NOTE);
-                PORTAMENTO_TGT_NOTE = PORTAMENTO_TGT_NOTE + (*layer).transposition + (*seqPlayer).transposition + (*seqChannel).transposition;
+                PORTAMENTO_TGT_NOTE = PORTAMENTO_TGT_NOTE + (*layer).transposition
+                                      + (*seqPlayer).transposition + (*seqChannel).transposition;
                 if (PORTAMENTO_TGT_NOTE >= 0x80) {
                     PORTAMENTO_TGT_NOTE = 0;
                 }
@@ -352,14 +348,13 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
                     layer->playPercentage = sp3A;
                     goto l1090;
 
-                    
                 case 0x80: // layer_note2 (velocity, duration; uses last play percentage)
                     sp3A = layer->playPercentage;
                     vel = *(state->pc++);
                     layer->noteDuration = *(state->pc++);
                     goto l1090;
             }
-l1090:
+        l1090:
             cmdSemitone = (cmd - (cmd & 0xc0));
             layer->velocitySquare = vel * vel;
         } else {
@@ -384,13 +379,11 @@ l1090:
         layer->delay = sp3A;
         layer->duration = layer->noteDuration * sp3A / 256;
         if ((seqPlayer->muted && (seqChannel->muteBehavior & MUTE_BEHAVIOR_STOP_NOTES) != 0)
-            || seqChannel->stopSomething2
-            || !seqChannel->hasInstrument
-        ) {
+            || seqChannel->stopSomething2 || !seqChannel->hasInstrument) {
             layer->stopSomething = TRUE;
         } else {
             if (seqChannel->instOrWave == 0) { // drum
-                //DRUM_INDEX = cmdSemitone;
+                // DRUM_INDEX = cmdSemitone;
                 DRUM_INDEX += (*seqChannel).transposition + (*layer).transposition;
                 if (DRUM_INDEX >= gCtlEntries[seqChannel->bankId].numDrums) {
                     DRUM_INDEX = gCtlEntries[seqChannel->bankId].numDrums;
@@ -416,8 +409,9 @@ l1090:
 
             skip:;
             } else { // instrument
-                //SEMITONE = cmdSemitone;
-                SEMITONE += (*(seqPlayer)).transposition + (*(seqChannel)).transposition + (*(layer)).transposition;
+                // SEMITONE = cmdSemitone;
+                SEMITONE += (*(seqPlayer)).transposition + (*(seqChannel)).transposition
+                            + (*(layer)).transposition;
                 if (SEMITONE >= 0x80) {
                     layer->stopSomething = TRUE;
                 } else {
@@ -428,7 +422,8 @@ l1090:
 
                     if (layer->portamento.mode != 0) {
                         //! copt needs a ternary:
-                        //usedSemitone = (layer->portamentoTargetNote < SEMITONE) ? SEMITONE : layer->portamentoTargetNote;
+                        // usedSemitone = (layer->portamentoTargetNote < SEMITONE) ? SEMITONE :
+                        // layer->portamentoTargetNote;
                         if (layer->portamentoTargetNote < SEMITONE) {
                             USED_SEMITONE = SEMITONE;
                         } else {
@@ -436,9 +431,11 @@ l1090:
                         }
 
                         if (instrument != NULL) {
-                            sound = (u8) USED_SEMITONE < instrument->normalRangeLo ? &instrument->lowNotesSound
-                                  : (u8) USED_SEMITONE <= instrument->normalRangeHi ?
-                                        &instrument->normalNotesSound : &instrument->highNotesSound;
+                            sound = (u8) USED_SEMITONE < instrument->normalRangeLo
+                                        ? &instrument->lowNotesSound
+                                    : (u8) USED_SEMITONE <= instrument->normalRangeHi
+                                        ? &instrument->normalNotesSound
+                                        : &instrument->highNotesSound;
 
                             sameSound = (sound == (*layer).sound);
                             layer->sound = sound;
@@ -466,12 +463,13 @@ l1090:
                                 sp24 = temp_f12;
                                 goto l13cc;
                         }
-l13cc:
+                    l13cc:
                         portamento->extent = sp24 / freqScale - US_FLOAT(1.0);
                         if (PORTAMENTO_IS_SPECIAL((*(layer)).portamento)) {
-                            portamento->speed = US_FLOAT(32512.0) * FLOAT_CAST((*(seqPlayer)).tempo)
-                                                / ((f32)(*(layer)).delay * (f32) gTempoInternalToExternal
-                                                   * FLOAT_CAST((*(layer)).portamentoTime));
+                            portamento->speed =
+                                US_FLOAT(32512.0) * FLOAT_CAST((*(seqPlayer)).tempo)
+                                / ((f32)(*(layer)).delay * (f32) gTempoInternalToExternal
+                                   * FLOAT_CAST((*(layer)).portamentoTime));
                         } else {
                             portamento->speed = US_FLOAT(127.0) / FLOAT_CAST((*(layer)).portamentoTime);
                         }
@@ -481,9 +479,9 @@ l13cc:
                             layer->portamentoTargetNote = SEMITONE;
                         }
                     } else if (instrument != NULL) {
-                        sound = SEMITONE < instrument->normalRangeLo ?
-                                         &instrument->lowNotesSound : SEMITONE <= instrument->normalRangeHi ?
-                                         &instrument->normalNotesSound : &instrument->highNotesSound;
+                        sound = SEMITONE < instrument->normalRangeLo    ? &instrument->lowNotesSound
+                                : SEMITONE <= instrument->normalRangeHi ? &instrument->normalNotesSound
+                                                                        : &instrument->highNotesSound;
 
                         sameSound = (sound == (*(layer)).sound);
                         layer->sound = sound;

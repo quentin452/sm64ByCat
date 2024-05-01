@@ -32,7 +32,7 @@ struct ObjGroup *gMarioFaceGrp = NULL;     // @ 801A82E0; returned by load_dynli
 struct ObjShape *D_801A82E4 = NULL;        // Shape used for drawing lights?
 static struct ObjShape *D_801A82E8 = NULL; // returned by load_dynlist
 struct ObjShape *gShapeRedSpark = NULL;    // @ 801A82EC
-struct ObjShape *gShapeSilverSpark = NULL;    // @ 801A82F0
+struct ObjShape *gShapeSilverSpark = NULL; // @ 801A82F0
 struct ObjShape *gShapeRedStar = NULL;     // @ 801A82F4
 struct ObjShape *gShapeSilverStar = NULL;  // @ 801A82F8
 static struct UnkData sUnref801A82FC = { { {
@@ -885,7 +885,7 @@ struct ObjMaterial *find_or_add_new_mtl(struct ObjGroup *group, UNUSED s32 a1, f
     }
 
     newMtl = make_material(0, NULL, 1);
-    set_cur_dynobj((struct GdObj *)newMtl);
+    set_cur_dynobj((struct GdObj *) newMtl);
     d_set_diffuse(r, g, b);
     addto_group(group, (struct GdObj *) newMtl);
 

@@ -90,10 +90,7 @@ enum MenuButtonTypes {
     MENU_BUTTON_OPTION_MAX
 };
 
-enum ScoreMenuMessageID {
-    SCORE_MSG_CHECK_FILE,
-    SCORE_MSG_NOSAVE_DATA
-};
+enum ScoreMenuMessageID { SCORE_MSG_CHECK_FILE, SCORE_MSG_NOSAVE_DATA };
 
 enum CopyMenuMessageID {
     COPY_MSG_MAIN_TEXT,
@@ -103,11 +100,7 @@ enum CopyMenuMessageID {
     COPY_MSG_SAVE_EXISTS
 };
 
-enum CopyMenuActionPhase {
-    COPY_PHASE_MAIN,
-    COPY_PHASE_COPY_WHERE,
-    COPY_PHASE_COPY_COMPLETE
-};
+enum CopyMenuActionPhase { COPY_PHASE_MAIN, COPY_PHASE_COPY_WHERE, COPY_PHASE_COPY_COMPLETE };
 
 enum EraseMenuMessageID {
     ERASE_MSG_MAIN_TEXT,
@@ -117,15 +110,9 @@ enum EraseMenuMessageID {
     ERASE_MSG_SAVE_EXISTS
 };
 
-enum EraseMenuActionPhase {
-    ERASE_PHASE_MAIN,
-    ERASE_PHASE_PROMPT,
-    ERASE_PHASE_MARIO_ERASED
-};
+enum EraseMenuActionPhase { ERASE_PHASE_MAIN, ERASE_PHASE_PROMPT, ERASE_PHASE_MARIO_ERASED };
 
-enum SoundModeMenuActionPhase {
-    SOUND_MODE_PHASE_MAIN
-};
+enum SoundModeMenuActionPhase { SOUND_MODE_PHASE_MAIN };
 
 void beh_yellow_background_menu_init(void);
 void beh_yellow_background_menu_loop(void);
@@ -133,7 +120,8 @@ void bhv_menu_button_init(void);
 void bhv_menu_button_loop(void);
 void bhv_menu_button_manager_init(void);
 void bhv_menu_button_manager_loop(void);
-Gfx *geo_file_select_strings_and_menu_cursor(s32 callContext, UNUSED struct GraphNode *node, UNUSED Mat4 mtx);
+Gfx *geo_file_select_strings_and_menu_cursor(s32 callContext, UNUSED struct GraphNode *node,
+                                             UNUSED Mat4 mtx);
 s32 lvl_init_menu_values_and_cursor_pos(UNUSED s32 arg, UNUSED s32 unused);
 s32 lvl_update_obj_and_load_file_selected(UNUSED s32 arg, UNUSED s32 unused);
 

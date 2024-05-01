@@ -3,16 +3,16 @@
 
 #include <PR/ultratypes.h>
 
-#define ASCII_TO_DIALOG(asc)                                       \
-    (((asc) >= '0' && (asc) <= '9') ? ((asc) - '0') :              \
-     ((asc) >= 'A' && (asc) <= 'Z') ? ((asc) - 'A' + 0x0A) :       \
-     ((asc) >= 'a' && (asc) <= 'z') ? ((asc) - 'a' + 0x24) : 0x00)
+#define ASCII_TO_DIALOG(asc)                                                                           \
+    (((asc) >= '0' && (asc) <= '9')   ? ((asc) - '0')                                                  \
+     : ((asc) >= 'A' && (asc) <= 'Z') ? ((asc) - 'A' + 0x0A)                                           \
+     : ((asc) >= 'a' && (asc) <= 'z') ? ((asc) - 'a' + 0x24)                                           \
+                                      : 0x00)
 
-
-#define MENU_MTX_PUSH   1
+#define MENU_MTX_PUSH 1
 #define MENU_MTX_NOPUSH 2
 
-#define MENU_SCROLL_VERTICAL   1
+#define MENU_SCROLL_VERTICAL 1
 #define MENU_SCROLL_HORIZONTAL 2
 
 // Japanese File Select uses an unique table
@@ -27,20 +27,18 @@
 #define HUD_LUT_DIFF HUD_LUT_GLOBAL
 #endif
 
-#define RENDER_PAUSE_SCREEN       1
+#define RENDER_PAUSE_SCREEN 1
 #define RENDER_COURSE_DONE_SCREEN 2
-
 
 extern s8 gDialogCourseActNum;
 extern s8 gHudFlash;
 
-struct DialogEntry
-{
- /*0x00*/ u32 unused;
- /*0x04*/ s8 linesPerBox;
- /*0x06*/ s16 leftOffset;
- /*0x08*/ s16 width;
- /*0x0C*/ const u8 *str;
+struct DialogEntry {
+    /*0x00*/ u32 unused;
+    /*0x04*/ s8 linesPerBox;
+    /*0x06*/ s16 leftOffset;
+    /*0x08*/ s16 width;
+    /*0x0C*/ const u8 *str;
 };
 
 // EU only
@@ -50,10 +48,7 @@ enum HudSpecialHUDChars {
     HUD_CHAR_U_UMLAUT = 0x3C
 };
 
-enum SpecialFontChars {
-    GLOBAL_CHAR_SPACE = 0x9E,
-    GLOBAR_CHAR_TERMINATOR = 0xFF
-};
+enum SpecialFontChars { GLOBAL_CHAR_SPACE = 0x9E, GLOBAR_CHAR_TERMINATOR = 0xFF };
 
 // definitions for some of the special characters defined in charmap.txt
 enum DialogSpecialChars {

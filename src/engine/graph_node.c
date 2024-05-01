@@ -187,8 +187,8 @@ struct GraphNodeSwitchCase *init_graph_node_switch_case(struct AllocOnlyPool *po
  * Allocates and returns a newly created camera node
  */
 struct GraphNodeCamera *init_graph_node_camera(struct AllocOnlyPool *pool,
-                                               struct GraphNodeCamera *graphNode, f32 *pos,
-                                               f32 *focus, GraphNodeFunc func, s32 mode) {
+                                               struct GraphNodeCamera *graphNode, f32 *pos, f32 *focus,
+                                               GraphNodeFunc func, s32 mode) {
     if (pool != NULL) {
         graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeCamera));
     }
@@ -497,8 +497,7 @@ struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *poo
  */
 struct GraphNodeHeldObject *init_graph_node_held_object(struct AllocOnlyPool *pool,
                                                         struct GraphNodeHeldObject *graphNode,
-                                                        struct Object *objNode,
-                                                        Vec3s translation,
+                                                        struct Object *objNode, Vec3s translation,
                                                         GraphNodeFunc nodeFunc, s32 playerIndex) {
     if (pool != NULL) {
         graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeHeldObject));
@@ -748,7 +747,8 @@ void geo_obj_init_animation(struct GraphNodeObject *graphNode, struct Animation 
 /**
  * Initialize the animation of an object node
  */
-void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, struct Animation **animPtrAddr, u32 animAccel) {
+void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, struct Animation **animPtrAddr,
+                                  u32 animAccel) {
     struct Animation **animSegmented = segmented_to_virtual(animPtrAddr);
     struct Animation *anim = segmented_to_virtual(*animSegmented);
 

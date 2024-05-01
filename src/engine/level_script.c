@@ -104,8 +104,7 @@ static void level_cmd_exit_and_execute(void) {
     main_pool_pop_state();
     main_pool_push_state();
 
-    load_segment(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8),
-            MEMORY_POOL_LEFT);
+    load_segment(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8), MEMORY_POOL_LEFT);
 
     sStackTop = sStackBase;
     sCurrentCmd = segmented_to_virtual(targetAddr);
@@ -269,8 +268,7 @@ static void level_cmd_load_to_fixed_address(void) {
 }
 
 static void level_cmd_load_raw(void) {
-    load_segment(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8),
-            MEMORY_POOL_LEFT);
+    load_segment(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8), MEMORY_POOL_LEFT);
     sCurrentCmd = CMD_NEXT;
 }
 
@@ -284,7 +282,7 @@ static void level_cmd_load_mario_head(void) {
     void *addr = main_pool_alloc(DOUBLE_SIZE_ON_64_BIT(0xE1000), MEMORY_POOL_LEFT);
     if (addr != NULL) {
         gdm_init(addr, DOUBLE_SIZE_ON_64_BIT(0xE1000));
-        gd_add_to_heap(gZBuffer, sizeof(gZBuffer)); // 0x25800
+        gd_add_to_heap(gZBuffer, sizeof(gZBuffer));               // 0x25800
         gd_add_to_heap(gFrameBuffer0, 3 * sizeof(gFrameBuffer0)); // 0x70800
         gdm_setup();
         gdm_maketestdl(CMD_GET(s16, 2));
@@ -629,7 +627,8 @@ static void level_cmd_set_macro_objects(void) {
         while (data[len++] != MACRO_OBJECT_END()) {
             len += 4;
         }
-        gAreas[sCurrAreaIndex].macroObjects = alloc_only_pool_alloc(sLevelPool, len * sizeof(MacroObject));
+        gAreas[sCurrAreaIndex].macroObjects =
+            alloc_only_pool_alloc(sLevelPool, len * sizeof(MacroObject));
         memcpy(gAreas[sCurrAreaIndex].macroObjects, data, len * sizeof(MacroObject));
     }
     sCurrentCmd = CMD_NEXT;
@@ -731,8 +730,8 @@ static void level_cmd_get_or_set_var(void) {
             case 4:
                 gCurrAreaIndex = sRegister;
                 break;
-            case 5: 
-                gPressedStart = sRegister; 
+            case 5:
+                gPressedStart = sRegister;
                 break;
         }
     } else {
@@ -752,8 +751,8 @@ static void level_cmd_get_or_set_var(void) {
             case 4:
                 sRegister = gCurrAreaIndex;
                 break;
-            case 5: 
-                sRegister = gPressedStart; 
+            case 5:
+                sRegister = gPressedStart;
                 break;
         }
     }
@@ -762,13 +761,7 @@ static void level_cmd_get_or_set_var(void) {
 }
 
 int gDemoLevels[7] = {
-    LEVEL_BOWSER_1,
-    LEVEL_WF,
-    LEVEL_CCM,
-    LEVEL_BBH,
-    LEVEL_JRB,
-    LEVEL_HMC,
-    LEVEL_PSS
+    LEVEL_BOWSER_1, LEVEL_WF, LEVEL_CCM, LEVEL_BBH, LEVEL_JRB, LEVEL_HMC, LEVEL_PSS
 };
 
 int gDemoLevelID = 0;
@@ -776,10 +769,9 @@ int gDemoInputListID_2 = 0;
 
 extern int start_demo(int);
 
-static void level_cmd_advdemo(void)
-{
+static void level_cmd_advdemo(void) {
     start_demo(0);
-    if(gDemoLevelID == 6) {
+    if (gDemoLevelID == 6) {
         sRegister = gDemoLevels[6];
         gDemoLevelID = 0;
     } else {
@@ -788,8 +780,7 @@ static void level_cmd_advdemo(void)
     sCurrentCmd = CMD_NEXT;
 }
 
-static void level_cmd_cleardemoptr(void)
-{
+static void level_cmd_cleardemoptr(void) {
     gCurrDemoInput = NULL;
     sCurrentCmd = CMD_NEXT;
 }

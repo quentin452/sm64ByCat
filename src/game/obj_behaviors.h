@@ -17,9 +17,9 @@ void bhv_moving_blue_coin_init(void);
 void bhv_moving_blue_coin_loop(void);
 void bhv_blue_coin_sliding_jumping_init(void);
 void blue_coin_sliding_away_from_mario(void); /* likely unused */
-void blue_coin_sliding_slow_down(void); /* likely unused */
-void bhv_blue_coin_sliding_loop(void); /* likely unused */
-void bhv_blue_coin_jumping_loop(void); /* likely unused */
+void blue_coin_sliding_slow_down(void);       /* likely unused */
+void bhv_blue_coin_sliding_loop(void);        /* likely unused */
+void bhv_blue_coin_jumping_loop(void);        /* likely unused */
 void bhv_seaweed_init(void);
 void bhv_seaweed_bundle_init(void);
 void bhv_bobomb_init(void);
@@ -107,7 +107,7 @@ void bhv_big_bully_with_minions_loop(void);
 f32 water_ring_calc_mario_dist(void);
 void water_ring_init(void);
 void bhv_jet_stream_water_ring_init(void);
-void water_ring_check_collection(f32 avgScale, struct Object* ringManager);
+void water_ring_check_collection(f32 avgScale, struct Object *ringManager);
 void water_ring_set_scale(f32 avgScale);
 void water_ring_act_collected(void);
 void water_ring_act_not_collected(void);
@@ -155,9 +155,9 @@ void bhv_generic_bowling_ball_spawner_loop(void);
 void bhv_thi_bowling_ball_spawner_loop(void);
 void bhv_bob_pit_bowling_ball_init(void);
 void bhv_bob_pit_bowling_ball_loop(void);
-void bhv_free_bowling_ball_init(void); /* likely unused */
+void bhv_free_bowling_ball_init(void);      /* likely unused */
 void bhv_free_bowling_ball_roll_loop(void); /* likely unused */
-void bhv_free_bowling_ball_loop(void); /* likely unused */
+void bhv_free_bowling_ball_loop(void);      /* likely unused */
 void bhv_rr_cruiser_wing_init(void);
 void bhv_rr_cruiser_wing_loop(void);
 void spawn_default_star(f32 sp20, f32 sp24, f32 sp28);

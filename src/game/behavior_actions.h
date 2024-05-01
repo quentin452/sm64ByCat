@@ -15,7 +15,8 @@ void vec3f_copy_2(Vec3f dest, Vec3f src);
 void tox_box_move(f32 forwardVel, f32 a1, s16 deltaPitch, s16 deltaRoll);
 void play_penguin_walking_sound(s32 walk);
 s32 update_angle_from_move_flags(s32 *angle);
-void cur_obj_spawn_strong_wind_particles(s32 windSpread, f32 scale, f32 relPosX, f32 relPosY, f32 relPosZ);
+void cur_obj_spawn_strong_wind_particles(s32 windSpread, f32 scale, f32 relPosX, f32 relPosY,
+                                         f32 relPosZ);
 
 void bhv_cap_switch_loop(void);
 void bhv_tiny_star_particles_init(void);

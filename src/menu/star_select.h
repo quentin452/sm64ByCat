@@ -6,12 +6,7 @@
 
 #include "types.h"
 
-enum StarSelectorTypes
-{
-    STAR_SELECTOR_NOT_SELECTED,
-    STAR_SELECTOR_SELECTED,
-    STAR_SELECTOR_100_COINS
-};
+enum StarSelectorTypes { STAR_SELECTOR_NOT_SELECTED, STAR_SELECTOR_SELECTED, STAR_SELECTOR_100_COINS };
 
 #ifdef AVOID_UB
 Gfx *geo_act_selector_strings(s16 callContext, UNUSED struct GraphNode *node, UNUSED void *context);

@@ -69,7 +69,6 @@ extern struct Object *sMasterTreadmill;
  */
 struct Object *sMasterTreadmill;
 
-
 f32 sObjSavedPosX;
 f32 sObjSavedPosY;
 f32 sObjSavedPosZ;
@@ -97,8 +96,8 @@ static s16 obj_get_pitch_from_vel(void) {
  * move again.
  */
 static s32 obj_update_race_proposition_dialog(s16 dialogID) {
-    s32 dialogResponse =
-        cur_obj_update_dialog_with_cutscene(2, DIALOG_UNK2_FLAG_0 | DIALOG_UNK2_LEAVE_TIME_STOP_ENABLED, CUTSCENE_RACE_DIALOG, dialogID);
+    s32 dialogResponse = cur_obj_update_dialog_with_cutscene(
+        2, DIALOG_UNK2_FLAG_0 | DIALOG_UNK2_LEAVE_TIME_STOP_ENABLED, CUTSCENE_RACE_DIALOG, dialogID);
 
     if (dialogResponse == 2) {
         set_mario_npc_dialog(0);
@@ -366,7 +365,8 @@ static s32 cur_obj_play_sound_at_anim_range(s8 arg0, s8 arg1, u32 sound) {
         val04 = 1;
     }
 
-    if (cur_obj_check_anim_frame_in_range(arg0, val04) || cur_obj_check_anim_frame_in_range(arg1, val04)) {
+    if (cur_obj_check_anim_frame_in_range(arg0, val04)
+        || cur_obj_check_anim_frame_in_range(arg1, val04)) {
         cur_obj_play_sound_2(sound);
         return TRUE;
     }
@@ -623,7 +623,7 @@ static void obj_die_if_health_non_positive(void) {
             spawn_mist_particles();
         }
 
-        if ((s32)o->oNumLootCoins < 0) {
+        if ((s32) o->oNumLootCoins < 0) {
             spawn_object(o, MODEL_BLUE_COIN, bhvMrIBlueCoin);
         } else {
             obj_spawn_loot_yellow_coins(o, o->oNumLootCoins, 20.0f);
@@ -899,12 +899,12 @@ static void treat_far_home_as_mario(f32 threshold) {
 #include "behaviors/fly_guy.inc.c"
 #include "behaviors/goomba.inc.c"
 #include "behaviors/chain_chomp.inc.c" // TODO: chain_chomp_sub_act_lunge documentation
-#include "behaviors/wiggler.inc.c"     // TODO
+#include "behaviors/wiggler.inc.c" // TODO
 #include "behaviors/spiny.inc.c"
 #include "behaviors/enemy_lakitu.inc.c" // TODO
 #include "behaviors/cloud.inc.c"
 #include "behaviors/camera_lakitu.inc.c" // TODO: 104 label, follow cam documentation
-#include "behaviors/monty_mole.inc.c"    // TODO
+#include "behaviors/monty_mole.inc.c" // TODO
 #include "behaviors/platform_on_track.inc.c"
 #include "behaviors/seesaw_platform.inc.c"
 #include "behaviors/ferris_wheel.inc.c"

@@ -19,10 +19,10 @@
 #endif
 #endif
 
-#define LAYERS_MAX       4
-#define CHANNELS_MAX     16
+#define LAYERS_MAX 4
+#define CHANNELS_MAX 16
 
-#define NO_LAYER ((struct SequenceChannelLayer *)(-1))
+#define NO_LAYER ((struct SequenceChannelLayer *) (-1))
 
 #define MUTE_BEHAVIOR_STOP_SCRIPT 0x80 // stop processing sequence/channel scripts
 #define MUTE_BEHAVIOR_STOP_NOTES 0x40  // prevent further notes from playing
@@ -51,22 +51,21 @@
 #ifdef VERSION_JP
 #define US_FLOAT(x) x
 #else
-#define US_FLOAT(x) x ## f
+#define US_FLOAT(x) x##f
 #endif
 
 // Convert u8 or u16 to f32. On JP, this uses a u32->f32 conversion,
 // resulting in more bloated codegen, while on US it goes through s32.
 // Since u8 and u16 fit losslessly in both, behavior is the same.
 #ifdef VERSION_JP
-#define FLOAT_CAST(x) (f32) (x)
+#define FLOAT_CAST(x) (f32)(x)
 #else
-#define FLOAT_CAST(x) (f32) (s32) (x)
+#define FLOAT_CAST(x) (f32)(s32)(x)
 #endif
 
 struct NotePool;
 
-struct AudioListItem
-{
+struct AudioListItem {
     // A node in a circularly linked list. Each node is either a head or an item:
     // - Items can be either detached (prev = NULL), or attached to a list.
     //   'value' points to something of interest.
@@ -83,8 +82,7 @@ struct AudioListItem
     struct NotePool *pool;
 }; // size = 0x10
 
-struct NotePool
-{
+struct NotePool {
     struct AudioListItem disabled;
     struct AudioListItem decaying;
     struct AudioListItem releasing;
@@ -127,8 +125,7 @@ struct AdsrEnvelope {
     s16 arg;
 }; // size = 0x4
 
-struct AdpcmLoop
-{
+struct AdpcmLoop {
     u32 start;
     u32 end;
     u32 count;
@@ -136,15 +133,13 @@ struct AdpcmLoop
     s16 state[16]; // only exists if count != 0. 8-byte aligned
 };
 
-struct AdpcmBook
-{
+struct AdpcmBook {
     s32 order;
     s32 npredictors;
     s16 book[1]; // size 8 * order * npredictors. 8-byte aligned
 };
 
-struct AudioBankSample
-{
+struct AudioBankSample {
     u8 unused;
     u8 loaded;
     u8 *sampleAddr;
@@ -153,14 +148,12 @@ struct AudioBankSample
     u32 sampleSize; // never read. either 0 or 1 mod 9, depending on padding
 };
 
-struct AudioBankSound
-{
+struct AudioBankSound {
     struct AudioBankSample *sample;
     f32 tuning; // frequency scale factor
-}; // size = 0x8
+};              // size = 0x8
 
-struct Instrument
-{
+struct Instrument {
     /*0x00*/ u8 loaded;
     /*0x01*/ u8 normalRangeLo;
     /*0x02*/ u8 normalRangeHi;
@@ -171,8 +164,7 @@ struct Instrument
     /*0x18*/ struct AudioBankSound highNotesSound;
 }; // size = 0x20
 
-struct Drum
-{
+struct Drum {
     u8 releaseRate;
     u8 pan;
     u8 loaded;
@@ -180,14 +172,12 @@ struct Drum
     struct AdsrEnvelope *envelope;
 };
 
-struct AudioBank
-{
+struct AudioBank {
     struct Drum **drums;
     struct Instrument *instruments[1];
 }; // dynamic size
 
-struct CtlEntry
-{
+struct CtlEntry {
     u8 unused;
     u8 numInstruments;
     u8 numDrums;
@@ -202,8 +192,7 @@ struct M64ScriptState {
     u8 depth;
 }; // size = 0x1C
 
-struct SequencePlayer
-{
+struct SequencePlayer {
     /*US/JP, EU   */
 #ifdef VERSION_EU
     /*0x000, 0x000*/ u8 enabled : 1;
@@ -225,7 +214,7 @@ struct SequencePlayer
     /*0x004, 0x003*/ u8 muteBehavior;
     /*0x005, 0x004*/ u8 seqId;
     /*0x006, 0x005*/ u8 defaultBank[1]; // must be an array to get a comparison
-    // to match; other u8's might also be part of that array
+                                        // to match; other u8's might also be part of that array
     /*0x007, 0x006*/ u8 loadingBankId;
 #ifndef VERSION_EU
     /*0x008, ?????*/ u8 loadingBankNumInstruments;
@@ -245,10 +234,10 @@ struct SequencePlayer
     /*0x00E, 0x010*/ u16 fadeTimer;
     /*     , 0x012*/ u16 fadeTimerUnkEu;
 #endif
-    /*0x014, 0x014*/ u8 *seqData; // buffer of some sort
-    /*0x018, 0x018*/ f32 fadeVolume; // set to 1.0f
-    /*0x01C, 0x01C*/ f32 fadeVelocity; // set to 0.0f
-    /*0x020, 0x020*/ f32 volume; // set to 0.0f
+    /*0x014, 0x014*/ u8 *seqData;         // buffer of some sort
+    /*0x018, 0x018*/ f32 fadeVolume;      // set to 1.0f
+    /*0x01C, 0x01C*/ f32 fadeVelocity;    // set to 0.0f
+    /*0x020, 0x020*/ f32 volume;          // set to 0.0f
     /*0x024, 0x024*/ f32 muteVolumeScale; // set to 0.5f
 #ifdef VERSION_EU
     /*     , 0x028*/ f32 fadeVolumeScale;
@@ -276,8 +265,7 @@ struct SequencePlayer
     /*     ext    */ f32 volumeScale;
 }; // size = 0x140, 0x148 on EU
 
-struct AdsrSettings
-{
+struct AdsrSettings {
     u8 releaseRate;
 #ifdef VERSION_EU
     u8 sustain;
@@ -314,8 +302,7 @@ struct AdsrState {
     /*0x1C, 0x20*/ struct AdsrEnvelope *envelope;
 }; // size = 0x20, 0x24 in EU
 
-struct NoteAttributes
-{
+struct NoteAttributes {
     s8 reverb;
 #ifdef VERSION_EU
     u8 pan;
@@ -327,8 +314,7 @@ struct NoteAttributes
 #endif
 }; // size = 0x10
 
-struct SequenceChannel
-{
+struct SequenceChannel {
     /* U/J, EU  */
     /*0x00, 0x00*/ u8 enabled : 1;
     /*0x00, 0x00*/ u8 finished : 1;
@@ -337,7 +323,7 @@ struct SequenceChannel
     /*0x00, 0x00*/ u8 hasInstrument : 1;
     /*0x00, 0x00*/ u8 stereoHeadsetEffects : 1;
     /*0x00, ????*/ u8 largeNotes : 1; // notes specify duration and velocity
-    /*0x00, ????*/ u8 unused : 1; // never read, set to 0
+    /*0x00, ????*/ u8 unused : 1;     // never read, set to 0
 #ifdef VERSION_EU
     /*    , 0x01*/ union {
         struct {
@@ -350,7 +336,7 @@ struct SequenceChannel
 #endif
     /*0x01, 0x02*/ u8 noteAllocPolicy;
     /*0x02, 0x03*/ u8 muteBehavior;
-    /*0x03, 0x04*/ u8 reverb; // or dry/wet mix
+    /*0x03, 0x04*/ u8 reverb;       // or dry/wet mix
     /*0x04, ????*/ u8 notePriority; // 0-3
     /*0x05, 0x06*/ u8 bankId;
 #ifdef VERSION_EU
@@ -370,7 +356,7 @@ struct SequenceChannel
     /*0x14, 0x18*/ u16 vibratoDelay;
     /*0x16, 0x1A*/ u16 delay;
     /*0x18, 0x1C*/ s16 instOrWave; // either 0 (none), instrument index + 1, or
-    // 0x80..0x83 for sawtooth/triangle/sine/square waves.
+                                   // 0x80..0x83 for sawtooth/triangle/sine/square waves.
     /*0x1A, 0x1E*/ s16 transposition;
     /*0x1C, 0x20*/ f32 volumeScale;
     /*0x20, 0x24*/ f32 volume;
@@ -383,7 +369,7 @@ struct SequenceChannel
 #endif
     /*0x2C, 0x30*/ f32 freqScale;
     /*0x30, 0x34*/ u8 (*dynTable)[][2];
-    /*0x34, ????*/ struct Note *noteUnused; // never read
+    /*0x34, ????*/ struct Note *noteUnused;                  // never read
     /*0x38, ????*/ struct SequenceChannelLayer *layerUnused; // never read
     /*0x3C, 0x40*/ struct Instrument *instrument;
     /*0x40, 0x44*/ struct SequencePlayer *seqPlayer;
@@ -401,7 +387,8 @@ struct SequenceChannelLayer // Maybe SequenceTrack?
     /*0x00, 0x00*/ u8 enabled : 1;
     /*0x00, 0x00*/ u8 finished : 1;
     /*0x00, 0x00*/ u8 stopSomething : 1; // ?
-    /*0x00, 0x00*/ u8 continuousNotes : 1; // keep the same note for consecutive notes with the same sound
+    /*0x00, 0x00*/ u8
+        continuousNotes : 1; // keep the same note for consecutive notes with the same sound
 #ifdef VERSION_EU
     /*    , 0x00*/ u8 unusedEu0b8 : 1;
     /*    , 0x00*/ u8 notePropertiesNeedInit : 1;
@@ -448,8 +435,7 @@ struct SequenceChannelLayer // Maybe SequenceTrack?
 }; // size = 0x80
 
 #ifdef VERSION_EU
-struct NoteSynthesisState
-{
+struct NoteSynthesisState {
     /*0x00*/ u8 restart;
     /*0x01*/ u8 sampleDmaIndex;
     /*0x02*/ u8 prevHeadsetPanRight;
@@ -460,8 +446,7 @@ struct NoteSynthesisState
     /*0x10*/ s16 curVolLeft;
     /*0x12*/ s16 curVolRight;
 };
-struct NotePlaybackState
-{
+struct NotePlaybackState {
     /* U/J, EU  */
     /*0x04, 0x00*/ u8 priority;
     /*      0x01*/ u8 waveId;
@@ -477,8 +462,7 @@ struct NotePlaybackState
     /*0x74, 0x4C*/ struct Portamento portamento;
     /*0x84, 0x5C*/ struct VibratoState vibratoState;
 };
-struct NoteSubEu
-{
+struct NoteSubEu {
     /*0x00*/ volatile u8 enabled : 1;
     /*0x00*/ u8 needsInit : 1;
     /*0x00*/ u8 finished : 1;
@@ -503,8 +487,7 @@ struct NoteSubEu
         struct AudioBankSound *audioBankSound;
     } sound;
 };
-struct Note
-{
+struct Note {
     /* U/J, EU  */
     /*0xA4, 0x00*/ struct AudioListItem listItem;
     /*      0x10*/ struct NoteSynthesisState synthesisState;
@@ -525,14 +508,12 @@ struct Note
     /*    , 0xB0*/ struct NoteSubEu noteSubEu;
 }; // size = 0xC0
 #else
-struct vNote
-{
+struct vNote {
     /* U/J, EU  */
     /*0x00*/ volatile u8 enabled : 1;
     long long int force_structure_alignment;
 }; // size = 0xC0
-struct Note
-{
+struct Note {
     /* U/J, EU  */
     /*0x00*/ u8 enabled : 1;
     /*0x00*/ u8 needsInit : 1;
@@ -582,8 +563,7 @@ struct Note
 }; // size = 0xC0
 #endif
 
-struct NoteSynthesisBuffers
-{
+struct NoteSynthesisBuffers {
     s16 adpcmdecState[0x10];
     s16 finalResampleState[0x10];
     s16 mixEnvelopeState[0x28];
@@ -595,20 +575,18 @@ struct NoteSynthesisBuffers
 #endif
 };
 
-struct ReverbSettingsEU
-{
+struct ReverbSettingsEU {
     u8 downsampleRate;
     u8 windowSize; // To be multiplied by 64
     u16 gain;
 };
 
-struct AudioSessionSettingsEU
-{
+struct AudioSessionSettingsEU {
     u32 frequency;
-    u8 unk1;  // always 1
+    u8 unk1; // always 1
     u8 maxSimultaneousNotes;
     u8 numReverbs; // always 1
-    u8 unk2;  // always 0
+    u8 unk2;       // always 0
     struct ReverbSettingsEU *reverbSettings;
     u16 volume;
     u16 unk3; // always 0
@@ -618,8 +596,7 @@ struct AudioSessionSettingsEU
     u32 temporaryBankMem;
 };
 
-struct AudioSessionSettings
-{
+struct AudioSessionSettings {
     /*0x00*/ u32 frequency;
     /*0x04*/ u8 maxSimultaneousNotes;
     /*0x05*/ u8 reverbDownsampleRate; // always 1
@@ -643,8 +620,8 @@ struct AudioBufferParametersEU {
     /*0x0E*/ s16 samplesPerUpdate;
     /*0x10*/ s16 samplesPerUpdateMax;
     /*0x12*/ s16 samplesPerUpdateMin;
-    /*0x14*/ f32 resampleRate; // contains 32000.0f / frequency
-    /*0x18*/ f32 updatesPerFrameInv; // 1.0f / updatesPerFrame
+    /*0x14*/ f32 resampleRate;             // contains 32000.0f / frequency
+    /*0x18*/ f32 updatesPerFrameInv;       // 1.0f / updatesPerFrame
     /*0x1C*/ f32 unkUpdatesPerFrameScaled; // 3.0f / (1280.0f * updatesPerFrame)
 };
 

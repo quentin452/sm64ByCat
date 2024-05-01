@@ -418,7 +418,8 @@ static void eyerok_hand_act_smash(void) {
 }
 
 static void eyerok_hand_act_fist_push(void) {
-    if (o->oTimer > 5 && (o->oPosZ - gMarioObject->oPosZ > 0.0f || (o->oMoveFlags & OBJ_MOVE_HIT_EDGE))) {
+    if (o->oTimer > 5
+        && (o->oPosZ - gMarioObject->oPosZ > 0.0f || (o->oMoveFlags & OBJ_MOVE_HIT_EDGE))) {
         o->oAction = EYEROK_HAND_ACT_FIST_SWEEP;
         o->oForwardVel = 0.0f;
 

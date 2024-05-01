@@ -12,19 +12,17 @@
 #define MAX_UPDATES_PER_FRAME 4
 #endif
 
-struct ReverbRingBufferItem
-{
+struct ReverbRingBufferItem {
     s16 numSamplesAfterDownsampling;
     s16 chunkLen; // never read
     s16 *toDownsampleLeft;
     s16 *toDownsampleRight; // data pointed to by left and right are adjacent in memory
-    s32 startPos; // start pos in ring buffer
-    s16 lengthA; // first length in ring buffer (from startPos, at most until end)
-    s16 lengthB; // second length in ring buffer (from pos 0)
-}; // size = 0x14
+    s32 startPos;           // start pos in ring buffer
+    s16 lengthA;            // first length in ring buffer (from startPos, at most until end)
+    s16 lengthB;            // second length in ring buffer (from pos 0)
+};                          // size = 0x14
 
-struct SynthesisReverb
-{
+struct SynthesisReverb {
     /*0x00, 0x00*/ u8 resampleFlags;
     /*0x01, 0x01*/ u8 useReverb;
     /*0x02, 0x02*/ u8 framesLeftToIgnore;
@@ -38,8 +36,7 @@ struct SynthesisReverb
     /*0x08, 0x0C*/ s32 nextRingBufferPos;
     /*0x0C, 0x10*/ s32 unkC; // never read
     /*0x10, 0x14*/ s32 bufSizePerChannel;
-    struct
-    {
+    struct {
         s16 *left;
         s16 *right;
     } ringBuffer;
@@ -58,7 +55,7 @@ extern s8 gNumSynthesisReverbs;
 extern struct NoteSubEu *gNoteSubsEu;
 extern f32 gLeftVolRampings[3][1024];
 extern f32 gRightVolRampings[3][1024];
-extern f32 *gCurrentLeftVolRamping; // Points to any of the three left buffers above
+extern f32 *gCurrentLeftVolRamping;  // Points to any of the three left buffers above
 extern f32 *gCurrentRightVolRamping; // Points to any of the three right buffers above
 #else
 extern struct SynthesisReverb gSynthesisReverb;

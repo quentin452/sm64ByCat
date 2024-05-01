@@ -70,8 +70,10 @@ s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
     struct Animation *targetAnim = m->animation->targetAnim;
 
     if (load_patchable_table(m->animation, targetAnimID)) {
-        targetAnim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->values);
-        targetAnim->index = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->index);
+        targetAnim->values =
+            (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->values);
+        targetAnim->index =
+            (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->index);
     }
 
     if (o->header.gfx.unk38.animID != targetAnimID) {
@@ -103,8 +105,10 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
     struct Animation *targetAnim = m->animation->targetAnim;
 
     if (load_patchable_table(m->animation, targetAnimID)) {
-        targetAnim->values = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->values);
-        targetAnim->index = (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->index);
+        targetAnim->values =
+            (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->values);
+        targetAnim->index =
+            (void *) VIRTUAL_TO_PHYSICAL((u8 *) targetAnim + (uintptr_t) targetAnim->index);
     }
 
     if (o->header.gfx.unk38.animID != targetAnimID) {
@@ -354,9 +358,10 @@ void play_mario_heavy_landing_sound_once(struct MarioState *m, u32 soundBits) {
  */
 void play_mario_sound(struct MarioState *m, s32 actionSound, s32 marioSound) {
     if (actionSound == SOUND_ACTION_TERRAIN_JUMP) {
-        play_mario_action_sound(
-                m, (m->flags & MARIO_METAL_CAP) ? (s32)SOUND_ACTION_METAL_JUMP
-                                                : (s32)SOUND_ACTION_TERRAIN_JUMP, 1);
+        play_mario_action_sound(m,
+                                (m->flags & MARIO_METAL_CAP) ? (s32) SOUND_ACTION_METAL_JUMP
+                                                             : (s32) SOUND_ACTION_TERRAIN_JUMP,
+                                1);
     } else {
         play_sound_if_no_flag(m, actionSound, MARIO_ACTION_SOUND_PLAYED);
     }
@@ -1218,18 +1223,15 @@ void squish_mario_model(struct MarioState *m) {
             if (Cheats.EnableCheats) {
                 if (Cheats.HugeMario) {
                     vec3f_set(m->marioObj->header.gfx.scale, 2.5f, 2.5f, 2.5f);
-                }
-                else if (Cheats.TinyMario) {
+                } else if (Cheats.TinyMario) {
                     vec3f_set(m->marioObj->header.gfx.scale, 0.2f, 0.2f, 0.2f);
-                }
-                else {
+                } else {
                     vec3f_set(m->marioObj->header.gfx.scale, 1.0f, 1.0f, 1.0f);
                 }
-            }
-            else {
+            } else {
                 vec3f_set(m->marioObj->header.gfx.scale, 1.0f, 1.0f, 1.0f);
             }
-            
+
         }
         // If timer is less than 16, rubber-band Mario's size scale up and down.
         else if (m->squishTimer <= 16) {
@@ -1327,7 +1329,7 @@ void update_mario_joystick_inputs(struct MarioState *m) {
         if (gLakituState.mode != CAMERA_MODE_NEWCAM)
             m->intendedYaw = atan2s(-controller->stickY, controller->stickX) + m->area->camera->yaw;
         else
-            m->intendedYaw = atan2s(-controller->stickY, controller->stickX)-newcam_yaw+0x4000;
+            m->intendedYaw = atan2s(-controller->stickY, controller->stickX) - newcam_yaw + 0x4000;
         m->input |= INPUT_NONZERO_ANALOG;
     } else {
         m->intendedYaw = m->faceAngle[1];
@@ -1407,11 +1409,12 @@ void update_mario_inputs(struct MarioState *m) {
     update_mario_geometry_inputs(m);
 
     debug_print_speed_action_normal(m);
-    
+
     /* Moonjump cheat */
-    while (Cheats.MoonJump == true && Cheats.EnableCheats == true && m->controller->buttonDown & L_TRIG ){
+    while (Cheats.MoonJump == true && Cheats.EnableCheats == true
+           && m->controller->buttonDown & L_TRIG) {
         m->vel[1] = 25;
-        break;   // TODO: Unneeded break?
+        break; // TODO: Unneeded break?
     }
     /*End of moonjump cheat */
 
@@ -1720,7 +1723,7 @@ void func_sh_8025574C(void) {
     } else if (gMarioState->particleFlags & PARTICLE_TRIANGLE) {
         queue_rumble_data(5, 80);
     }
-    if(gMarioState->heldObj && gMarioState->heldObj->behavior == segmented_to_virtual(bhvBobomb)) {
+    if (gMarioState->heldObj && gMarioState->heldObj->behavior == segmented_to_virtual(bhvBobomb)) {
         reset_rumble_timers();
     }
 }
@@ -1731,11 +1734,10 @@ void func_sh_8025574C(void) {
 s32 execute_mario_action(UNUSED struct Object *o) {
     s32 inLoop = TRUE;
     /**
-    * Cheat stuff
-    */
+     * Cheat stuff
+     */
 
-    if (Cheats.EnableCheats)
-    {
+    if (Cheats.EnableCheats) {
         if (Cheats.GodMode)
             gMarioState->health = 0x880;
 
@@ -1746,8 +1748,8 @@ s32 execute_mario_action(UNUSED struct Object *o) {
             gMarioState->forwardVel += 100;
     }
     /**
-    * End of cheat stuff
-    */
+     * End of cheat stuff
+     */
     if (gMarioState->action) {
         gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
         mario_reset_bodystate(gMarioState);

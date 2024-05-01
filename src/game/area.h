@@ -7,34 +7,30 @@
 #include "camera.h"
 #include "engine/graph_node.h"
 
-struct WarpNode
-{
+struct WarpNode {
     /*00*/ u8 id;
     /*01*/ u8 destLevel;
     /*02*/ u8 destArea;
     /*03*/ u8 destNode;
 };
 
-struct ObjectWarpNode
-{
+struct ObjectWarpNode {
     /*0x00*/ struct WarpNode node;
     /*0x04*/ struct Object *object;
     /*0x08*/ struct ObjectWarpNode *next;
 };
 
 // From Surface 0x1B to 0x1E
-#define INSTANT_WARP_INDEX_START  0x00 // Equal and greater than Surface 0x1B
-#define INSTANT_WARP_INDEX_STOP   0x04 // Less than Surface 0x1F
+#define INSTANT_WARP_INDEX_START 0x00 // Equal and greater than Surface 0x1B
+#define INSTANT_WARP_INDEX_STOP 0x04 // Less than Surface 0x1F
 
-struct InstantWarp
-{
+struct InstantWarp {
     /*0x00*/ u8 id; // 0 = 0x1B / 1 = 0x1C / 2 = 0x1D / 3 = 0x1E
     /*0x01*/ u8 area;
     /*0x02*/ Vec3s displacement;
 };
 
-struct SpawnInfo
-{
+struct SpawnInfo {
     /*0x00*/ Vec3s startPos;
     /*0x06*/ Vec3s startAngle;
     /*0x0C*/ s8 areaIndex;
@@ -45,8 +41,7 @@ struct SpawnInfo
     /*0x1C*/ struct SpawnInfo *next;
 };
 
-struct UnusedArea28
-{
+struct UnusedArea28 {
     /*0x00*/ s16 unk00;
     /*0x02*/ s16 unk02;
     /*0x04*/ s16 unk04;
@@ -54,21 +49,19 @@ struct UnusedArea28
     /*0x08*/ s16 unk08;
 };
 
-struct Whirlpool
-{
+struct Whirlpool {
     /*0x00*/ Vec3s pos;
     /*0x03*/ s16 strength;
 };
 
-struct Area
-{
+struct Area {
     /*0x00*/ s8 index;
-    /*0x01*/ s8 flags; // Only has 1 flag: 0x01 = Is this the active area?
+    /*0x01*/ s8 flags;        // Only has 1 flag: 0x01 = Is this the active area?
     /*0x02*/ u16 terrainType; // default terrain of the level (set from level script cmd 0x31)
     /*0x04*/ struct GraphNodeRoot *unk04; // geometry layout data
-    /*0x08*/ s16 *terrainData; // collision data (set from level script cmd 0x2E)
-    /*0x0C*/ s8 *surfaceRooms; // (set from level script cmd 0x2F)
-    /*0x10*/ s16 *macroObjects; // Macro Objects Ptr (set from level script cmd 0x39)
+    /*0x08*/ s16 *terrainData;            // collision data (set from level script cmd 0x2E)
+    /*0x0C*/ s8 *surfaceRooms;            // (set from level script cmd 0x2F)
+    /*0x10*/ s16 *macroObjects;           // Macro Objects Ptr (set from level script cmd 0x39)
     /*0x14*/ struct ObjectWarpNode *warpNodes;
     /*0x18*/ struct WarpNode *paintingWarpNodes;
     /*0x1C*/ struct InstantWarp *instantWarps;
@@ -82,8 +75,7 @@ struct Area
 };
 
 // All the transition data to be used in screen_transition.c
-struct WarpTransitionData
-{
+struct WarpTransitionData {
     /*0x00*/ u8 red;
     /*0x01*/ u8 green;
     /*0x02*/ u8 blue;
@@ -98,19 +90,18 @@ struct WarpTransitionData
     /*0x10*/ s16 texTimer; // always 0, does seems to affect transition when disabled
 };
 
-#define WARP_TRANSITION_FADE_FROM_COLOR  0x00
-#define WARP_TRANSITION_FADE_INTO_COLOR  0x01
-#define WARP_TRANSITION_FADE_FROM_STAR   0x08
-#define WARP_TRANSITION_FADE_INTO_STAR   0x09
+#define WARP_TRANSITION_FADE_FROM_COLOR 0x00
+#define WARP_TRANSITION_FADE_INTO_COLOR 0x01
+#define WARP_TRANSITION_FADE_FROM_STAR 0x08
+#define WARP_TRANSITION_FADE_INTO_STAR 0x09
 #define WARP_TRANSITION_FADE_FROM_CIRCLE 0x0A
 #define WARP_TRANSITION_FADE_INTO_CIRCLE 0x0B
-#define WARP_TRANSITION_FADE_FROM_MARIO  0x10
-#define WARP_TRANSITION_FADE_INTO_MARIO  0x11
+#define WARP_TRANSITION_FADE_FROM_MARIO 0x10
+#define WARP_TRANSITION_FADE_INTO_MARIO 0x11
 #define WARP_TRANSITION_FADE_FROM_BOWSER 0x12
 #define WARP_TRANSITION_FADE_INTO_BOWSER 0x13
 
-struct WarpTransition
-{
+struct WarpTransition {
     /*0x00*/ u8 isActive;       // Is the transition active. (either TRUE or FALSE)
     /*0x01*/ u8 type;           // Determines the type of transition to use (circle, star, etc.)
     /*0x02*/ u8 time;           // Amount of time to complete the transition (in frames)
@@ -137,7 +128,6 @@ extern struct Area *gCurrentArea;
 
 extern s16 gCurrSaveFileNum;
 extern s16 gCurrLevelNum;
-
 
 void override_viewport_and_clip(Vp *a, Vp *b, u8 c, u8 d, u8 e);
 void print_intro_text(void);

@@ -177,7 +177,7 @@ void bully_step(void) {
 
 void bully_spawn_coin(void) {
     struct Object *coin = spawn_object(o, MODEL_YELLOW_COIN, bhvMovingYellowCoin);
-#ifdef VERSION_JP //TODO: maybe move this ifdef logic to the header?
+#ifdef VERSION_JP // TODO: maybe move this ifdef logic to the header?
     cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT);
 #elif VERSION_EU
     cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT_EU);

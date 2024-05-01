@@ -36,11 +36,7 @@ enum ProfilerGameEvent {
     THREAD5_END
 };
 
-enum ProfilerGfxEvent {
-    TASKS_QUEUED,
-    RSP_COMPLETE,
-    RDP_COMPLETE
-};
+enum ProfilerGfxEvent { TASKS_QUEUED, RSP_COMPLETE, RDP_COMPLETE };
 
 void profiler_log_thread5_time(enum ProfilerGameEvent eventID);
 void profiler_log_thread4_time(void);

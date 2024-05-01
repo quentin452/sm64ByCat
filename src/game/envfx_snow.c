@@ -69,8 +69,8 @@ void patch_interpolated_snow_particles(void) {
     }
 
     for (i = 0; i < sPrevSnowParticleCount; i += 5) {
-        gSPVertex(sPrevSnowVertices[i / 5].pos,
-                  VIRTUAL_TO_PHYSICAL(sPrevSnowVertices[i / 5].vertices), 15, 0);
+        gSPVertex(sPrevSnowVertices[i / 5].pos, VIRTUAL_TO_PHYSICAL(sPrevSnowVertices[i / 5].vertices),
+                  15, 0);
     }
 }
 
@@ -99,7 +99,8 @@ s32 envfx_init_snow(s32 mode) {
             break;
     }
 
-    gEnvFxBuffer = mem_pool_alloc(gEffectsMemoryPool, gSnowParticleMaxCount * sizeof(struct EnvFxParticle));
+    gEnvFxBuffer =
+        mem_pool_alloc(gEffectsMemoryPool, gSnowParticleMaxCount * sizeof(struct EnvFxParticle));
     if (!gEnvFxBuffer) {
         return 0;
     }
@@ -240,7 +241,7 @@ void envfx_update_snow_normal(s32 snowCylinderX, s32 snowCylinderY, s32 snowCyli
             (gEnvFxBuffer + i)->spawnTimestamp = gGlobalTimer;
         } else {
             (gEnvFxBuffer + i)->xPos += random_float() * 2 - 1.0f + (s16)(deltaX / 1.2);
-            (gEnvFxBuffer + i)->yPos -= 2 -(s16)(deltaY * 0.8);
+            (gEnvFxBuffer + i)->yPos -= 2 - (s16)(deltaY * 0.8);
             (gEnvFxBuffer + i)->zPos += random_float() * 2 - 1.0f + (s16)(deltaZ / 1.2);
         }
     }
@@ -275,7 +276,7 @@ void envfx_update_snow_blizzard(s32 snowCylinderX, s32 snowCylinderY, s32 snowCy
             (gEnvFxBuffer + i)->spawnTimestamp = gGlobalTimer;
         } else {
             (gEnvFxBuffer + i)->xPos += random_float() * 2 - 1.0f + (s16)(deltaX / 1.2) + 20.0f;
-            (gEnvFxBuffer + i)->yPos -= 5 -(s16)(deltaY * 0.8);
+            (gEnvFxBuffer + i)->yPos -= 5 - (s16)(deltaY * 0.8);
             (gEnvFxBuffer + i)->zPos += random_float() * 2 - 1.0f + (s16)(deltaZ / 1.2);
         }
     }
@@ -423,8 +424,8 @@ void append_snowflake_vertex_buffer(Gfx *gfx, s32 index, Vec3s vertex1, Vec3s ve
     for (i = 0; i < 15; i++) {
         v = &sPrevSnowVertices[index / 5].vertices[i];
         vertBufInterpolated[i] = gSnowTempVtx[i % 3];
-        if (index < sPrevSnowParticleCount && gGlobalTimer == sPrevSnowTimestamp + 1 &&
-            gGlobalTimer != gEnvFxBuffer[index + i / 3].spawnTimestamp) {
+        if (index < sPrevSnowParticleCount && gGlobalTimer == sPrevSnowTimestamp + 1
+            && gGlobalTimer != gEnvFxBuffer[index + i / 3].spawnTimestamp) {
             vertBufInterpolated[i].v.ob[0] = (v->v.ob[0] + vertBuf[i].v.ob[0]) / 2;
             vertBufInterpolated[i].v.ob[1] = (v->v.ob[1] + vertBuf[i].v.ob[1]) / 2;
             vertBufInterpolated[i].v.ob[2] = (v->v.ob[2] + vertBuf[i].v.ob[2]) / 2;

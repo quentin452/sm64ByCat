@@ -32,8 +32,7 @@
 /// Painting that has one texture used for an environment map effect
 #define PAINTING_ENV_MAP 1
 
-struct Painting
-{
+struct Painting {
     s16 id;
     /// How many images should be drawn when the painting is rippling.
     s8 imageCount;

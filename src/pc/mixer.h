@@ -34,7 +34,9 @@ void aResampleImpl(uint8_t flags, uint16_t pitch, RESAMPLE_STATE state);
 void aEnvMixerImpl(uint8_t flags, ENVMIX_STATE state);
 void aMixImpl(int16_t gain, uint16_t in_addr, uint16_t out_addr);
 
-#define aSegment(pkt, s, b) do { } while(0)
+#define aSegment(pkt, s, b)                                                                            \
+    do {                                                                                               \
+    } while (0)
 #define aClearBuffer(pkt, d, c) aClearBufferImpl(d, c)
 #define aLoadBuffer(pkt, s) aLoadBufferImpl(s)
 #define aSaveBuffer(pkt, s) aSaveBufferImpl(s)

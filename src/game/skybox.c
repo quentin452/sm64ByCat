@@ -10,7 +10,6 @@
 #include "segment2.h"
 #include "sm64.h"
 
-
 /**
  * @file skybox.c
  *
@@ -74,16 +73,9 @@ extern SkyboxTexture water_skybox_ptrlist;
 extern SkyboxTexture wdw_skybox_ptrlist;
 
 SkyboxTexture *sSkyboxTextures[10] = {
-    &water_skybox_ptrlist,
-    &bitfs_skybox_ptrlist,
-    &wdw_skybox_ptrlist,
-    &cloud_floor_skybox_ptrlist,
-    &ccm_skybox_ptrlist,
-    &ssl_skybox_ptrlist,
-    &bbh_skybox_ptrlist,
-    &bidw_skybox_ptrlist,
-    &clouds_skybox_ptrlist,
-    &bits_skybox_ptrlist,
+    &water_skybox_ptrlist,  &bitfs_skybox_ptrlist, &wdw_skybox_ptrlist, &cloud_floor_skybox_ptrlist,
+    &ccm_skybox_ptrlist,    &ssl_skybox_ptrlist,   &bbh_skybox_ptrlist, &bidw_skybox_ptrlist,
+    &clouds_skybox_ptrlist, &bits_skybox_ptrlist,
 };
 
 /**
@@ -123,7 +115,6 @@ u8 sSkyboxColors[][3] = {
  * The vertical length of the skybox tilemap in tiles.
  */
 #define SKYBOX_ROWS (8)
-
 
 /**
  * Convert the camera's yaw into an x position into the scaled skybox image.
@@ -196,14 +187,15 @@ Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex) {
     s16 y = SKYBOX_HEIGHT - tileIndex / SKYBOX_COLS * SKYBOX_TILE_HEIGHT;
 
     if (verts != NULL) {
-        make_vertex(verts, 0, x, y, -1, 0, 0, sSkyboxColors[colorIndex][0], sSkyboxColors[colorIndex][1],
-                    sSkyboxColors[colorIndex][2], 255);
-        make_vertex(verts, 1, x, y - SKYBOX_TILE_HEIGHT, -1, 0, 31 << 5, sSkyboxColors[colorIndex][0], sSkyboxColors[colorIndex][1],
-                    sSkyboxColors[colorIndex][2], 255);
-        make_vertex(verts, 2, x + SKYBOX_TILE_WIDTH, y - SKYBOX_TILE_HEIGHT, -1, 31 << 5, 31 << 5, sSkyboxColors[colorIndex][0],
+        make_vertex(verts, 0, x, y, -1, 0, 0, sSkyboxColors[colorIndex][0],
                     sSkyboxColors[colorIndex][1], sSkyboxColors[colorIndex][2], 255);
-        make_vertex(verts, 3, x + SKYBOX_TILE_WIDTH, y, -1, 31 << 5, 0, sSkyboxColors[colorIndex][0], sSkyboxColors[colorIndex][1],
+        make_vertex(verts, 1, x, y - SKYBOX_TILE_HEIGHT, -1, 0, 31 << 5, sSkyboxColors[colorIndex][0],
+                    sSkyboxColors[colorIndex][1], sSkyboxColors[colorIndex][2], 255);
+        make_vertex(verts, 2, x + SKYBOX_TILE_WIDTH, y - SKYBOX_TILE_HEIGHT, -1, 31 << 5, 31 << 5,
+                    sSkyboxColors[colorIndex][0], sSkyboxColors[colorIndex][1],
                     sSkyboxColors[colorIndex][2], 255);
+        make_vertex(verts, 3, x + SKYBOX_TILE_WIDTH, y, -1, 31 << 5, 0, sSkyboxColors[colorIndex][0],
+                    sSkyboxColors[colorIndex][1], sSkyboxColors[colorIndex][2], 255);
     } else {
     }
     return verts;
@@ -289,9 +281,8 @@ Gfx *init_skybox_display_list(s8 player, s8 background, s8 colorIndex) {
  * @param posX,posY,posZ The camera's position
  * @param focX,focY,focZ The camera's focus.
  */
-Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov,
-                                    f32 posX, f32 posY, f32 posZ,
-                                    f32 focX, f32 focY, f32 focZ) {
+Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov, f32 posX, f32 posY, f32 posZ,
+                                 f32 focX, f32 focY, f32 focZ) {
     f32 cameraFaceX = focX - posX;
     f32 cameraFaceY = focY - posY;
     f32 cameraFaceZ = focZ - posZ;
@@ -306,7 +297,8 @@ Gfx *create_skybox_facing_camera(s8 player, s8 background, f32 fov,
     //! the first frame, which causes a floating point divide by 0
     fov = 90.0f;
     sSkyBoxInfo[player].yaw = atan2s(cameraFaceZ, cameraFaceX);
-    sSkyBoxInfo[player].pitch = atan2s(sqrtf(cameraFaceX * cameraFaceX + cameraFaceZ * cameraFaceZ), cameraFaceY);
+    sSkyBoxInfo[player].pitch =
+        atan2s(sqrtf(cameraFaceX * cameraFaceX + cameraFaceZ * cameraFaceZ), cameraFaceY);
     sSkyBoxInfo[player].scaledX = calculate_skybox_scaled_x(player, fov);
     sSkyBoxInfo[player].scaledY = calculate_skybox_scaled_y(player, fov);
     sSkyBoxInfo[player].upperLeftTile = get_top_left_tile_idx(player);

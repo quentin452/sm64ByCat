@@ -21,7 +21,7 @@
  * Since that's an awful practice to emulate, include this file (first!) to prevent
  * the proper prototypes of these functions from being seen by files with the
  * the incorrectly compiled calls.
-*/
+ */
 
 #ifndef AVOID_UB
 

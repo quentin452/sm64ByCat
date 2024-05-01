@@ -13,9 +13,9 @@
 
 static struct ControllerAPI *controller_implementations[] = {
     &controller_recorded_tas,
-    #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
+#if defined(CAPI_SDL2) || defined(CAPI_SDL1)
     &controller_sdl,
-    #endif
+#endif
     &controller_keyboard,
 };
 
@@ -64,7 +64,8 @@ void osContGetReadData(OSContPad *pad) {
 u32 controller_get_raw_key(void) {
     for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++) {
         u32 vk = controller_implementations[i]->rawkey();
-        if (vk != VK_INVALID) return vk + controller_implementations[i]->vkbase;
+        if (vk != VK_INVALID)
+            return vk + controller_implementations[i]->vkbase;
     }
     return VK_INVALID;
 }

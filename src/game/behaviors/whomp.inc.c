@@ -235,10 +235,8 @@ void whomp_act_9(void) {
         stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));
 }
 
-void (*sWhompActions[])(void) = {
-    whomp_act_0, whomp_act_1, whomp_act_2, whomp_act_3, whomp_act_4,
-    whomp_act_5, whomp_act_6, whomp_act_7, whomp_act_8, whomp_act_9
-};
+void (*sWhompActions[])(void) = { whomp_act_0, whomp_act_1, whomp_act_2, whomp_act_3, whomp_act_4,
+                                  whomp_act_5, whomp_act_6, whomp_act_7, whomp_act_8, whomp_act_9 };
 
 // MM
 void bhv_whomp_loop(void) {

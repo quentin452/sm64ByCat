@@ -12,7 +12,7 @@ extern struct ObjCamera *gViewUpdateCamera;
 // bss
 // this is unused, but it needs to be declared before gGdLightGroup
 extern u8 gUnref_801B9B30[0x88];
-extern struct ObjGroup *gGdLightGroup;  // ObjGroup* of ObjLights
+extern struct ObjGroup *gGdLightGroup; // ObjGroup* of ObjLights
 
 // functions
 void draw_light(struct ObjLight *light);

@@ -105,7 +105,6 @@ extern u8 gSoundDataRaw[];  // sound_data.tbl
 extern u8 gMusicData[];     // sequences.s
 extern u8 gBankSetsData[];  // bank_sets.s
 
-
 /**
  * Performs an immediate DMA copy
  */
@@ -119,7 +118,8 @@ void audio_dma_copy_immediate(uintptr_t devAddr, void *vAddr, size_t nbytes) {
 /**
  * Performs an asynchronus (normal priority) DMA copy
  */
-void audio_dma_copy_async(uintptr_t devAddr, void *vAddr, size_t nbytes, OSMesgQueue *queue, OSIoMesg *mesg) {
+void audio_dma_copy_async(uintptr_t devAddr, void *vAddr, size_t nbytes, OSMesgQueue *queue,
+                          OSIoMesg *mesg) {
     osInvalDCache(vAddr, nbytes);
     osPiStartDma(mesg, OS_MESG_PRI_NORMAL, OS_READ, devAddr, vAddr, nbytes, queue);
 }
@@ -128,7 +128,8 @@ void audio_dma_copy_async(uintptr_t devAddr, void *vAddr, size_t nbytes, OSMesgQ
  * Performs a partial asynchronous (normal priority) DMA copy. This is limited
  * to 0x1000 bytes transfer at once.
  */
-void audio_dma_partial_copy_async(uintptr_t *devAddr, u8 **vAddr, ssize_t *remaining, OSMesgQueue *queue, OSIoMesg *mesg) {
+void audio_dma_partial_copy_async(uintptr_t *devAddr, u8 **vAddr, ssize_t *remaining,
+                                  OSMesgQueue *queue, OSIoMesg *mesg) {
 #ifdef VERSION_EU
     ssize_t transfer = (*remaining >= 0x1000 ? 0x1000 : *remaining);
 #else
@@ -277,8 +278,8 @@ void *dma_sample_data(uintptr_t devAddr, u32 size, s32 arg2, u8 *arg3) {
     osInvalDCache(dma->buffer, transfer);
 #endif
 #ifdef VERSION_EU
-    osPiStartDma(&gCurrAudioFrameDmaIoMesgBufs[gCurrAudioFrameDmaCount++], OS_MESG_PRI_NORMAL,
-                 OS_READ, dmaDevAddr, dma->buffer, transfer, &gCurrAudioFrameDmaQueue);
+    osPiStartDma(&gCurrAudioFrameDmaIoMesgBufs[gCurrAudioFrameDmaCount++], OS_MESG_PRI_NORMAL, OS_READ,
+                 dmaDevAddr, dma->buffer, transfer, &gCurrAudioFrameDmaQueue);
     *arg3 = dmaIndex;
     return (devAddr - dmaDevAddr) + dma->buffer;
 #else
@@ -390,12 +391,13 @@ out2:
 static
 #endif
 
-void patch_sound(UNUSED struct AudioBankSound *sound, UNUSED u8 *memBase, UNUSED u8 *offsetBase) {
+    void
+    patch_sound(UNUSED struct AudioBankSound *sound, UNUSED u8 *memBase, UNUSED u8 *offsetBase) {
     struct AudioBankSample *sample;
     void *patched;
     UNUSED u8 *mem; // unused on US
 
-#define PATCH(x, base) (patched = (void *)((uintptr_t) (x) + (uintptr_t) base))
+#define PATCH(x, base) (patched = (void *) ((uintptr_t)(x) + (uintptr_t) base))
 
     if (sound->sample != NULL) {
         sample = sound->sample = PATCH(sound->sample, memBase);
@@ -427,28 +429,26 @@ void patch_sound(UNUSED struct AudioBankSound *sound, UNUSED u8 *memBase, UNUSED
 }
 
 #ifndef VERSION_EU
-#define PATCH_SOUND(_sound, mem, offset)                                                  \
-{                                                                                         \
-    struct AudioBankSound *sound = _sound;                                                \
-    struct AudioBankSample *sample;                                                       \
-    void *patched;                                                                        \
-    if ((*sound).sample != (void *) 0)                                                    \
-    {                                                                                     \
-        patched = (void *)(((uintptr_t)(*sound).sample) + ((uintptr_t)((u8 *) mem)));     \
-        (*sound).sample = patched;                                                        \
-        sample = (*sound).sample;                                                         \
-        if ((*sample).loaded == 0)                                                        \
-        {                                                                                 \
-            patched = (void *)(((uintptr_t)(*sample).sampleAddr) + ((uintptr_t) offset)); \
-            (*sample).sampleAddr = patched;                                               \
-            patched = (void *)(((uintptr_t)(*sample).loop) + ((uintptr_t)((u8 *) mem)));  \
-            (*sample).loop = patched;                                                     \
-            patched = (void *)(((uintptr_t)(*sample).book) + ((uintptr_t)((u8 *) mem)));  \
-            (*sample).book = patched;                                                     \
-            (*sample).loaded = 1;                                                         \
-        }                                                                                 \
-    }                                                                                     \
-}
+#define PATCH_SOUND(_sound, mem, offset)                                                               \
+    {                                                                                                  \
+        struct AudioBankSound *sound = _sound;                                                         \
+        struct AudioBankSample *sample;                                                                \
+        void *patched;                                                                                 \
+        if ((*sound).sample != (void *) 0) {                                                           \
+            patched = (void *) (((uintptr_t)(*sound).sample) + ((uintptr_t)((u8 *) mem)));             \
+            (*sound).sample = patched;                                                                 \
+            sample = (*sound).sample;                                                                  \
+            if ((*sample).loaded == 0) {                                                               \
+                patched = (void *) (((uintptr_t)(*sample).sampleAddr) + ((uintptr_t) offset));         \
+                (*sample).sampleAddr = patched;                                                        \
+                patched = (void *) (((uintptr_t)(*sample).loop) + ((uintptr_t)((u8 *) mem)));          \
+                (*sample).loop = patched;                                                              \
+                patched = (void *) (((uintptr_t)(*sample).book) + ((uintptr_t)((u8 *) mem)));          \
+                (*sample).book = patched;                                                              \
+                (*sample).loaded = 1;                                                                  \
+            }                                                                                          \
+        }                                                                                              \
+    }
 #endif
 
 // on US/JP this inlines patch_sound, using some -sopt compiler flag
@@ -465,41 +465,40 @@ void patch_audio_bank(struct AudioBank *mem, u8 *offset, u32 numInstruments, u32
     u32 numDrums2;
 #endif
 
-#define PATCH(x, base) (patched = (void *)((uintptr_t) (x) + (uintptr_t) base))
+#define PATCH(x, base) (patched = (void *) ((uintptr_t)(x) + (uintptr_t) base))
 #define PATCH_MEM(x) x = PATCH(x, mem)
 
     drums = mem->drums;
 #ifndef VERSION_EU
     if (drums != NULL && numDrums > 0) {
-        mem->drums = (void *)((uintptr_t) drums + (uintptr_t) mem);
+        mem->drums = (void *) ((uintptr_t) drums + (uintptr_t) mem);
         if (numDrums > 0) //! unneeded when -sopt is enabled
-        for (i = 0; i < numDrums; i++) {
+            for (i = 0; i < numDrums; i++) {
 #else
     numDrums2 = numDrums;
     if (drums != NULL && numDrums2 > 0) {
         mem->drums = PATCH(drums, mem);
         for (i = 0; i < numDrums2; i++) {
 #endif
-            patched = mem->drums[i];
-            if (patched != NULL) {
-                drum = PATCH(patched, mem);
-                mem->drums[i] = drum;
-                if (drum->loaded == 0) {
+                patched = mem->drums[i];
+                if (patched != NULL) {
+                    drum = PATCH(patched, mem);
+                    mem->drums[i] = drum;
+                    if (drum->loaded == 0) {
 #ifndef VERSION_EU
-                    //! copt replaces drum with 'patched' for these two lines
-                    PATCH_SOUND(&(*(struct Drum *)patched).sound, mem, offset);
-                    patched = (*(struct Drum *)patched).envelope;
-                    drum->envelope = (void *)((uintptr_t) mem + (uintptr_t) patched);
+                        //! copt replaces drum with 'patched' for these two lines
+                        PATCH_SOUND(&(*(struct Drum *) patched).sound, mem, offset);
+                        patched = (*(struct Drum *) patched).envelope;
+                        drum->envelope = (void *) ((uintptr_t) mem + (uintptr_t) patched);
 #else
                     patch_sound(&drum->sound, (u8 *) mem, offset);
                     patched = drum->envelope;
-                    drum->envelope = (void *)((uintptr_t) patched + (uintptr_t) mem);
+                    drum->envelope = (void *) ((uintptr_t) patched + (uintptr_t) mem);
 #endif
-                    drum->loaded = 1;
+                        drum->loaded = 1;
+                    }
                 }
-
             }
-        }
     }
 
     //! Doesn't affect EU, but required for US/JP
@@ -507,20 +506,20 @@ void patch_audio_bank(struct AudioBank *mem, u8 *offset, u32 numInstruments, u32
 #ifndef VERSION_EU
     if (numInstruments >= 1)
 #endif
-    if (numInstruments > 0) {
-        //! Doesn't affect EU, but required for US/JP
-        struct Instrument **tempInst;
-        itInstrs = temp->instruments;
-        tempInst = temp->instruments;
-        end = numInstruments + tempInst;
+        if (numInstruments > 0) {
+            //! Doesn't affect EU, but required for US/JP
+            struct Instrument **tempInst;
+            itInstrs = temp->instruments;
+            tempInst = temp->instruments;
+            end = numInstruments + tempInst;
 
 #ifndef VERSION_EU
-l2:
+        l2:
 #else
         do {
 #endif
             if (*itInstrs != NULL) {
-                *itInstrs = (void *)((uintptr_t) *itInstrs + (uintptr_t) mem);
+                *itInstrs = (void *) ((uintptr_t) *itInstrs + (uintptr_t) mem);
                 instrument = *itInstrs;
 
                 if (instrument->loaded == 0) {
@@ -535,9 +534,9 @@ l2:
 #endif
                     patched = instrument->envelope;
 #ifndef VERSION_EU
-                    instrument->envelope = (void *)((uintptr_t) mem + (uintptr_t) patched);
+                    instrument->envelope = (void *) ((uintptr_t) mem + (uintptr_t) patched);
 #else
-                    instrument->envelope = (void *)((uintptr_t) patched + (uintptr_t) mem);
+                    instrument->envelope = (void *) ((uintptr_t) patched + (uintptr_t) mem);
 #endif
                     instrument->loaded = 1;
                 }
@@ -551,7 +550,7 @@ l2:
 #else
         } while (end != itInstrs);
 #endif
-    }
+        }
 #undef PATCH_MEM
 #undef PATCH
 #undef PATCH_SOUND
@@ -681,7 +680,7 @@ void *sequence_dma_async(s32 seqId, s32 arg1, struct SequencePlayer *seqPlayer) 
         // Immediately load short sequenece
         audio_dma_copy_immediate((uintptr_t) seqData, ptr, seqLength);
         if (1) {
-        gSeqLoadStatus[seqId] = SOUND_LOAD_STATUS_COMPLETE;
+            gSeqLoadStatus[seqId] = SOUND_LOAD_STATUS_COMPLETE;
         }
     } else {
         audio_dma_copy_immediate((uintptr_t) seqData, ptr, 0x40);
@@ -691,8 +690,8 @@ void *sequence_dma_async(s32 seqId, s32 arg1, struct SequencePlayer *seqPlayer) 
         seqPlayer->seqDmaMesg = NULL;
 #endif
         seqPlayer->seqDmaInProgress = TRUE;
-        audio_dma_copy_async((uintptr_t)(seqData + 0x40), (u8 *) ptr + 0x40, seqLength - 0x40, mesgQueue,
-                             &seqPlayer->seqDmaIoMesg);
+        audio_dma_copy_async((uintptr_t)(seqData + 0x40), (u8 *) ptr + 0x40, seqLength - 0x40,
+                             mesgQueue, &seqPlayer->seqDmaIoMesg);
         gSeqLoadStatus[seqId] = SOUND_LOAD_STATUS_IN_PROGRESS;
     }
     return ptr;
@@ -872,18 +871,19 @@ void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync) {
 }
 
 #ifdef EXTERNAL_DATA
-# define LOAD_DATA(x) load_sound_res((const char *)x)
-# include <stdio.h>
-# include <stdlib.h>
+#define LOAD_DATA(x) load_sound_res((const char *) x)
+#include <stdio.h>
+#include <stdlib.h>
 static inline void *load_sound_res(const char *path) {
     void *data = fs_load_file(path, NULL);
-    if (!data) sys_fatal("could not load sound data from '%s'", path);
+    if (!data)
+        sys_fatal("could not load sound data from '%s'", path);
     // FIXME: figure out where it is safe to free this shit
     //        can't free it immediately after in audio_init()
     return data;
 }
 #else
-# define LOAD_DATA(x) x
+#define LOAD_DATA(x) x
 #endif
 
 // (void) must be omitted from parameters
@@ -954,7 +954,7 @@ void audio_init() {
     for (i = 0; i < NUMAIBUFFERS; i++) {
         gAiBuffers[i] = soundAlloc(&gAudioInitPool, AIBUFFER_LEN);
 
-        for (j = 0; j < (s32) (AIBUFFER_LEN / sizeof(s16)); j++) {
+        for (j = 0; j < (s32)(AIBUFFER_LEN / sizeof(s16)); j++) {
             gAiBuffers[i][j] = 0;
         }
     }
@@ -1012,4 +1012,3 @@ void audio_init() {
     init_sequence_players();
     gAudioLoadLock = AUDIO_LOCK_NOT_LOADING;
 }
-

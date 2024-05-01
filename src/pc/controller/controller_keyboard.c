@@ -61,19 +61,19 @@ static void keyboard_bindkeys(void) {
     bzero(keyboard_mapping, sizeof(keyboard_mapping));
     num_keybinds = 0;
 
-    keyboard_add_binds(STICK_UP,     configKeyStickUp);
-    keyboard_add_binds(STICK_LEFT,   configKeyStickLeft);
-    keyboard_add_binds(STICK_DOWN,   configKeyStickDown);
-    keyboard_add_binds(STICK_RIGHT,  configKeyStickRight);
-    keyboard_add_binds(A_BUTTON,     configKeyA);
-    keyboard_add_binds(B_BUTTON,     configKeyB);
-    keyboard_add_binds(Z_TRIG,       configKeyZ);
-    keyboard_add_binds(U_CBUTTONS,   configKeyCUp);
-    keyboard_add_binds(L_CBUTTONS,   configKeyCLeft);
-    keyboard_add_binds(D_CBUTTONS,   configKeyCDown);
-    keyboard_add_binds(R_CBUTTONS,   configKeyCRight);
-    keyboard_add_binds(L_TRIG,       configKeyL);
-    keyboard_add_binds(R_TRIG,       configKeyR);
+    keyboard_add_binds(STICK_UP, configKeyStickUp);
+    keyboard_add_binds(STICK_LEFT, configKeyStickLeft);
+    keyboard_add_binds(STICK_DOWN, configKeyStickDown);
+    keyboard_add_binds(STICK_RIGHT, configKeyStickRight);
+    keyboard_add_binds(A_BUTTON, configKeyA);
+    keyboard_add_binds(B_BUTTON, configKeyB);
+    keyboard_add_binds(Z_TRIG, configKeyZ);
+    keyboard_add_binds(U_CBUTTONS, configKeyCUp);
+    keyboard_add_binds(L_CBUTTONS, configKeyCLeft);
+    keyboard_add_binds(D_CBUTTONS, configKeyCDown);
+    keyboard_add_binds(R_CBUTTONS, configKeyCRight);
+    keyboard_add_binds(L_TRIG, configKeyL);
+    keyboard_add_binds(R_TRIG, configKeyR);
     keyboard_add_binds(START_BUTTON, configKeyStart);
 }
 
@@ -109,12 +109,6 @@ static void keyboard_shutdown(void) {
 }
 
 struct ControllerAPI controller_keyboard = {
-    VK_BASE_KEYBOARD,
-    keyboard_init,
-    keyboard_read,
-    keyboard_rawkey,
-    NULL,
-    NULL,
-    keyboard_bindkeys,
-    keyboard_shutdown
+    VK_BASE_KEYBOARD,  keyboard_init,    keyboard_read, keyboard_rawkey, NULL, NULL,
+    keyboard_bindkeys, keyboard_shutdown
 };
