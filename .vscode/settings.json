@@ -138,6 +138,7 @@
     "editor.defaultFormatter": "cheshirekow.cmake-format"
   },
   "[c]": {
+    "editor.defaultFormatter": "xaver.clang-format",
     "editor.wordBasedSuggestions": "matchingDocuments"
   },
   "sonarlint.pathToCompileCommands": "${workspaceFolder}\\build\\compile_commands.json",
