@@ -129,6 +129,7 @@ u16 newcam_modeflags;
 s16 newcam_saved_mode = -1;
 s16 newcam_saved_defmode = -1;
 
+u8 bowser_cam_changed;
 /// This is called at every level initialisation.
 void newcam_init(struct Camera *c, u8 dv) {
     newcam_tilt = 1500;
@@ -138,24 +139,6 @@ void newcam_init(struct Camera *c, u8 dv) {
     /// This here will dictate what modes the camera will start in at the beginning of a level. Below
     /// are some examples.
     switch (gCurrLevelNum) {
-        case LEVEL_BITDW:
-            newcam_yaw = 0x4000;
-            newcam_mode = NC_MODE_8D;
-            newcam_tilt = 4000;
-            newcam_distance_target = newcam_distance_values[2];
-            break;
-        case LEVEL_BITFS:
-            newcam_yaw = 0x4000;
-            newcam_mode = NC_MODE_8D;
-            newcam_tilt = 4000;
-            newcam_distance_target = newcam_distance_values[2];
-            break;
-        case LEVEL_BITS:
-            newcam_yaw = 0x4000;
-            newcam_mode = NC_MODE_8D;
-            newcam_tilt = 4000;
-            newcam_distance_target = newcam_distance_values[2];
-            break;
         case LEVEL_WF:
             newcam_yaw = 0x4000;
             newcam_tilt = 2000;
@@ -186,6 +169,15 @@ void newcam_init(struct Camera *c, u8 dv) {
             if (gCurrAreaIndex == 2)
                 newcam_mode = NC_MODE_SLIDE;
             break;
+    }
+    if ((gCurrLevelNum == LEVEL_BITDW) || (gCurrLevelNum == LEVEL_BITFS)
+        || (gCurrLevelNum == LEVEL_BITS)) {
+        newcam_yaw = 0x4000;
+        if (configBowserCam) {
+            newcam_mode = NC_MODE_8D;
+        }
+        newcam_tilt = 4000;
+        newcam_distance_target = newcam_distance_values[2];
     }
 
     // clear these out when entering a new level to prevent "camera mode buffering"
@@ -245,6 +237,29 @@ void newcam_init_settings(void) {
     newcam_degrade = (f32) configCameraDegrade;
 
     newcam_toggle(configEnableCamera);
+
+    if (bowser_cam_changed != configBowserCam) {
+        bowser_cam_changed = configBowserCam;
+        if ((gCurrLevelNum == LEVEL_BITDW) || (gCurrLevelNum == LEVEL_BITFS)
+            || (gCurrLevelNum == LEVEL_BITS)) {
+            if (configEnableCamera) {
+                newcam_saved_defmode = -1;
+                newcam_saved_mode = -1;
+                if (configBowserCam) {
+                    newcam_yaw = 0x4000;
+                    newcam_mode = NC_MODE_8D;
+                    newcam_tilt = 4000;
+                    newcam_distance_target = newcam_distance_values[2];
+                    newcam_tilt_acc = 0;
+                    newcam_yaw_acc = 0;
+                } else {
+                    newcam_mode = NC_MODE_NORMAL;
+                }
+                newcam_intendedmode = newcam_mode;
+                newcam_modeflags = newcam_mode;
+            }
+        }
+    }
 }
 
 /** Mathematic calculations. This stuffs so basic even *I* understand it lol

@@ -60,6 +60,7 @@
 #define TEXT_OPT_DRAWDIST  _("DRAW DISTANCE")
 #define TEXT_OPT_APPLY     _("APPLY")
 #define TEXT_OPT_RESETWND  _("RESET WINDOW")
+#define TEXT_OPT_BOWSERCAM _("BOWSER LEVEL 8-WAY CAMERA")
 
 #define TEXT_BIND_A        _("A BUTTON")
 #define TEXT_BIND_B        _("B BUTTON")
@@ -126,6 +127,7 @@
 #define TEXT_OPT_DRAWDIST  _("Draw Distance")
 #define TEXT_OPT_APPLY     _("Apply")
 #define TEXT_OPT_RESETWND  _("Reset Window")
+#define TEXT_OPT_BOWSERCAM _("Bowser Level 8-way Camera")
 
 #define TEXT_BIND_A        _("A Button")
 #define TEXT_BIND_B        _("B Button")
