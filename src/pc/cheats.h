@@ -13,6 +13,7 @@ struct CheatList {
     bool ExitAnywhere;
     bool HugeMario;
     bool TinyMario;
+    unsigned int StayInLevel;
     bool ForeverShell;
     bool ForeverCap;
     bool WingCap;

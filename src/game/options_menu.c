@@ -80,10 +80,16 @@ static const u8 optsAudioStr[][32] = {
 };
 
 static const u8 optsCheatsStr[][64] = {
-    { TEXT_OPT_CHEAT1 },    { TEXT_OPT_CHEAT2 },        { TEXT_OPT_CHEAT3 },      { TEXT_OPT_CHEAT4 },
-    { TEXT_OPT_CHEAT5 },    { TEXT_OPT_CHEAT6 },        { TEXT_OPT_CHEAT7 },      { TEXT_OPT_CHEAT8 },
-    { TEXT_OPT_CHEAT9 },    { TEXT_OPT_FOREVER_SHELL }, { TEXT_OPT_FOREVER_CAP }, { TEXT_OPT_WING_CAP },
-    { TEXT_OPT_METAL_CAP }, { TEXT_OPT_VANISH_CAP },    { TEXT_OPT_NORMAL_CAP },
+    { TEXT_OPT_CHEAT1 },   { TEXT_OPT_CHEAT2 },    { TEXT_OPT_CHEAT3 },        { TEXT_OPT_CHEAT4 },
+    { TEXT_OPT_CHEAT5 },   { TEXT_OPT_CHEAT6 },    { TEXT_OPT_CHEAT7 },        { TEXT_OPT_CHEAT8 },
+    { TEXT_OPT_CHEAT9 },   { TEXT_OPT_CHEAT10 },   { TEXT_OPT_FOREVER_SHELL }, { TEXT_OPT_FOREVER_CAP },
+    { TEXT_OPT_WING_CAP }, { TEXT_OPT_METAL_CAP }, { TEXT_OPT_VANISH_CAP },    { TEXT_OPT_NORMAL_CAP },
+};
+
+static const u8 optsStayInLevelStr[][32] = {
+    { TEXT_CHEAT_STAY1 },
+    { TEXT_CHEAT_STAY2 },
+    { TEXT_CHEAT_STAY3 },
 };
 
 static const u8 bindStr[][32] = {
@@ -104,6 +110,12 @@ static const u8 *vsyncChoices[] = {
     toggleStr[0],
     toggleStr[1],
     optsVideoStr[6],
+};
+
+static const u8 *stayInLevelChoices[] = {
+    optsStayInLevelStr[0],
+    optsStayInLevelStr[1],
+    optsStayInLevelStr[2],
 };
 
 enum OptType {
@@ -263,12 +275,13 @@ static struct Option optsCheats[] = {
     DEF_OPT_TOGGLE(optsCheatsStr[6], &Cheats.ExitAnywhere),
     DEF_OPT_TOGGLE(optsCheatsStr[7], &Cheats.HugeMario),
     DEF_OPT_TOGGLE(optsCheatsStr[8], &Cheats.TinyMario),
-    DEF_OPT_TOGGLE(optsCheatsStr[9], &Cheats.ForeverShell),
-    DEF_OPT_TOGGLE(optsCheatsStr[10], &Cheats.ForeverCap),
-    DEF_OPT_BUTTON(optsCheatsStr[11], setCap_Wing),
-    DEF_OPT_BUTTON(optsCheatsStr[12], setCap_Metal),
-    DEF_OPT_BUTTON(optsCheatsStr[13], setCap_Vanish),
-    DEF_OPT_BUTTON(optsCheatsStr[14], setCap_Normal),
+    DEF_OPT_CHOICE(optsCheatsStr[9], &Cheats.StayInLevel, stayInLevelChoices),
+    DEF_OPT_TOGGLE(optsCheatsStr[10], &Cheats.ForeverShell),
+    DEF_OPT_TOGGLE(optsCheatsStr[11], &Cheats.ForeverCap),
+    DEF_OPT_BUTTON(optsCheatsStr[12], setCap_Wing),
+    DEF_OPT_BUTTON(optsCheatsStr[13], setCap_Metal),
+    DEF_OPT_BUTTON(optsCheatsStr[14], setCap_Vanish),
+    DEF_OPT_BUTTON(optsCheatsStr[15], setCap_Normal),
 };
 
 /* submenu definitions */

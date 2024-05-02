@@ -97,7 +97,8 @@
     "gfx_window_manager_api.h": "c",
     "stdbool.h": "c",
     "graph_node.h": "c",
-    "windows.h": "c"
+    "windows.h": "c",
+    "ingame_menu.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {
