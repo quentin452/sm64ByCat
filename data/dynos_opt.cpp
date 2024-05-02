@@ -4,9 +4,7 @@ extern "C" {
 #include "audio/external.h"
 #include "game/game_init.h"
 #include "pc/controller/controller_keyboard.h"
-#ifdef BETTERCAMERA
 #include "game/bettercamera.h"
-#endif
 }
 
 //
@@ -482,9 +480,7 @@ static void DynOS_Opt_Close(bool aPlaySavedSfx) {
         if (aPlaySavedSfx) {
             play_sound(SOUND_DYNOS_SAVED, gDefaultSoundArgs);
         }
-#ifdef BETTERCAMERA
         newcam_init_settings();
-#endif
         controller_reconfigure();
         configfile_save(configfile_name());
         DynOS_Opt_SaveConfig(sDynosMenu);
