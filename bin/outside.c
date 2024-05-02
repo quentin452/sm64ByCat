@@ -106,4 +106,3 @@ ALIGNED8 const u8 outside_0900B400[] = {
 ALIGNED8 const u8 outside_0900BC00[] = {
 #include "textures/outside/castle_grounds_textures.0BC00.ia16.inc.c"
 };
-

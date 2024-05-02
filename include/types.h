@@ -7,32 +7,29 @@
 #include <ultra64.h>
 #include "macros.h"
 
-
 // Certain functions are marked as having return values, but do not
 // actually return a value. This causes undefined behavior, which we'd rather
 // avoid on modern GCC. This only impacts -O2 and can matter for both the function
 // itself and functions that call it.
 #ifdef AVOID_UB
-    #define BAD_RETURN(cmd) void
+#define BAD_RETURN(cmd) void
 #else
-    #define BAD_RETURN(cmd) cmd
+#define BAD_RETURN(cmd) cmd
 #endif
 
-
-struct Controller
-{
-  /*0x00*/ s16 rawStickX;       //
-  /*0x02*/ s16 rawStickY;       //
-  /*0x04*/ float stickX;        // [-64, 64] positive is right
-  /*0x08*/ float stickY;        // [-64, 64] positive is up
-  /*0x0C*/ float stickMag;      // distance from center [0, 64]
-  /*0x10*/ u16 buttonDown;
-  /*0x12*/ u16 buttonPressed;
-  /*0x14*/ OSContStatus *statusData;
-  /*0x18*/ OSContPad *controllerData;
-  /*0x1C*/ int port;
-  /*ext */ s16 extStickX;       // additional (right) stick values
-  /*ext */ s16 extStickY;
+struct Controller {
+    /*0x00*/ s16 rawStickX;  //
+    /*0x02*/ s16 rawStickY;  //
+    /*0x04*/ float stickX;   // [-64, 64] positive is right
+    /*0x08*/ float stickY;   // [-64, 64] positive is up
+    /*0x0C*/ float stickMag; // distance from center [0, 64]
+    /*0x10*/ u16 buttonDown;
+    /*0x12*/ u16 buttonPressed;
+    /*0x14*/ OSContStatus *statusData;
+    /*0x18*/ OSContPad *controllerData;
+    /*0x1C*/ int port;
+    /*ext */ s16 extStickX; // additional (right) stick values
+    /*ext */ s16 extStickY;
 };
 
 typedef f32 Vec2f[2];
@@ -61,28 +58,26 @@ enum SpTaskState {
     SPTASK_STATE_FINISHED_DP
 };
 
-struct SPTask
-{
+struct SPTask {
     /*0x00*/ OSTask task;
     /*0x40*/ OSMesgQueue *msgqueue;
     /*0x44*/ OSMesg msg;
     /*0x48*/ enum SpTaskState state;
 }; // size = 0x4C, align = 0x8
 
-struct VblankHandler
-{
+struct VblankHandler {
     OSMesgQueue *queue;
     OSMesg msg;
 };
 
-#define ANIM_FLAG_NOLOOP     (1 << 0) // 0x01
-#define ANIM_FLAG_FORWARD    (1 << 1) // 0x02
-#define ANIM_FLAG_2          (1 << 2) // 0x04
-#define ANIM_FLAG_HOR_TRANS  (1 << 3) // 0x08
+#define ANIM_FLAG_NOLOOP (1 << 0) // 0x01
+#define ANIM_FLAG_FORWARD (1 << 1) // 0x02
+#define ANIM_FLAG_2 (1 << 2) // 0x04
+#define ANIM_FLAG_HOR_TRANS (1 << 3) // 0x08
 #define ANIM_FLAG_VERT_TRANS (1 << 4) // 0x10
-#define ANIM_FLAG_5          (1 << 5) // 0x20
-#define ANIM_FLAG_6          (1 << 6) // 0x40
-#define ANIM_FLAG_7          (1 << 7) // 0x80
+#define ANIM_FLAG_5 (1 << 5) // 0x20
+#define ANIM_FLAG_6 (1 << 6) // 0x40
+#define ANIM_FLAG_7 (1 << 7) // 0x80
 
 struct Animation {
     /*0x00*/ s16 flags;
@@ -98,9 +93,8 @@ struct Animation {
 
 #define ANIMINDEX_NUMPARTS(animindex) (sizeof(animindex) / sizeof(u16) / 6 - 1)
 
-struct GraphNode
-{
-    /*0x00*/ s16 type; // structure type
+struct GraphNode {
+    /*0x00*/ s16 type;  // structure type
     /*0x02*/ s16 flags; // hi = drawing layer, lo = rendering modes
     /*0x04*/ struct GraphNode *prev;
     /*0x08*/ struct GraphNode *next;
@@ -110,8 +104,7 @@ struct GraphNode
 };
 
 // struct AnimInfo?
-struct GraphNodeObject_sub
-{
+struct GraphNodeObject_sub {
     /*0x00 0x38*/ s16 animID;
     /*0x02 0x3A*/ s16 animYTrans;
     /*0x04 0x3C*/ struct Animation *curAnim;
@@ -125,8 +118,7 @@ struct GraphNodeObject_sub
     struct Animation *prevAnimPtr;
 };
 
-struct GraphNodeObject
-{
+struct GraphNodeObject {
     /*0x00*/ struct GraphNode node;
     /*0x14*/ struct GraphNode *sharedChild;
     /*0x18*/ s8 unk18;
@@ -151,8 +143,7 @@ struct GraphNodeObject
     u32 skipInterpolationTimestamp;
 };
 
-struct ObjectNode
-{
+struct ObjectNode {
     struct GraphNodeObject gfx;
     struct ObjectNode *next;
     struct ObjectNode *prev;
@@ -161,8 +152,7 @@ struct ObjectNode
 // NOTE: Since ObjectNode is the first member of Object, it is difficult to determine
 // whether some of these pointers point to ObjectNode or Object.
 
-struct Object
-{
+struct Object {
     /*0x000*/ struct ObjectNode header;
     /*0x068*/ struct Object *parentObj;
     /*0x06C*/ struct Object *prevObj;
@@ -171,8 +161,7 @@ struct Object
     /*0x076*/ s16 numCollidedObjs;
     /*0x078*/ struct Object *collidedObjs[4];
     /*0x088*/
-    union
-    {
+    union {
         // Object fields. See object_fields.h.
         u32 asU32[0x50];
         s32 asS32[0x50];
@@ -222,8 +211,7 @@ struct Object
     /*0x25C*/ void *respawnInfo;
 };
 
-struct ObjectHitbox
-{
+struct ObjectHitbox {
     /*0x00*/ u32 interactType;
     /*0x04*/ u8 downOffset;
     /*0x05*/ s8 damageOrCoinValue;
@@ -235,14 +223,12 @@ struct ObjectHitbox
     /*0x0E*/ s16 hurtboxHeight;
 };
 
-struct Waypoint
-{
+struct Waypoint {
     s16 flags;
     Vec3s pos;
 };
 
-struct Surface
-{
+struct Surface {
     /*0x00*/ s16 type;
     /*0x02*/ s16 force;
     /*0x04*/ s8 flags;
@@ -265,8 +251,7 @@ struct Surface
     u32 modifiedTimestamp;
 };
 
-struct MarioBodyState
-{
+struct MarioBodyState {
     /*0x00*/ u32 action;
     /*0x04*/ s8 capState; /// see MarioCapGSCId
     /*0x05*/ s8 eyeState;
@@ -281,29 +266,25 @@ struct MarioBodyState
     u8 padding[4];
 };
 
-struct OffsetSizePair
-{
+struct OffsetSizePair {
     u32 offset;
     u32 size;
 };
 
-struct MarioAnimDmaRelatedThing
-{
+struct MarioAnimDmaRelatedThing {
     u32 count;
     u8 *srcAddr;
     struct OffsetSizePair anim[1]; // dynamic size
 };
 
-struct MarioAnimation
-{
+struct MarioAnimation {
     struct MarioAnimDmaRelatedThing *animDmaTable;
     u8 *currentAnimAddr;
     struct Animation *targetAnim;
     u8 padding[4];
 };
 
-struct MarioState
-{
+struct MarioState {
     /*0x00*/ u16 unk00;
     /*0x02*/ u16 input;
     /*0x04*/ u32 flags;

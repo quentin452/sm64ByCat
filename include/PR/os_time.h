@@ -6,8 +6,7 @@
 
 /* Types */
 
-typedef struct OSTimer_str
-{
+typedef struct OSTimer_str {
     struct OSTimer_str *next;
     struct OSTimer_str *prev;
     u64 interval;

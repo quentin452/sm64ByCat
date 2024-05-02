@@ -20,17 +20,19 @@ typedef unsigned long long u64;
 typedef float f32;
 
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-# define bswap16(x) (x)
-# define bswap32(x) (x)
-# define BSWAP16(x)
-# define BSWAP32(x)
-# define BSWAP16_MANY(x, n)
+#define bswap16(x) (x)
+#define bswap32(x) (x)
+#define BSWAP16(x)
+#define BSWAP32(x)
+#define BSWAP16_MANY(x, n)
 #else
-# define bswap16(x) __builtin_bswap16(x)
-# define bswap32(x) __builtin_bswap32(x)
-# define BSWAP16(x) x = __builtin_bswap16(x)
-# define BSWAP32(x) x = __builtin_bswap32(x)
-# define BSWAP16_MANY(x, n) for (s32 _i = 0; _i < n; _i++) BSWAP16((x)[_i])
+#define bswap16(x) __builtin_bswap16(x)
+#define bswap32(x) __builtin_bswap32(x)
+#define BSWAP16(x) x = __builtin_bswap16(x)
+#define BSWAP32(x) x = __builtin_bswap32(x)
+#define BSWAP16_MANY(x, n)                                                                             \
+    for (s32 _i = 0; _i < n; _i++)                                                                     \
+    BSWAP16((x)[_i])
 #endif
 
 #define NORETURN __attribute__((noreturn))
@@ -92,23 +94,22 @@ typedef struct {
     s16 nEntries;
 } CodeChunk;
 
-typedef struct
-{
+typedef struct {
     u32 start;
     u32 end;
     u32 count;
     s16 state[16];
 } ALADPCMloop;
 
-
 static char usage[] = "input.aifc output.aiff";
 static const char *progname, *infilename;
 
-#define checked_fread(a, b, c, d) if (fread(a, b, c, d) != c) fail_parse("error parsing file")
+#define checked_fread(a, b, c, d)                                                                      \
+    if (fread(a, b, c, d) != c)                                                                        \
+    fail_parse("error parsing file")
 
 NORETURN
-void fail_parse(const char *fmt, ...)
-{
+void fail_parse(const char *fmt, ...) {
     char *formatted = NULL;
     va_list ap;
     va_start(ap, fmt);
@@ -135,36 +136,35 @@ void fail_parse(const char *fmt, ...)
     exit(1);
 }
 
-s32 myrand()
-{
+s32 myrand() {
     static u64 state = 1619236481962341ULL;
     state *= 3123692312231ULL;
     state++;
     return state >> 33;
 }
 
-s16 qsample(s32 x, s32 scale)
-{
+s16 qsample(s32 x, s32 scale) {
     // Compute x / 2^scale rounded to the nearest integer, breaking ties towards zero.
-    if (scale == 0) return x;
+    if (scale == 0)
+        return x;
     return (x + (1 << (scale - 1)) - (x > 0)) >> scale;
 }
 
-s16 clamp_to_s16(s32 x)
-{
-    if (x < -0x8000) return -0x8000;
-    if (x > 0x7fff) return 0x7fff;
+s16 clamp_to_s16(s32 x) {
+    if (x < -0x8000)
+        return -0x8000;
+    if (x > 0x7fff)
+        return 0x7fff;
     return (s16) x;
 }
 
-s32 toi4(s32 x)
-{
-    if (x >= 8) return x - 16;
+s32 toi4(s32 x) {
+    if (x >= 8)
+        return x - 16;
     return x;
 }
 
-s32 readaifccodebook(FILE *fhandle, s32 ****table, s16 *order, s16 *npredictors)
-{
+s32 readaifccodebook(FILE *fhandle, s32 ****table, s16 *order, s16 *npredictors) {
     checked_fread(order, sizeof(s16), 1, fhandle);
     BSWAP16(*order);
     checked_fread(npredictors, sizeof(s16), 1, fhandle);
@@ -208,8 +208,7 @@ s32 readaifccodebook(FILE *fhandle, s32 ****table, s16 *order, s16 *npredictors)
     return 0;
 }
 
-ALADPCMloop *readlooppoints(FILE *ifile, s16 *nloops)
-{
+ALADPCMloop *readlooppoints(FILE *ifile, s16 *nloops) {
     checked_fread(nloops, sizeof(s16), 1, ifile);
     BSWAP16(*nloops);
     ALADPCMloop *al = malloc(*nloops * sizeof(ALADPCMloop));
@@ -223,8 +222,7 @@ ALADPCMloop *readlooppoints(FILE *ifile, s16 *nloops)
     return al;
 }
 
-s32 inner_product(s32 length, s32 *v1, s32 *v2)
-{
+s32 inner_product(s32 length, s32 *v1, s32 *v2) {
     s32 out = 0;
     for (s32 i = 0; i < length; i++) {
         out += v1[i] * v2[i];
@@ -236,8 +234,7 @@ s32 inner_product(s32 length, s32 *v1, s32 *v2)
     return dout - (out - fiout < 0);
 }
 
-void my_decodeframe(u8 *frame, s32 *state, s32 order, s32 ***coefTable)
-{
+void my_decodeframe(u8 *frame, s32 *state, s32 order, s32 ***coefTable) {
     s32 ix[16];
 
     u8 header = frame[0];
@@ -245,13 +242,14 @@ void my_decodeframe(u8 *frame, s32 *state, s32 order, s32 ***coefTable)
     s32 optimalp = header & 0xf;
 
     for (s32 i = 0; i < 16; i += 2) {
-        u8 c = frame[1 + i/2];
+        u8 c = frame[1 + i / 2];
         ix[i] = c >> 4;
         ix[i + 1] = c & 0xf;
     }
 
     for (s32 i = 0; i < 16; i++) {
-        if (ix[i] >= 8) ix[i] -= 16;
+        if (ix[i] >= 8)
+            ix[i] -= 16;
         ix[i] *= scale;
     }
 
@@ -275,8 +273,7 @@ void my_decodeframe(u8 *frame, s32 *state, s32 order, s32 ***coefTable)
     }
 }
 
-void my_encodeframe(u8 *out, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 order, s32 npredictors)
-{
+void my_encodeframe(u8 *out, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 order, s32 npredictors) {
     s16 ix[16];
     s32 prediction[16];
     s32 inVector[16];
@@ -333,7 +330,8 @@ void my_encodeframe(u8 *out, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 or
     }
 
     for (scale = 0; scale <= 12; scale++) {
-        if (max <= 7 && max >= -8) break;
+        if (max <= 7 && max >= -8)
+            break;
         max /= 2;
     }
 
@@ -343,7 +341,8 @@ void my_encodeframe(u8 *out, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 or
 
     for (s32 nIter = 0, again = 1; nIter < 2 && again; nIter++) {
         again = 0;
-        if (nIter == 1) scale++;
+        if (nIter == 1)
+            scale++;
         if (scale > 12) {
             scale = 12;
         }
@@ -351,8 +350,7 @@ void my_encodeframe(u8 *out, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 or
         for (s32 j = 0; j < 2; j++) {
             s32 base = j * 8;
             for (s32 i = 0; i < order; i++) {
-                inVector[i] = (j == 0 ?
-                        saveState[16 - order + i] : state[8 - order + i]);
+                inVector[i] = (j == 0 ? saveState[16 - order + i] : state[8 - order + i]);
             }
 
             for (s32 i = 0; i < 8; i++) {
@@ -360,7 +358,8 @@ void my_encodeframe(u8 *out, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 or
                 s32 se = inBuffer[base + i] - prediction[base + i];
                 ix[base + i] = qsample(se, scale);
                 s32 cV = clamp_to_s16(ix[base + i]) - ix[base + i];
-                if (cV > 1 || cV < -1) again = 1;
+                if (cV > 1 || cV < -1)
+                    again = 1;
                 ix[base + i] += cV;
                 inVector[i + order] = ix[base + i] * (1 << scale);
                 state[base + i] = prediction[base + i] + inVector[i + order];
@@ -372,26 +371,23 @@ void my_encodeframe(u8 *out, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 or
     out[0] = header;
     for (s32 i = 0; i < 16; i += 2) {
         u8 c = ((ix[i] & 0xf) << 4) | (ix[i + 1] & 0xf);
-        out[1 + i/2] = c;
+        out[1 + i / 2] = c;
     }
 }
 
-void permute(s16 *out, s32 *in, s32 scale)
-{
+void permute(s16 *out, s32 *in, s32 scale) {
     for (s32 i = 0; i < 16; i++) {
         out[i] = clamp_to_s16(in[i] - scale / 2 + myrand() % (scale + 1));
     }
 }
 
-void write_header(FILE *ofile, const char *id, s32 size)
-{
+void write_header(FILE *ofile, const char *id, s32 size) {
     fwrite(id, 4, 1, ofile);
     BSWAP32(size);
     fwrite(&size, sizeof(s32), 1, ofile);
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     s16 order = -1;
     s16 nloops = 0;
     ALADPCMloop *aloops = NULL;
@@ -439,7 +435,8 @@ int main(int argc, char **argv)
     for (;;) {
         s32 num = fread(&Header, sizeof(Header), 1, ifile);
         u32 ts;
-        if (num <= 0) break;
+        if (num <= 0)
+            break;
         BSWAP32(Header.ckID);
         BSWAP32(Header.ckSize);
 
@@ -448,79 +445,80 @@ int main(int argc, char **argv)
         s32 offset = ftell(ifile);
 
         switch (Header.ckID) {
-        case 0x434f4d4d: // COMM
-            checked_fread(&CommChunk, sizeof(CommChunk), 1, ifile);
-            BSWAP16(CommChunk.numChannels);
-            BSWAP16(CommChunk.numFramesH);
-            BSWAP16(CommChunk.numFramesL);
-            BSWAP16(CommChunk.sampleSize);
-            BSWAP16(CommChunk.compressionTypeH);
-            BSWAP16(CommChunk.compressionTypeL);
-            s32 cType = (CommChunk.compressionTypeH << 16) + CommChunk.compressionTypeL;
-            if (cType != 0x56415043) { // VAPC
-                fail_parse("file is of the wrong compression type");
-            }
-            if (CommChunk.numChannels != 1) {
-                fail_parse("file contains %d channels, only 1 channel supported", CommChunk.numChannels);
-            }
-            if (CommChunk.sampleSize != 16) {
-                fail_parse("file contains %d bit samples, only 16 bit samples supported", CommChunk.sampleSize);
-            }
+            case 0x434f4d4d: // COMM
+                checked_fread(&CommChunk, sizeof(CommChunk), 1, ifile);
+                BSWAP16(CommChunk.numChannels);
+                BSWAP16(CommChunk.numFramesH);
+                BSWAP16(CommChunk.numFramesL);
+                BSWAP16(CommChunk.sampleSize);
+                BSWAP16(CommChunk.compressionTypeH);
+                BSWAP16(CommChunk.compressionTypeL);
+                s32 cType = (CommChunk.compressionTypeH << 16) + CommChunk.compressionTypeL;
+                if (cType != 0x56415043) { // VAPC
+                    fail_parse("file is of the wrong compression type");
+                }
+                if (CommChunk.numChannels != 1) {
+                    fail_parse("file contains %d channels, only 1 channel supported",
+                               CommChunk.numChannels);
+                }
+                if (CommChunk.sampleSize != 16) {
+                    fail_parse("file contains %d bit samples, only 16 bit samples supported",
+                               CommChunk.sampleSize);
+                }
 
-            nSamples = (CommChunk.numFramesH << 16) + CommChunk.numFramesL;
+                nSamples = (CommChunk.numFramesH << 16) + CommChunk.numFramesL;
 
-            // Allow broken input lengths
-            if (nSamples % 16) {
-                nSamples--;
-            }
+                // Allow broken input lengths
+                if (nSamples % 16) {
+                    nSamples--;
+                }
 
-            if (nSamples % 16 != 0) {
-                fail_parse("number of chunks must be a multiple of 16, found %d", nSamples);
-            }
-            break;
+                if (nSamples % 16 != 0) {
+                    fail_parse("number of chunks must be a multiple of 16, found %d", nSamples);
+                }
+                break;
 
-        case 0x53534e44: // SSND
-            checked_fread(&SndDChunk, sizeof(SndDChunk), 1, ifile);
-            BSWAP32(SndDChunk.offset);
-            BSWAP32(SndDChunk.blockSize);
-            assert(SndDChunk.offset == 0);
-            assert(SndDChunk.blockSize == 0);
-            soundPointer = ftell(ifile);
-            break;
+            case 0x53534e44: // SSND
+                checked_fread(&SndDChunk, sizeof(SndDChunk), 1, ifile);
+                BSWAP32(SndDChunk.offset);
+                BSWAP32(SndDChunk.blockSize);
+                assert(SndDChunk.offset == 0);
+                assert(SndDChunk.blockSize == 0);
+                soundPointer = ftell(ifile);
+                break;
 
-        case 0x4150504c: // APPL
-            checked_fread(&ts, sizeof(u32), 1, ifile);
-            BSWAP32(ts);
-            if (ts == 0x73746f63) { // stoc
-                u8 len;
-                checked_fread(&len, 1, 1, ifile);
-                if (len == 11) {
-                    char ChunkName[12];
-                    s16 version;
-                    checked_fread(ChunkName, 11, 1, ifile);
-                    ChunkName[11] = '\0';
-                    if (strcmp("VADPCMCODES", ChunkName) == 0) {
-                        checked_fread(&version, sizeof(s16), 1, ifile);
-                        BSWAP16(version);
-                        if (version != 1) {
-                            fail_parse("Unknown codebook chunk version");
-                        }
-                        readaifccodebook(ifile, &coefTable, &order, &npredictors);
-                    }
-                    else if (strcmp("VADPCMLOOPS", ChunkName) == 0) {
-                        checked_fread(&version, sizeof(s16), 1, ifile);
-                        BSWAP16(version);
-                        if (version != 1) {
-                            fail_parse("Unknown loop chunk version");
-                        }
-                        aloops = readlooppoints(ifile, &nloops);
-                        if (nloops != 1) {
-                            fail_parse("Only a single loop supported");
+            case 0x4150504c: // APPL
+                checked_fread(&ts, sizeof(u32), 1, ifile);
+                BSWAP32(ts);
+                if (ts == 0x73746f63) { // stoc
+                    u8 len;
+                    checked_fread(&len, 1, 1, ifile);
+                    if (len == 11) {
+                        char ChunkName[12];
+                        s16 version;
+                        checked_fread(ChunkName, 11, 1, ifile);
+                        ChunkName[11] = '\0';
+                        if (strcmp("VADPCMCODES", ChunkName) == 0) {
+                            checked_fread(&version, sizeof(s16), 1, ifile);
+                            BSWAP16(version);
+                            if (version != 1) {
+                                fail_parse("Unknown codebook chunk version");
+                            }
+                            readaifccodebook(ifile, &coefTable, &order, &npredictors);
+                        } else if (strcmp("VADPCMLOOPS", ChunkName) == 0) {
+                            checked_fread(&version, sizeof(s16), 1, ifile);
+                            BSWAP16(version);
+                            if (version != 1) {
+                                fail_parse("Unknown loop chunk version");
+                            }
+                            aloops = readlooppoints(ifile, &nloops);
+                            if (nloops != 1) {
+                                fail_parse("Only a single loop supported");
+                            }
                         }
                     }
                 }
-            }
-            break;
+                break;
         }
 
         fseek(ifile, offset + Header.ckSize, SEEK_SET);
@@ -577,15 +575,16 @@ int main(int argc, char **argv)
             for (s32 failures = 0; failures < 50; failures++) {
                 s32 ind = myrand() % 16;
                 s32 old = guess[ind];
-                if (old == origGuess[ind]) continue;
+                if (old == origGuess[ind])
+                    continue;
                 guess[ind] = origGuess[ind];
-                if (myrand() % 2) guess[ind] += (old - origGuess[ind]) / 2;
+                if (myrand() % 2)
+                    guess[ind] += (old - origGuess[ind]) / 2;
                 memcpy(state, lastState, sizeof(lastState));
                 my_encodeframe(encoded, guess, state, coefTable, order, npredictors);
                 if (memcmp(input, encoded, 9) == 0) {
                     failures = -1;
-                }
-                else {
+                } else {
                     guess[ind] = old;
                 }
             }
@@ -612,11 +611,9 @@ int main(int argc, char **argv)
 
     if (nloops > 0) {
         s32 startPos = aloops[0].start, endPos = aloops[0].end;
-        const char *markerNames[2] = {"start", "end"};
-        Marker markers[2] = {
-            {1, startPos >> 16, startPos & 0xffff},
-            {2, endPos >> 16, endPos & 0xffff}
-        };
+        const char *markerNames[2] = { "start", "end" };
+        Marker markers[2] = { { 1, startPos >> 16, startPos & 0xffff },
+                              { 2, endPos >> 16, endPos & 0xffff } };
         write_header(ofile, "MARK", 2 + 2 * sizeof(Marker) + 1 + 5 + 1 + 3);
         s16 numMarkers = bswap16(2);
         fwrite(&numMarkers, sizeof(s16), 1, ofile);

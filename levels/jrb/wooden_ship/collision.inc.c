@@ -226,7 +226,6 @@ const Collision jrb_seg7_collision_in_sunken_ship_3[] = {
     COL_END(),
 };
 
-
 // 0x0700CE5C - 0x0700CEF0
 const Collision jrb_seg7_collision_in_sunken_ship[] = {
     COL_INIT(),

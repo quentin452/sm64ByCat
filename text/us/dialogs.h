@@ -123,8 +123,7 @@ Ready....\n\
 //Go!////Don't Go"))
 
 DEFINE_DIALOG(DIALOG_006, 1, 3, 30, 200, _("\
-Hey!!! Don't try to " SCAM_ME
-"You've gotta run\n\
+Hey!!! Don't try to " SCAM_ME "You've gotta run\n\
 the whole course.\n\
 Later. Look me up when\n\
 you want to race for\n\
@@ -784,8 +783,7 @@ by enemy attacks.\n\
 You don't even have to\n\
 breathe while wearing it.\n\
 \n\
-The only problem:\n"
-YOU_CANT_SWIM_IN_IT))
+The only problem:\n" YOU_CANT_SWIM_IN_IT))
 
 DEFINE_DIALOG(DIALOG_063, 1, 5, 30, 200, _("\
 The Vanish Cap is inside\n\
@@ -1972,7 +1970,8 @@ sliding, press [A] or [B]."))
 #ifdef VERSION_EU
 #define KEEP_ON_PLAYING ".."
 #else
-#define KEEP_ON_PLAYING "\n\
+#define KEEP_ON_PLAYING                                                                                \
+    "\n\
 We want you to keep on\n\
 playing, so we have a\n\
 little something for you.\n\
@@ -2000,8 +1999,7 @@ message for you.\n\
 『Thanks for playing Super\n\
 Mario 64! This is the\n\
 end of the game, but not\n\
-the end of the fun." \
-KEEP_ON_PLAYING "』\n\
+the end of the fun." KEEP_ON_PLAYING "』\n\
 \n\
 The Super Mario 64 Team"))
 

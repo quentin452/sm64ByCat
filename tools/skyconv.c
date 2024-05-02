@@ -19,19 +19,9 @@ typedef struct {
     unsigned int pos;
 } TextureTile;
 
-typedef enum {
-    InvalidType = -1,
-    Skybox,
-    Cake,
-    CakeEU,
-    ImageType_MAX
-} ImageType;
+typedef enum { InvalidType = -1, Skybox, Cake, CakeEU, ImageType_MAX } ImageType;
 
-typedef enum {
-    InvalidMode = -1,
-    Combine,
-    Split
-} OperationMode;
+typedef enum { InvalidMode = -1, Combine, Split } OperationMode;
 
 typedef struct {
     int imageWidth, imageHeight;
@@ -61,9 +51,9 @@ typedef struct {
 } TableDimension;
 
 static const TableDimension TABLE_DIMENSIONS[ImageType_MAX] = {
-    [Skybox]   = {8, 10},
-    [Cake]     = {4, 12},
-    [CakeEU]   = {5,  7},
+    [Skybox] = { 8, 10 },
+    [Cake] = { 4, 12 },
+    [CakeEU] = { 5, 7 },
 };
 
 TextureTile *tiles;
@@ -90,7 +80,8 @@ static void allocate_tiles() {
     rgba *tileData = calloc(1, totalSize);
     for (int row = 0; row < numRows; ++row) {
         for (int col = 0; col < numCols; ++col) {
-            tiles[row * numCols + col].px = (tileData + (row * numCols + col) * (tileWidth * tileHeight));
+            tiles[row * numCols + col].px =
+                (tileData + (row * numCols + col) * (tileWidth * tileHeight));
         }
     }
 }
@@ -133,7 +124,8 @@ static void expand_tiles(ImageType imageType) {
             for (int col = 0; col < numCols; ++col) {
                 int nextCol = (col + 1) % numCols;
                 for (int y = 0; y < (tileHeight - 1); ++y) {
-                    tiles[row * numCols + col].px[(tileWidth - 1) + y * tileWidth] = tiles[row * numCols + nextCol].px[y * tileWidth];
+                    tiles[row * numCols + col].px[(tileWidth - 1) + y * tileWidth] =
+                        tiles[row * numCols + nextCol].px[y * tileWidth];
                 }
             }
         }
@@ -143,13 +135,14 @@ static void expand_tiles(ImageType imageType) {
             for (int col = 0; col < numCols - 1; ++col) {
                 int nextCol = (col + 1) % numCols;
                 for (int y = 0; y < (tileHeight - 1); ++y) {
-                    tiles[row * numCols + col].px[(tileWidth - 1) + y * tileWidth] = tiles[row * numCols + nextCol].px[y * tileWidth];
+                    tiles[row * numCols + col].px[(tileWidth - 1) + y * tileWidth] =
+                        tiles[row * numCols + nextCol].px[y * tileWidth];
                 }
             }
             for (int y = 0; y < (tileHeight - 1); ++y) {
-                tiles[row * numCols + (numCols - 1)].px[(tileWidth - 1) + y * tileWidth] = tiles[row * numCols + (numCols - 1)].px[(tileWidth - 2) + y * tileWidth];
+                tiles[row * numCols + (numCols - 1)].px[(tileWidth - 1) + y * tileWidth] =
+                    tiles[row * numCols + (numCols - 1)].px[(tileWidth - 2) + y * tileWidth];
             }
-
         }
     }
 
@@ -160,7 +153,8 @@ static void expand_tiles(ImageType imageType) {
             for (int col = 0; col < numCols; ++col) {
                 int nextRow = (row + 1) % numRows;
                 for (int x = 0; x < tileWidth; ++x) {
-                    tiles[row * numCols + col].px[x + (tileHeight - 1) * tileWidth] = tiles[nextRow * numCols + col].px[x];
+                    tiles[row * numCols + col].px[x + (tileHeight - 1) * tileWidth] =
+                        tiles[nextRow * numCols + col].px[x];
                 }
             }
         }
@@ -168,7 +162,8 @@ static void expand_tiles(ImageType imageType) {
         else {
             for (int col = 0; col < numCols; ++col) {
                 for (int x = 0; x < tileWidth; ++x) {
-                    tiles[row * numCols + col].px[x + (tileHeight - 1) * tileWidth] = tiles[row * numCols + col].px[x + (tileHeight - 2) * tileWidth];
+                    tiles[row * numCols + col].px[x + (tileHeight - 1) * tileWidth] =
+                        tiles[row * numCols + col].px[x + (tileHeight - 2) * tileWidth];
                 }
             }
         }
@@ -230,19 +225,19 @@ void write_tiles() {
 
     strcat(buffer, "/");
 
-    switch(type) {
+    switch (type) {
         case Skybox:
             strcat(buffer, skyboxName);
-        break;
+            break;
         case Cake:
             strcat(buffer, "cake");
-        break;
+            break;
         case CakeEU:
             strcat(buffer, "cake_eu");
-        break;
+            break;
         default:
             exit(EXIT_FAILURE);
-        break;
+            break;
     }
 
     int dirLength = strlen(buffer);
@@ -298,14 +293,13 @@ static void write_skybox_c() { /* write c data to disc */
     for (int i = 0; i < props.numRows * props.numCols; i++) {
         if (!tiles[i].useless) {
             if (storeNamesOnly) {
-                fprintf(
-                    cFile,
-                    "ALIGNED8 static const u8 %s_skybox_texture_%05X[] = "
-                    "\"textures/skybox_tiles/%s.%d.rgba16\";\n\n",
-                    skyboxName, tiles[i].pos, skyboxName, tiles[i].pos
-                );
+                fprintf(cFile,
+                        "ALIGNED8 static const u8 %s_skybox_texture_%05X[] = "
+                        "\"textures/skybox_tiles/%s.%d.rgba16\";\n\n",
+                        skyboxName, tiles[i].pos, skyboxName, tiles[i].pos);
             } else {
-                fprintf(cFile, "ALIGNED8 static const u8 %s_skybox_texture_%05X[] = {\n", skyboxName, tiles[i].pos);
+                fprintf(cFile, "ALIGNED8 static const u8 %s_skybox_texture_%05X[] = {\n", skyboxName,
+                        tiles[i].pos);
                 print_raw_data(cFile, &tiles[i]);
                 fputs("};\n\n", cFile);
             }
@@ -316,7 +310,8 @@ static void write_skybox_c() { /* write c data to disc */
 
     for (int row = 0; row < 8; row++) {
         for (int col = 0; col < 10; col++) {
-            fprintf(cFile, "%s_skybox_texture_%05X,\n", skyboxName, get_index(tiles, row * 8 + (col % 8)));
+            fprintf(cFile, "%s_skybox_texture_%05X,\n", skyboxName,
+                    get_index(tiles, row * 8 + (col % 8)));
         }
     }
 
@@ -333,8 +328,7 @@ static void write_cake_c() {
 
     if (type == CakeEU) {
         strcat(buffer, "/cake_eu.inc.c");
-    }
-    else {
+    } else {
         strcat(buffer, "/cake.inc.c");
     }
 
@@ -348,12 +342,10 @@ static void write_cake_c() {
     int numTiles = TABLE_DIMENSIONS[type].cols * TABLE_DIMENSIONS[type].rows;
     for (int i = 0; i < numTiles; ++i) {
         if (storeNamesOnly) {
-            fprintf(
-                cFile,
-                "ALIGNED8 static const u8 cake_end_texture_%s%d[] = "
-                "\"textures/skybox_tiles/cake%s.%d.rgba16\";\n\n",
-                euSuffx, i, *euSuffx ? "_eu" : "", tiles[i].pos
-            );
+            fprintf(cFile,
+                    "ALIGNED8 static const u8 cake_end_texture_%s%d[] = "
+                    "\"textures/skybox_tiles/cake%s.%d.rgba16\";\n\n",
+                    euSuffx, i, *euSuffx ? "_eu" : "", tiles[i].pos);
         } else {
             fprintf(cFile, "ALIGNED8 static const u8 cake_end_texture_%s%d[] = {\n", euSuffx, i);
             print_raw_data(cFile, &tiles[i]);
@@ -369,54 +361,59 @@ void combine_skybox(const char *input, const char *output) {
     enum { W = 10, H = 8, W2 = 8 };
 
     FILE *file = fopen(input, "rb");
-    if (!file) goto fail;
-    if (fseek(file, 0, SEEK_END)) goto fail;
+    if (!file)
+        goto fail;
+    if (fseek(file, 0, SEEK_END))
+        goto fail;
 
     ssize_t fileSize = ftell(file);
-    if (fileSize < 8*10*4) goto fail;
+    if (fileSize < 8 * 10 * 4)
+        goto fail;
     rewind(file);
 
-    size_t tableIndex = fileSize - 8*10*4;
-    if (tableIndex % (32*32*2) != 0) goto fail;
+    size_t tableIndex = fileSize - 8 * 10 * 4;
+    if (tableIndex % (32 * 32 * 2) != 0)
+        goto fail;
 
     // there are at most 64 tiles before the table
-    rgba *tiles[8*8];
+    rgba *tiles[8 * 8];
     size_t tileIndex = 0;
-    for (size_t pos = 0; pos < tableIndex; pos += 32*32*2) {
-        uint8_t buf[32*32*2];
-        if (fread(buf, sizeof(buf), 1, file) != 1) goto fail;
+    for (size_t pos = 0; pos < tableIndex; pos += 32 * 32 * 2) {
+        uint8_t buf[32 * 32 * 2];
+        if (fread(buf, sizeof(buf), 1, file) != 1)
+            goto fail;
         tiles[tileIndex] = raw2rgba(buf, 32, 32, 16);
         tileIndex++;
     }
 
-    uint32_t table[W*H];
-    if (fread(table, sizeof(table), 1, file) != 1) goto fail;
+    uint32_t table[W * H];
+    if (fread(table, sizeof(table), 1, file) != 1)
+        goto fail;
 
-    #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-    reverse_endian((unsigned char *) table, W*H*4);
-    #endif
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+    reverse_endian((unsigned char *) table, W * H * 4);
+#endif
 
     uint32_t base = table[0];
-    for (int i = 0; i < W*H; i++) {
+    for (int i = 0; i < W * H; i++) {
         table[i] -= base;
     }
 
-    // Convert the 256x256 skybox to an editable 248x248 image by skipping the duplicated rows and columns
-    // every 32nd column is a repeat of the 33rd, and
-    // every 32nd row is a repeat of the 33rd, EXCEPT for the last row, but that only matters when
-    // expanding the tiles
-    rgba combined[31*H * 31*W2];
+    // Convert the 256x256 skybox to an editable 248x248 image by skipping the duplicated rows and
+    // columns every 32nd column is a repeat of the 33rd, and every 32nd row is a repeat of the 33rd,
+    // EXCEPT for the last row, but that only matters when expanding the tiles
+    rgba combined[31 * H * 31 * W2];
     for (int i = 0; i < H; i++) {
         for (int j = 0; j < W2; j++) {
-            int index = table[i*W+j] / 0x800;
+            int index = table[i * W + j] / 0x800;
             for (int y = 0; y < 31; y++) {
                 for (int x = 0; x < 31; x++) {
-                    combined[(i*31 + y) * (31*W2) + (j*31 + x)] = tiles[index][y*32 + x];
+                    combined[(i * 31 + y) * (31 * W2) + (j * 31 + x)] = tiles[index][y * 32 + x];
                 }
             }
         }
     }
-    if (!rgba2png(output, combined, 31*W2, 31*H)) {
+    if (!rgba2png(output, combined, 31 * W2, 31 * H)) {
         fprintf(stderr, "Failed to write skybox image.\n");
         exit(1);
     }
@@ -441,46 +438,50 @@ void combine_cakeimg(const char *input, const char *output, bool eu) {
     }
 
     FILE *file = fopen(input, "rb");
-    if (!file) goto fail;
+    if (!file)
+        goto fail;
 
     rgba *combined;
     if (!eu) {
-        combined = malloc((SMALLH-1)*H * (SMALLW-1)*W * sizeof(rgba));
+        combined = malloc((SMALLH - 1) * H * (SMALLW - 1) * W * sizeof(rgba));
         for (int i = 0; i < H; i++) {
             for (int j = 0; j < W; j++) {
-                //Read the full tile
+                // Read the full tile
                 uint8_t buf[SMALLH * SMALLW * 2];
-                if (fread(buf, sizeof(buf), 1, file) != 1) goto fail;
+                if (fread(buf, sizeof(buf), 1, file) != 1)
+                    goto fail;
                 rgba *tile = raw2rgba(buf, SMALLH, SMALLW, 16);
 
-                //Only write the unique parts of each tile
+                // Only write the unique parts of each tile
                 for (int y = 0; y < SMALLH - 1; y++) {
                     for (int x = 0; x < SMALLW - 1; x++) {
-                        combined[(i*(SMALLH-1) + y) * (SMALLW-1)*W + (j*(SMALLW-1) + x)] = tile[y*(SMALLW) + x];
+                        combined[(i * (SMALLH - 1) + y) * (SMALLW - 1) * W + (j * (SMALLW - 1) + x)] =
+                            tile[y * (SMALLW) + x];
                     }
                 }
             }
         }
-        if (!rgba2png(output, combined, (SMALLW-1)*W, (SMALLH-1)*H)) {
+        if (!rgba2png(output, combined, (SMALLW - 1) * W, (SMALLH - 1) * H)) {
             fprintf(stderr, "Failed to write cake image.\n");
             exit(1);
         }
-    }
-    else {
-        combined = malloc(SMALLH*H * SMALLW*W * sizeof(rgba));
+    } else {
+        combined = malloc(SMALLH * H * SMALLW * W * sizeof(rgba));
         for (int i = 0; i < H; i++) {
             for (int j = 0; j < W; j++) {
                 uint8_t buf[SMALLH * SMALLW * 2];
-                if (fread(buf, sizeof(buf), 1, file) != 1) goto fail;
+                if (fread(buf, sizeof(buf), 1, file) != 1)
+                    goto fail;
                 rgba *tile = raw2rgba(buf, SMALLH, SMALLW, 16);
                 for (int y = 0; y < SMALLH; y++) {
                     for (int x = 0; x < SMALLW; x++) {
-                        combined[(i*SMALLH + y) * SMALLW*W + (j*SMALLW + x)] = tile[y*SMALLW + x];
+                        combined[(i * SMALLH + y) * SMALLW * W + (j * SMALLW + x)] =
+                            tile[y * SMALLW + x];
                     }
                 }
             }
         }
-        if (!rgba2png(output, combined, SMALLW*W, SMALLH*H)) {
+        if (!rgba2png(output, combined, SMALLW * W, SMALLH * H)) {
             fprintf(stderr, "Failed to write cake image.\n");
             exit(1);
         }
@@ -498,7 +499,8 @@ static void usage() {
             "\n"
             "Optional arguments:\n"
             " --write-tiles OUTDIR      Also create the individual tiles' PNG files\n"
-            " --store-names             Store texture file names instead of actual data\n", programName);
+            " --store-names             Store texture file names instead of actual data\n",
+            programName);
 }
 
 // Modified from n64split
@@ -532,7 +534,7 @@ static int parse_arguments(int argc, char *argv[]) {
 
             output = argv[i];
         }
-        
+
         if (strcmp(argv[i], "--type") == 0) {
             if (++i >= argc || type != InvalidType) {
                 goto invalid;
@@ -540,9 +542,9 @@ static int parse_arguments(int argc, char *argv[]) {
 
             if (strcmp(argv[i], "sky") == 0) {
                 type = Skybox;
-            } else if(strcmp(argv[i], "cake-eu") == 0) {
+            } else if (strcmp(argv[i], "cake-eu") == 0) {
                 type = CakeEU;
-            } else if(strcmp(argv[i], "cake") == 0) {
+            } else if (strcmp(argv[i], "cake") == 0) {
                 type = Cake;
             }
         }
@@ -570,8 +572,8 @@ invalid:
 bool imageMatchesDimensions(int width, int height) {
     bool matchesDimensions = false;
     for (int expand = false; expand <= true; ++expand) {
-        if (width  == IMAGE_PROPERTIES[type][expand].imageWidth &&
-            height == IMAGE_PROPERTIES[type][expand].imageHeight) {
+        if (width == IMAGE_PROPERTIES[type][expand].imageWidth
+            && height == IMAGE_PROPERTIES[type][expand].imageHeight) {
             matchesDimensions = true;
             expanded = expand;
             break;
@@ -579,16 +581,15 @@ bool imageMatchesDimensions(int width, int height) {
     }
     if (!matchesDimensions) {
         if (type != CakeEU) {
-            fprintf(stderr, "err: That type of image must be either %d x %d or %d x %d. Yours is %d x %d.\n",
+            fprintf(stderr,
+                    "err: That type of image must be either %d x %d or %d x %d. Yours is %d x %d.\n",
                     IMAGE_PROPERTIES[type][false].imageWidth, IMAGE_PROPERTIES[type][false].imageHeight,
                     IMAGE_PROPERTIES[type][true].imageWidth, IMAGE_PROPERTIES[type][true].imageHeight,
                     width, height);
-        }
-        else {
+        } else {
             fprintf(stderr, "err: That type of image must be %d x %d. Yours is %d x %d.\n",
                     IMAGE_PROPERTIES[type][true].imageWidth, IMAGE_PROPERTIES[type][true].imageHeight,
                     width, height);
-
         }
         return false;
     }
@@ -610,7 +611,8 @@ int main(int argc, char *argv[]) {
         char *base = basename(input);
         strcpy(skyboxName, base);
         char *extension = strrchr(skyboxName, '.');
-        if (extension) *extension = '\0';
+        if (extension)
+            *extension = '\0';
     }
 
     switch (mode) {
@@ -618,19 +620,19 @@ int main(int argc, char *argv[]) {
             switch (type) {
                 case Skybox:
                     combine_skybox(input, output);
-                break;
+                    break;
                 case Cake:
                     combine_cakeimg(input, output, 0);
-                break;
+                    break;
                 case CakeEU:
                     combine_cakeimg(input, output, 1);
-                break;
+                    break;
                 default:
                     usage();
                     return EXIT_FAILURE;
-                break;
+                    break;
             }
-        break;
+            break;
 
         case Split: {
             int width, height;
@@ -645,7 +647,7 @@ int main(int argc, char *argv[]) {
             }
 
             allocate_tiles();
-            
+
             init_tiles(image, expanded);
             switch (type) {
                 case Skybox:
@@ -672,9 +674,8 @@ int main(int argc, char *argv[]) {
         default:
             usage();
             return EXIT_FAILURE;
-        break;
+            break;
     }
-
 
     return EXIT_SUCCESS;
 }

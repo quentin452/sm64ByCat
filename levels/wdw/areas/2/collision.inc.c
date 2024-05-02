@@ -1318,7 +1318,7 @@ const Collision wdw_seg7_area_2_collision[] = {
     COL_TRI(131, 163, 165),
     COL_TRI_STOP(),
     COL_SPECIAL_INIT(2),
-    SPECIAL_OBJECT(/*preset*/ special_bubble_tree, /*pos*/ 1664, -2457,  -946),
+    SPECIAL_OBJECT(/*preset*/ special_bubble_tree, /*pos*/ 1664, -2457, -946),
     SPECIAL_OBJECT(/*preset*/ special_bubble_tree, /*pos*/ 1664, -2457, -1637),
     COL_WATER_BOX_INIT(1),
     COL_WATER_BOX(0, -3839, -3839, 4608, 4608, -127),

@@ -5,9 +5,10 @@ import sys
 import threading
 
 def format_files(files):
-    blacklist = ["sound_data.tbl.inc.c"]
+    blacklist = ["sound_data.tbl.inc.c", "stb_image.h"]
+    blacklist_dirs = ["anims"]
     for file in files:
-        if os.path.basename(file) not in blacklist:
+        if os.path.basename(file) not in blacklist and not any(blacklist_dir in file for blacklist_dir in blacklist_dirs):
             print(f"Formatting {file}...")
             subprocess.run(["clang-format", "-i", "-style=file", file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
@@ -21,10 +22,7 @@ if len(sys.argv) > 1:
     print("done.")
 else:
     print("formatting...")
-    files_to_format = glob.glob("src/**/*.[chin]", recursive=True) + \
-                      glob.glob("lib/src/*.[chin]", recursive=True) + \
-                      glob.glob("data/**/*.[chin]", recursive=True) + \
-                      glob.glob("enhancements/*.inc.[chin]", recursive=True)
+    files_to_format = glob.glob("**/*.[chin]", recursive=True)
     format_thread = threading.Thread(target=format_files, args=(files_to_format,))
     format_thread.start()
     format_thread.join()

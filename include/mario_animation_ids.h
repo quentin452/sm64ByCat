@@ -3,8 +3,7 @@
 
 /* Mario Animation IDs */
 
-enum MarioAnimID
-{
+enum MarioAnimID {
     /* 0x00 */ MARIO_ANIM_SLOW_LEDGE_GRAB,
     /* 0x01 */ MARIO_ANIM_FALL_OVER_BACKWARDS,
     /* 0x02 */ MARIO_ANIM_BACKWARD_AIR_KB,
@@ -104,8 +103,8 @@ enum MarioAnimID
     /* 0x60 */ MARIO_ANIM_PUSH_DOOR_WALK_IN,
     /* 0x61 */ MARIO_ANIM_UNLOCK_DOOR,
     /* 0x62 */ MARIO_ANIM_START_REACH_POCKET, // unused, reaching keys maybe?
-    /* 0x63 */ MARIO_ANIM_REACH_POCKET, // unused
-    /* 0x64 */ MARIO_ANIM_STOP_REACH_POCKET, // unused
+    /* 0x63 */ MARIO_ANIM_REACH_POCKET,       // unused
+    /* 0x64 */ MARIO_ANIM_STOP_REACH_POCKET,  // unused
     /* 0x65 */ MARIO_ANIM_GROUND_THROW,
     /* 0x66 */ MARIO_ANIM_GROUND_KICK,
     /* 0x67 */ MARIO_ANIM_FIRST_PUNCH,

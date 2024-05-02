@@ -22,7 +22,8 @@ void lubksb(double **a, int n, int *indx, double *b);
 
 // codebook.c
 void split(double **table, double *delta, int order, int npredictors, double scale);
-void refine(double **table, int order, int npredictors, double **data, int dataSize, int refineIters, double unused);
+void refine(double **table, int order, int npredictors, double **data, int dataSize, int refineIters,
+            double unused);
 
 // print.c
 int print_entry(FILE *out, double *row, int order);

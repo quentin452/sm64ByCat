@@ -6,7 +6,7 @@
 
 /* Variables */
 
-//extern u64 osClockRate;
+// extern u64 osClockRate;
 
 /* Functions */
 

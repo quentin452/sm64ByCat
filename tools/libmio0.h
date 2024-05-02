@@ -7,11 +7,10 @@
 
 // typedefs
 
-typedef struct
-{
-   unsigned int dest_size;
-   unsigned int comp_offset;
-   unsigned int uncomp_offset;
+typedef struct {
+    unsigned int dest_size;
+    unsigned int comp_offset;
+    unsigned int uncomp_offset;
 } mio0_header_t;
 
 // function prototypes

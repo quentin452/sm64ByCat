@@ -16,11 +16,11 @@ typedef unsigned char u8;
 typedef unsigned int u32;
 
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-# define BSWAP16(x)
-# define BSWAP32(x)
+#define BSWAP16(x)
+#define BSWAP32(x)
 #else
-# define BSWAP16(x) x = __builtin_bswap16(x)
-# define BSWAP32(x) x = __builtin_bswap32(x)
+#define BSWAP16(x) x = __builtin_bswap16(x)
+#define BSWAP32(x) x = __builtin_bswap32(x)
 #endif
 
 #define NORETURN __attribute__((noreturn))
@@ -28,11 +28,10 @@ typedef unsigned int u32;
 
 #ifdef __APPLE__
 // even with -std=gnu99 vsnprintf seems to not be defined in stdio.h, why?
-extern int vsnprintf(char * __restrict, size_t, const char * __restrict, va_list);
+extern int vsnprintf(char *__restrict, size_t, const char *__restrict, va_list);
 #endif
 
-typedef struct
-{
+typedef struct {
     u32 start;
     u32 end;
     u32 count;
@@ -42,11 +41,12 @@ typedef struct
 static const char usage[] = "input.aiff";
 static const char *progname, *infilename;
 
-#define checked_fread(a, b, c, d) if (fread(a, b, c, d) != c) fail_parse("error parsing file")
+#define checked_fread(a, b, c, d)                                                                      \
+    if (fread(a, b, c, d) != c)                                                                        \
+    fail_parse("error parsing file")
 
 NORETURN
-void fail_parse(const char *fmt, ...)
-{
+void fail_parse(const char *fmt, ...) {
     char *formatted = NULL;
     va_list ap;
     va_start(ap, fmt);
@@ -73,8 +73,7 @@ void fail_parse(const char *fmt, ...)
     exit(1);
 }
 
-s32 readaifccodebook(FILE *fhandle, s32 ****table, s16 *order, s16 *npredictors)
-{
+s32 readaifccodebook(FILE *fhandle, s32 ****table, s16 *order, s16 *npredictors) {
     checked_fread(order, sizeof(s16), 1, fhandle);
     BSWAP16(*order);
     checked_fread(npredictors, sizeof(s16), 1, fhandle);
@@ -118,8 +117,7 @@ s32 readaifccodebook(FILE *fhandle, s32 ****table, s16 *order, s16 *npredictors)
     return 0;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     s16 order = -1;
     s16 npredictors = -1;
     s32 ***coefTable = NULL;
@@ -138,9 +136,10 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    char buf[5] = {0};
+    char buf[5] = { 0 };
     checked_fread(buf, 4, 1, ifile);
-    if (strcmp(buf, "FORM") != 0) fail_parse("not an AIFF file");
+    if (strcmp(buf, "FORM") != 0)
+        fail_parse("not an AIFF file");
     checked_fread(buf, 4, 1, ifile);
     checked_fread(buf, 4, 1, ifile);
     if (strcmp(buf, "AIFF") != 0 && strcmp(buf, "AIFC") != 0) {
@@ -149,7 +148,8 @@ int main(int argc, char **argv)
 
     for (;;) {
         s32 size;
-        if (!fread(buf, 4, 1, ifile) || !fread(&size, 4, 1, ifile)) break;
+        if (!fread(buf, 4, 1, ifile) || !fread(&size, 4, 1, ifile))
+            break;
         BSWAP32(size);
         s32 nextOffset = ftell(ifile) + ((size + 1) & ~1);
 

@@ -114,7 +114,6 @@ const Collision ssl_seg7_collision_07028370[] = {
     COL_END(),
 };
 
-
 // 0x070284B0 - 0x070285EE
 const Collision ssl_seg7_collision_070284B0[] = {
     COL_INIT(),

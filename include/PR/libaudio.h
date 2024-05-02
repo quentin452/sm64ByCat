@@ -3,14 +3,12 @@
 
 #include "abi.h"
 
-typedef struct
-{
+typedef struct {
     u8 *offset;
     s32 len;
 } ALSeqData;
 
-typedef struct
-{
+typedef struct {
     s16 revision;
     s16 seqCount;
     ALSeqData seqArray[1];

@@ -21,33 +21,32 @@ typedef uint32_t Elf32_Off;
 
 #define EI_NIDENT (16)
 
-typedef struct
-{
-  unsigned char	e_ident[EI_NIDENT];	/* Magic number and other info */
-  Elf32_Half	e_type;			/* Object file type */
-  Elf32_Half	e_machine;		/* Architecture */
-  Elf32_Word	e_version;		/* Object file version */
-  Elf32_Addr	e_entry;		/* Entry point virtual address */
-  Elf32_Off	e_phoff;		/* Program header table file offset */
-  Elf32_Off	e_shoff;		/* Section header table file offset */
-  Elf32_Word	e_flags;		/* Processor-specific flags */
-  Elf32_Half	e_ehsize;		/* ELF header size in bytes */
-  Elf32_Half	e_phentsize;		/* Program header table entry size */
-  Elf32_Half	e_phnum;		/* Program header table entry count */
-  Elf32_Half	e_shentsize;		/* Section header table entry size */
-  Elf32_Half	e_shnum;		/* Section header table entry count */
-  Elf32_Half	e_shstrndx;		/* Section header string table index */
+typedef struct {
+    unsigned char e_ident[EI_NIDENT]; /* Magic number and other info */
+    Elf32_Half e_type;                /* Object file type */
+    Elf32_Half e_machine;             /* Architecture */
+    Elf32_Word e_version;             /* Object file version */
+    Elf32_Addr e_entry;               /* Entry point virtual address */
+    Elf32_Off e_phoff;                /* Program header table file offset */
+    Elf32_Off e_shoff;                /* Section header table file offset */
+    Elf32_Word e_flags;               /* Processor-specific flags */
+    Elf32_Half e_ehsize;              /* ELF header size in bytes */
+    Elf32_Half e_phentsize;           /* Program header table entry size */
+    Elf32_Half e_phnum;               /* Program header table entry count */
+    Elf32_Half e_shentsize;           /* Section header table entry size */
+    Elf32_Half e_shnum;               /* Section header table entry count */
+    Elf32_Half e_shstrndx;            /* Section header string table index */
 } Elf32_Ehdr;
 
 /* Conglomeration of the identification bytes, for easy testing as a word.  */
-#define	ELFMAG		"\177ELF"
-#define	SELFMAG		4
+#define ELFMAG "\177ELF"
+#define SELFMAG 4
 
-#define EI_CLASS	4		/* File class byte index */
-#define ELFCLASS32	1		/* 32-bit objects */
+#define EI_CLASS 4 /* File class byte index */
+#define ELFCLASS32 1 /* 32-bit objects */
 
-#define EI_DATA		5		/* Data encoding byte index */
-#define ELFDATA2MSB	2		/* 2's complement, big endian */
+#define EI_DATA 5 /* Data encoding byte index */
+#define ELFDATA2MSB 2 /* 2's complement, big endian */
 
 /* end from elf.h */
 
@@ -75,9 +74,9 @@ struct ar_header {
     char ending[2];
 };
 
-//These constants found by inspecting output of objdump
+// These constants found by inspecting output of objdump
 #define FLAGS_MIPS3 0x20
-#define FLAGS_O32ABI 0x100000 
+#define FLAGS_O32ABI 0x100000
 int main(int argc, char **argv) {
     FILE *f = fopen(argv[1], "r+");
 

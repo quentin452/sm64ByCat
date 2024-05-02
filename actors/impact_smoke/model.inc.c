@@ -24,14 +24,14 @@ ALIGNED8 static const u8 impact_smoke_seg6_texture_06060A28[] = {
 
 // 0x06062A28
 static const Vtx impact_smoke_seg6_vertex_06062A28[] = {
-    {{{  -150,    150,      0}, 0, {     0,    992}, {0x28, 0x19, 0x14, 0xff}}},
-    {{{   150,    150,      0}, 0, {  2016,    992}, {0x28, 0x19, 0x14, 0xff}}},
-    {{{   150,    300,      0}, 0, {  2016,      0}, {0x28, 0x19, 0x14, 0xff}}},
-    {{{  -150,    300,      0}, 0, {     0,      0}, {0x28, 0x19, 0x14, 0xff}}},
-    {{{  -150,      0,      0}, 0, {     0,   2016}, {0x28, 0x19, 0x14, 0xff}}},
-    {{{   150,      0,      0}, 0, {  2016,   2016}, {0x28, 0x19, 0x14, 0xff}}},
-    {{{   150,    150,      0}, 0, {  2016,    992}, {0x28, 0x19, 0x14, 0xff}}},
-    {{{  -150,    150,      0}, 0, {     0,    992}, {0x28, 0x19, 0x14, 0xff}}},
+    { { { -150, 150, 0 }, 0, { 0, 992 }, { 0x28, 0x19, 0x14, 0xff } } },
+    { { { 150, 150, 0 }, 0, { 2016, 992 }, { 0x28, 0x19, 0x14, 0xff } } },
+    { { { 150, 300, 0 }, 0, { 2016, 0 }, { 0x28, 0x19, 0x14, 0xff } } },
+    { { { -150, 300, 0 }, 0, { 0, 0 }, { 0x28, 0x19, 0x14, 0xff } } },
+    { { { -150, 0, 0 }, 0, { 0, 2016 }, { 0x28, 0x19, 0x14, 0xff } } },
+    { { { 150, 0, 0 }, 0, { 2016, 2016 }, { 0x28, 0x19, 0x14, 0xff } } },
+    { { { 150, 150, 0 }, 0, { 2016, 992 }, { 0x28, 0x19, 0x14, 0xff } } },
+    { { { -150, 150, 0 }, 0, { 0, 992 }, { 0x28, 0x19, 0x14, 0xff } } },
 };
 
 // 0x06062AA8 - 0x06062AD8
@@ -45,13 +45,13 @@ const Gfx impact_smoke_seg6_dl_06062AA8[] = {
 
 // 0x06062AD8 - 0x06062AF0
 const Gfx impact_smoke_seg6_dl_06062AD8[] = {
-    gsSP2Triangles( 0,  1,  2, 0x0,  0,  2,  3, 0x0),
+    gsSP2Triangles(0, 1, 2, 0x0, 0, 2, 3, 0x0),
     gsSPEndDisplayList(),
 };
 
 // 0x06062AF0 - 0x06062B08
 const Gfx impact_smoke_seg6_dl_06062AF0[] = {
-    gsSP2Triangles( 4,  5,  6, 0x0,  4,  6,  7, 0x0),
+    gsSP2Triangles(4, 5, 6, 0x0, 4, 6, 7, 0x0),
     gsSPEndDisplayList(),
 };
 
@@ -68,7 +68,8 @@ const Gfx impact_smoke_seg6_dl_06062B08[] = {
 // 0x06062B38 - 0x06062BD8
 const Gfx impact_smoke_seg6_dl_06062B38[] = {
     gsSPDisplayList(impact_smoke_seg6_dl_06062AA8),
-    gsDPLoadTextureBlock(impact_smoke_seg6_texture_0605AA28, G_IM_FMT_IA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD),
+    gsDPLoadTextureBlock(impact_smoke_seg6_texture_0605AA28, G_IM_FMT_IA, G_IM_SIZ_16b, 64, 64, 0,
+                         G_TX_CLAMP, G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD),
     gsSPVertex(impact_smoke_seg6_vertex_06062A28, 8, 0),
     gsSPDisplayList(impact_smoke_seg6_dl_06062AD8),
     gsSPDisplayList(impact_smoke_seg6_dl_06062AF0),
@@ -79,7 +80,8 @@ const Gfx impact_smoke_seg6_dl_06062B38[] = {
 // 0x06062BD8 - 0x06062C78
 const Gfx impact_smoke_seg6_dl_06062BD8[] = {
     gsSPDisplayList(impact_smoke_seg6_dl_06062AA8),
-    gsDPLoadTextureBlock(impact_smoke_seg6_texture_0605CA28, G_IM_FMT_IA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD),
+    gsDPLoadTextureBlock(impact_smoke_seg6_texture_0605CA28, G_IM_FMT_IA, G_IM_SIZ_16b, 64, 64, 0,
+                         G_TX_CLAMP, G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD),
     gsSPVertex(impact_smoke_seg6_vertex_06062A28, 8, 0),
     gsSPDisplayList(impact_smoke_seg6_dl_06062AD8),
     gsSPDisplayList(impact_smoke_seg6_dl_06062AF0),
@@ -90,7 +92,8 @@ const Gfx impact_smoke_seg6_dl_06062BD8[] = {
 // 0x06062C78 - 0x06062D18
 const Gfx impact_smoke_seg6_dl_06062C78[] = {
     gsSPDisplayList(impact_smoke_seg6_dl_06062AA8),
-    gsDPLoadTextureBlock(impact_smoke_seg6_texture_0605EA28, G_IM_FMT_IA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD),
+    gsDPLoadTextureBlock(impact_smoke_seg6_texture_0605EA28, G_IM_FMT_IA, G_IM_SIZ_16b, 64, 64, 0,
+                         G_TX_CLAMP, G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD),
     gsSPVertex(impact_smoke_seg6_vertex_06062A28, 8, 0),
     gsSPDisplayList(impact_smoke_seg6_dl_06062AD8),
     gsSPDisplayList(impact_smoke_seg6_dl_06062AF0),
@@ -101,7 +104,8 @@ const Gfx impact_smoke_seg6_dl_06062C78[] = {
 // 0x06062D18 - 0x06062DB8
 const Gfx impact_smoke_seg6_dl_06062D18[] = {
     gsSPDisplayList(impact_smoke_seg6_dl_06062AA8),
-    gsDPLoadTextureBlock(impact_smoke_seg6_texture_06060A28, G_IM_FMT_IA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD),
+    gsDPLoadTextureBlock(impact_smoke_seg6_texture_06060A28, G_IM_FMT_IA, G_IM_SIZ_16b, 64, 64, 0,
+                         G_TX_CLAMP, G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD),
     gsSPVertex(impact_smoke_seg6_vertex_06062A28, 8, 0),
     gsSPDisplayList(impact_smoke_seg6_dl_06062AD8),
     gsSPDisplayList(impact_smoke_seg6_dl_06062AF0),

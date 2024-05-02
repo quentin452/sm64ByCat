@@ -15,21 +15,26 @@ typedef float f32;
 typedef double f64;
 
 #if defined(__sgi) || (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-#  define BSWAP16(x)
-#  define BSWAP32(x)
-#  define BSWAP16_MANY(x, n)
+#define BSWAP16(x)
+#define BSWAP32(x)
+#define BSWAP16_MANY(x, n)
 #else
-#  define BSWAP16(x) x = __builtin_bswap16(x);
-#  define BSWAP32(x) x = __builtin_bswap32(x);
-#  define BSWAP16_MANY(x, n) { s32 _i; for (_i = 0; _i < n; _i++) BSWAP16((x)[_i]) }
+#define BSWAP16(x) x = __builtin_bswap16(x);
+#define BSWAP32(x) x = __builtin_bswap32(x);
+#define BSWAP16_MANY(x, n)                                                                             \
+    {                                                                                                  \
+        s32 _i;                                                                                        \
+        for (_i = 0; _i < n; _i++)                                                                     \
+            BSWAP16((x)[_i])                                                                           \
+    }
 #endif
 
 #ifdef __sgi
-#  define MODE_READ "r"
-#  define MODE_WRITE "w"
+#define MODE_READ "r"
+#define MODE_WRITE "w"
 #else
-#  define MODE_READ "rb"
-#  define MODE_WRITE "wb"
+#define MODE_READ "rb"
+#define MODE_WRITE "wb"
 #endif
 
 typedef struct {
@@ -88,8 +93,7 @@ typedef struct {
     s16 nEntries;
 } CodeChunk;
 
-typedef struct
-{
+typedef struct {
     u32 start;
     u32 end;
     u32 count;
@@ -110,7 +114,8 @@ s32 clip(s32 ix, s32 llevel, s32 ulevel);
 void vdecodeframe(FILE *ifile, s32 *outp, s32 order, s32 ***coefTable);
 
 // vencode.c
-void vencodeframe(FILE *ofile, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 order, s32 npredictors, s32 nsam);
+void vencodeframe(FILE *ofile, s16 *inBuffer, s32 *state, s32 ***coefTable, s32 order, s32 npredictors,
+                  s32 nsam);
 
 // util.c
 u32 readbits(u32 nbits, FILE *ifile);

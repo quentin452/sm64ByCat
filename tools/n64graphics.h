@@ -4,26 +4,23 @@
 #include <stdint.h>
 
 // intermediate formats
-typedef struct _rgba
-{
-   uint8_t red;
-   uint8_t green;
-   uint8_t blue;
-   uint8_t alpha;
+typedef struct _rgba {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
 } rgba;
 
-typedef struct _ia
-{
-   uint8_t intensity;
-   uint8_t alpha;
+typedef struct _ia {
+    uint8_t intensity;
+    uint8_t alpha;
 } ia;
 
 // CI palette
-typedef struct
-{
-   uint16_t data[256];
-   int max; // max number of entries
-   int used; // number of entries used
+typedef struct {
+    uint16_t data[256];
+    int max;  // max number of entries
+    int used; // number of entries used
 } palette_t;
 
 //---------------------------------------------------------
@@ -53,7 +50,6 @@ int ia2raw(uint8_t *raw, const ia *img, int width, int height, int depth);
 // intermediate IA -> N64 raw I4/I8
 int i2raw(uint8_t *raw, const ia *img, int width, int height, int depth);
 
-
 //---------------------------------------------------------
 // N64 CI <-> N64 RGBA16/IA16
 //---------------------------------------------------------
@@ -63,7 +59,6 @@ uint8_t *ci2raw(const uint8_t *rawci, const uint8_t *palette, int width, int hei
 
 // convert from raw (RGBA16 or IA16) format to CI + palette
 int raw2ci(uint8_t *rawci, palette_t *pal, const uint8_t *raw, int raw_len, int ci_depth);
-
 
 //---------------------------------------------------------
 // intermediate RGBA/IA -> PNG
@@ -75,7 +70,6 @@ int rgba2png(const char *png_filename, const rgba *img, int width, int height);
 // intermediate IA write to grayscale PNG file
 int ia2png(const char *png_filename, const ia *img, int width, int height);
 
-
 //---------------------------------------------------------
 // PNG -> intermediate RGBA/IA
 //---------------------------------------------------------
@@ -85,7 +79,6 @@ rgba *png2rgba(const char *png_filename, int *width, int *height);
 
 // PNG file -> intermediate IA
 ia *png2ia(const char *png_filename, int *width, int *height);
-
 
 //---------------------------------------------------------
 // version

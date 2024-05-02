@@ -65,8 +65,7 @@
 /* Types */
 /* Types */
 
-typedef struct
-{
+typedef struct {
     /*0x00*/ u32 type;
     /*0x04*/ u32 flags;
 
@@ -101,8 +100,8 @@ typedef u32 OSYieldResult;
 
 /* Functions */
 
-#define osSpTaskStart(p) \
-    osSpTaskLoad(p);     \
+#define osSpTaskStart(p)                                                                               \
+    osSpTaskLoad(p);                                                                                   \
     osSpTaskStartGo(p);
 
 void osSpTaskLoad(OSTask *task);

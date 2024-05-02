@@ -4,16 +4,14 @@
 #include <stdint.h>
 
 // intermediate formats
-typedef struct _rgba
-{
+typedef struct _rgba {
     uint8_t red;
     uint8_t green;
     uint8_t blue;
     uint8_t alpha;
 } rgba;
 
-typedef struct _ia
-{
+typedef struct _ia {
     uint8_t intensity;
     uint8_t alpha;
 } ia;
@@ -25,7 +23,8 @@ rgba *raw2rgba(const uint8_t *raw, int width, int height, int depth);
 rgba *rawci2rgba(const uint8_t *rawci, const uint8_t *palette, int width, int height, int depth);
 
 // intermediate RGBA -> N64 raw CI + palette
-int rgba2rawci(uint8_t *raw, uint8_t *out_palette, int *pal_len, const rgba *img, int width, int height, int depth);
+int rgba2rawci(uint8_t *raw, uint8_t *out_palette, int *pal_len, const rgba *img, int width, int height,
+               int depth);
 
 // PNG file -> intermediate RGBA
 rgba *png2rgba(const char *png_filename, int *width, int *height);

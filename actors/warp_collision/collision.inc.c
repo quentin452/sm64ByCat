@@ -1,4 +1,5 @@
-// Warp Collision (seems strange to put these collision in another file. Only instance of this seperation thus far. Not sure what this is doing as a file.)
+// Warp Collision (seems strange to put these collision in another file. Only instance of this
+// seperation thus far. Not sure what this is doing as a file.)
 
 // 0x0301CE78 - 0x0301CECC
 const Collision door_seg3_collision_0301CE78[] = {

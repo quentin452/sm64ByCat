@@ -7,11 +7,11 @@
 
 // printing size_t varies by compiler
 #if defined(_MSC_VER) || defined(__MINGW32__)
-  #include <windows.h>
-  #define SIZE_T_FORMAT "%Iu"
-  #define realpath(N,R) _fullpath((R),(N),MAX_PATH)
+#include <windows.h>
+#define SIZE_T_FORMAT "%Iu"
+#define realpath(N, R) _fullpath((R), (N), MAX_PATH)
 #else
-  #define SIZE_T_FORMAT "%zu"
+#define SIZE_T_FORMAT "%zu"
 #endif
 
 #define KB 1024
@@ -24,48 +24,52 @@
 #define MAX(A_, B_) ((A_) > (B_) ? (A_) : (B_))
 
 // align value to N-byte boundary
-#define ALIGN(VAL_, ALIGNMENT_) (((VAL_) + ((ALIGNMENT_) - 1)) & ~((ALIGNMENT_) - 1))
+#define ALIGN(VAL_, ALIGNMENT_) (((VAL_) + ((ALIGNMENT_) -1)) & ~((ALIGNMENT_) -1))
 
 // read/write u32/16 big/little endian
-#define read_u32_be(buf) (unsigned int)(((buf)[0] << 24) + ((buf)[1] << 16) + ((buf)[2] << 8) + ((buf)[3]))
-#define read_u32_le(buf) (unsigned int)(((buf)[1] << 24) + ((buf)[0] << 16) + ((buf)[3] << 8) + ((buf)[2]))
-#define write_u32_be(buf, val) do { \
-   (buf)[0] = ((val) >> 24) & 0xFF; \
-   (buf)[1] = ((val) >> 16) & 0xFF; \
-   (buf)[2] = ((val) >> 8) & 0xFF; \
-   (buf)[3] = (val) & 0xFF; \
-} while(0)
+#define read_u32_be(buf)                                                                               \
+    (unsigned int) (((buf)[0] << 24) + ((buf)[1] << 16) + ((buf)[2] << 8) + ((buf)[3]))
+#define read_u32_le(buf)                                                                               \
+    (unsigned int) (((buf)[1] << 24) + ((buf)[0] << 16) + ((buf)[3] << 8) + ((buf)[2]))
+#define write_u32_be(buf, val)                                                                         \
+    do {                                                                                               \
+        (buf)[0] = ((val) >> 24) & 0xFF;                                                               \
+        (buf)[1] = ((val) >> 16) & 0xFF;                                                               \
+        (buf)[2] = ((val) >> 8) & 0xFF;                                                                \
+        (buf)[3] = (val) &0xFF;                                                                        \
+    } while (0)
 #define read_u16_be(buf) (((buf)[0] << 8) + ((buf)[1]))
-#define write_u16_be(buf, val) do { \
-   (buf)[0] = ((val) >> 8) & 0xFF; \
-   (buf)[1] = ((val)) & 0xFF; \
-} while(0)
+#define write_u16_be(buf, val)                                                                         \
+    do {                                                                                               \
+        (buf)[0] = ((val) >> 8) & 0xFF;                                                                \
+        (buf)[1] = ((val)) & 0xFF;                                                                     \
+    } while (0)
 
 // print nibbles and bytes
-#define fprint_nibble(FP, NIB_) fputc((NIB_) < 10 ? ('0' + (NIB_)) : ('A' + (NIB_) - 0xA), FP)
-#define fprint_byte(FP, BYTE_) do { \
-    fprint_nibble(FP, (BYTE_) >> 4); \
-    fprint_nibble(FP, (BYTE_) & 0x0F); \
-  } while(0)
+#define fprint_nibble(FP, NIB_) fputc((NIB_) < 10 ? ('0' + (NIB_)) : ('A' + (NIB_) -0xA), FP)
+#define fprint_byte(FP, BYTE_)                                                                         \
+    do {                                                                                               \
+        fprint_nibble(FP, (BYTE_) >> 4);                                                               \
+        fprint_nibble(FP, (BYTE_) &0x0F);                                                              \
+    } while (0)
 #define print_nibble(NIB_) fprint_nibble(stdout, NIB_)
 #define print_byte(BYTE_) fprint_byte(stdout, BYTE_)
 
 // Windows compatibility
 #if defined(_MSC_VER) || defined(__MINGW32__)
-  #include <direct.h>
-  #define mkdir(DIR_, PERM_) _mkdir(DIR_)
-  #ifndef strcasecmp
-    #define strcasecmp(A, B) stricmp(A, B)
-  #endif
+#include <direct.h>
+#define mkdir(DIR_, PERM_) _mkdir(DIR_)
+#ifndef strcasecmp
+#define strcasecmp(A, B) stricmp(A, B)
+#endif
 #endif
 
 // typedefs
 
 #define MAX_DIR_FILES 128
-typedef struct
-{
-   char *files[MAX_DIR_FILES];
-   int count;
+typedef struct {
+    char *files[MAX_DIR_FILES];
+    int count;
 } dir_list;
 
 // global verbosity setting
@@ -73,8 +77,12 @@ extern int g_verbosity;
 
 #undef ERROR
 #define ERROR(...) fprintf(stderr, __VA_ARGS__)
-#define INFO(...) if (g_verbosity) printf(__VA_ARGS__)
-#define INFO_HEX(...) if (g_verbosity) print_hex(__VA_ARGS__)
+#define INFO(...)                                                                                      \
+    if (g_verbosity)                                                                                   \
+    printf(__VA_ARGS__)
+#define INFO_HEX(...)                                                                                  \
+    if (g_verbosity)                                                                                   \
+    print_hex(__VA_ARGS__)
 
 // functions
 

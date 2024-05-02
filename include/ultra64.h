@@ -34,7 +34,7 @@
 #include <_mingw.h>
 #if !defined(__MINGW64_VERSION_MAJOR)
 #include <string.h>
-#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
+#define bzero(b, len) (memset((b), '\0', (len)), (void) 0)
 #define bcopy(s1, s2, n) memmove((s2), (s1), (n))
 #endif
 #endif
