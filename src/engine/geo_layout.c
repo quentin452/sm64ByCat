@@ -792,7 +792,7 @@ struct GraphNode *process_geo_layout(struct AllocOnlyPool *pool, void *segptr) {
     while (gGeoLayoutCommand != NULL) {
         GeoLayoutJumpTable[gGeoLayoutCommand[0x00]]();
     }
-    
+
     if (gCurRootGraphNode) {
         gCurRootGraphNode->georef = (const void *) segptr;
     }

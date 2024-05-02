@@ -14,7 +14,8 @@ if len(sys.argv) > 1:
 else:
     print("formatting...")
     files_to_format = glob.glob("src/**/*.[chin]", recursive=True) + \
-                      glob.glob("lib/src/*.[chin]") + \
-                      glob.glob("enhancements/*.inc.[chin]")
+                      glob.glob("lib/src/*.[chin]", recursive=True) + \
+                      glob.glob("data/**/*.[chin]", recursive=True) + \
+                      glob.glob("enhancements/*.inc.[chin]", recursive=True)
     format_files(files_to_format)
     print("done.")

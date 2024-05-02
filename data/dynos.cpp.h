@@ -4,8 +4,8 @@
 
 #include "dynos.h"
 
-#define FUNCTION_CODE   (u32) 0x434E5546
-#define POINTER_CODE    (u32) 0x52544E50
+#define FUNCTION_CODE (u32) 0x434E5546
+#define POINTER_CODE (u32) 0x52544E50
 
 //
 // Enums
@@ -57,12 +57,12 @@ enum {
 
 //
 // DynOS Array
-// A vector-like array, implemented to be processed really fast, but cannot handle C++ complex classes like std::string
+// A vector-like array, implemented to be processed really fast, but cannot handle C++ complex classes
+// like std::string
 //
 
-template <typename T>
-class Array {
-public:
+template <typename T> class Array {
+  public:
     inline Array() : mBuffer(NULL), mCount(0), mCapacity(0) {
     }
 
@@ -90,7 +90,7 @@ public:
         Clear();
     }
 
-public:
+  public:
     void Resize(s32 aCount) {
         if (aCount > mCapacity) {
             mCapacity = MAX(aCount, MAX(16, mCapacity * 2));
@@ -104,7 +104,7 @@ public:
         mCount = aCount;
     }
 
-    void Add(const T& aItem) {
+    void Add(const T &aItem) {
         Resize(mCount + 1);
         mBuffer[mCount - 1] = aItem;
     }
@@ -123,13 +123,14 @@ public:
     }
 
     void Clear() {
-        if (mBuffer) free(mBuffer);
-        mBuffer   = NULL;
-        mCount    = 0;
+        if (mBuffer)
+            free(mBuffer);
+        mBuffer = NULL;
+        mCount = 0;
         mCapacity = 0;
     }
 
-    s32 Find(const T& aItem) const {
+    s32 Find(const T &aItem) const {
         for (s32 i = 0; i != mCount; ++i) {
             if (mBuffer[i] == aItem) {
                 return i;
@@ -138,8 +139,7 @@ public:
         return -1;
     }
 
-    template <typename Predicate>
-    s32 FindIf(Predicate aPredicate) const {
+    template <typename Predicate> s32 FindIf(Predicate aPredicate) const {
         for (s32 i = 0; i != mCount; ++i) {
             if (aPredicate(mBuffer[i])) {
                 return i;
@@ -148,21 +148,38 @@ public:
         return -1;
     }
 
-public:
-    inline const T *begin() const { return mBuffer; }
-    inline const T *end() const { return mBuffer + mCount; }
-    inline T *begin() { return mBuffer; }
-    inline T *end() { return mBuffer + mCount; }
+  public:
+    inline const T *begin() const {
+        return mBuffer;
+    }
+    inline const T *end() const {
+        return mBuffer + mCount;
+    }
+    inline T *begin() {
+        return mBuffer;
+    }
+    inline T *end() {
+        return mBuffer + mCount;
+    }
 
-    inline const T &operator[](s32 aIndex) const { return mBuffer[aIndex]; }
-    inline T &operator[](s32 aIndex) { return mBuffer[aIndex]; }
+    inline const T &operator[](s32 aIndex) const {
+        return mBuffer[aIndex];
+    }
+    inline T &operator[](s32 aIndex) {
+        return mBuffer[aIndex];
+    }
 
-    inline s32 Count() const { return mCount; }
-    inline bool Empty() const { return mCount == 0; }
+    inline s32 Count() const {
+        return mCount;
+    }
+    inline bool Empty() const {
+        return mCount == 0;
+    }
 
-public:
+  public:
     void Read(FILE *aFile) {
-        s32 _Length = 0; fread(&_Length, sizeof(s32), 1, aFile);
+        s32 _Length = 0;
+        fread(&_Length, sizeof(s32), 1, aFile);
         Resize(_Length);
         fread(mBuffer, sizeof(T), _Length, aFile);
     }
@@ -172,7 +189,7 @@ public:
         fwrite(mBuffer, sizeof(T), mCount, aFile);
     }
 
-private:
+  private:
     T *mBuffer;
     s32 mCount;
     s32 mCapacity;
@@ -185,7 +202,7 @@ private:
 
 #define STRING_SIZE 95
 class String {
-public:
+  public:
     inline String() : mCount(0) {
         mBuffer[0] = 0;
     }
@@ -199,8 +216,7 @@ public:
         mBuffer[mCount] = 0;
     }
 
-    template <typename... Args>
-    inline String(const char *aFmt, Args... aArgs) : mCount(0) {
+    template <typename... Args> inline String(const char *aFmt, Args... aArgs) : mCount(0) {
         snprintf(mBuffer, STRING_SIZE, aFmt, aArgs...);
         mCount = (u8) strlen(mBuffer);
         mBuffer[mCount] = 0;
@@ -218,9 +234,10 @@ public:
         mBuffer[mCount] = 0;
     }
 
-public:
+  public:
     void Add(char aChar) {
-        if (mCount == STRING_SIZE - 1) return;
+        if (mCount == STRING_SIZE - 1)
+            return;
         mBuffer[mCount++] = aChar;
         mBuffer[mCount] = 0;
     }
@@ -251,22 +268,25 @@ public:
 
     s32 Find(const char *aString, s32 aStart = 0) const {
         const char *_Ptr = strstr(mBuffer + aStart, aString);
-        if (_Ptr) return (s32) (_Ptr - mBuffer);
+        if (_Ptr)
+            return (s32)(_Ptr - mBuffer);
         return -1;
     }
 
     s32 FindLast(char aChar) const {
         for (u8 i = mCount; i != 0; --i) {
             if (mBuffer[i - 1] == aChar) {
-                return (s32) (i - 1);
+                return (s32)(i - 1);
             }
         }
         return -1;
     }
 
     String SubString(s32 aStart, s32 aCount = STRING_SIZE - 1) const {
-        if (aStart >= mCount) return String();
-        if (aCount < 0) aCount = STRING_SIZE - 1;
+        if (aStart >= mCount)
+            return String();
+        if (aCount < 0)
+            aCount = STRING_SIZE - 1;
         aCount = MIN(aCount, mCount - aStart);
         String _String;
         _String.mCount = aCount;
@@ -275,21 +295,38 @@ public:
         return _String;
     }
 
-public:
-    inline const char *begin() const { return mBuffer; }
-    inline const char *end() const { return mBuffer + mCount; }
-    inline char *begin() { return mBuffer; }
-    inline char *end() { return mBuffer + mCount; }
+  public:
+    inline const char *begin() const {
+        return mBuffer;
+    }
+    inline const char *end() const {
+        return mBuffer + mCount;
+    }
+    inline char *begin() {
+        return mBuffer;
+    }
+    inline char *end() {
+        return mBuffer + mCount;
+    }
 
-    inline const char &operator[](s32 aIndex) const { return mBuffer[aIndex]; }
-    inline char &operator[](s32 aIndex) { return mBuffer[aIndex]; }
+    inline const char &operator[](s32 aIndex) const {
+        return mBuffer[aIndex];
+    }
+    inline char &operator[](s32 aIndex) {
+        return mBuffer[aIndex];
+    }
 
-    inline s32 Length() const { return (s32) mCount; }
-    inline bool Empty() const { return mCount == 0; }
+    inline s32 Length() const {
+        return (s32) mCount;
+    }
+    inline bool Empty() const {
+        return mCount == 0;
+    }
 
-public:
+  public:
     bool operator==(const char *aString) const {
-        if (strlen(aString) != mCount) return false;
+        if (strlen(aString) != mCount)
+            return false;
         for (u8 i = 0; i != mCount; ++i) {
             if (aString[i] != mBuffer[i]) {
                 return false;
@@ -299,7 +336,8 @@ public:
     }
 
     bool operator==(const String &aOther) const {
-        if (aOther.mCount != mCount) return false;
+        if (aOther.mCount != mCount)
+            return false;
         for (u8 i = 0; i != mCount; ++i) {
             if (aOther.mBuffer[i] != mBuffer[i]) {
                 return false;
@@ -309,7 +347,8 @@ public:
     }
 
     bool operator!=(const char *aString) const {
-        if (strlen(aString) != mCount) return true;
+        if (strlen(aString) != mCount)
+            return true;
         for (u8 i = 0; i != mCount; ++i) {
             if (aString[i] != mBuffer[i]) {
                 return true;
@@ -319,7 +358,8 @@ public:
     }
 
     bool operator!=(const String &aOther) const {
-        if (aOther.mCount != mCount) return true;
+        if (aOther.mCount != mCount)
+            return true;
         for (u8 i = 0; i != mCount; ++i) {
             if (aOther.mBuffer[i] != mBuffer[i]) {
                 return true;
@@ -328,7 +368,7 @@ public:
         return false;
     }
 
-public:
+  public:
     void Read(FILE *aFile) {
         fread(&mCount, sizeof(u8), 1, aFile);
         fread(mBuffer, sizeof(char), mCount, aFile);
@@ -356,7 +396,7 @@ public:
         return f;
     }
 
-private:
+  private:
     char mBuffer[STRING_SIZE];
     u8 mCount;
 };
@@ -366,15 +406,17 @@ static_assert(sizeof(String) == (STRING_SIZE + 1), "sizeof(String) must be (STRI
 // Types
 //
 
-template <typename U, typename V>
-using Pair = std::pair<U, V>;
+template <typename U, typename V> using Pair = std::pair<U, V>;
 
 typedef std::string SysPath;
 
 class NoCopy {
   protected:
-    NoCopy() {}
-    ~NoCopy() {}
+    NoCopy() {
+    }
+    ~NoCopy() {
+    }
+
   private:
     NoCopy(const NoCopy &) = delete;
     void operator=(const NoCopy &) = delete;
@@ -383,10 +425,10 @@ class NoCopy {
 struct TexData : NoCopy {
     Array<u8> mPngData;
     Array<u8> mRawData;
-    s32 mRawWidth  = -1;
+    s32 mRawWidth = -1;
     s32 mRawHeight = -1;
     s32 mRawFormat = -1;
-    s32 mRawSize   = -1;
+    s32 mRawSize = -1;
     bool mUploaded = false;
 };
 
@@ -402,25 +444,22 @@ struct AnimData : NoCopy {
     u32 mLength = 0;
 };
 
-template <typename T>
-struct DataNode : NoCopy {
+template <typename T> struct DataNode : NoCopy {
     String mName;
-    T* mData = NULL;
+    T *mData = NULL;
     u32 mSize = 0;
     Array<String> mTokens;
     u64 mModelIdentifier = 0;
     u64 mLoadIndex = 0;
 };
-template <typename T>
-using DataNodes = Array<DataNode<T>*>;
+template <typename T> using DataNodes = Array<DataNode<T> *>;
 
 struct GfxContext {
-    DataNode<TexData>* mCurrentTexture = NULL;
-    DataNode<TexData>* mCurrentPalette = NULL;
+    DataNode<TexData> *mCurrentTexture = NULL;
+    DataNode<TexData> *mCurrentPalette = NULL;
 };
 
-template <typename T>
-using AnimBuffer = Pair<String, Array<T>>;
+template <typename T> using AnimBuffer = Pair<String, Array<T>>;
 struct GfxData : NoCopy {
 
     // Model data
@@ -511,8 +550,7 @@ typedef bool (*DynosLoopFunc)(DynosOption *, void *);
 // Utils
 //
 
-template <typename T>
-T* New(u64 aCount = 1llu) {
+template <typename T> T *New(u64 aCount = 1llu) {
     T *_Ptr = (T *) calloc(aCount, sizeof(T));
     for (u64 i = 0; i != aCount; ++i) {
         new (_Ptr + i) T(); // Calls the constructor of type T at address (_Ptr + i)
@@ -520,22 +558,22 @@ T* New(u64 aCount = 1llu) {
     return _Ptr;
 }
 
-template <typename T>
-void Delete(T *& aPtr) {
-    if (aPtr) aPtr->~T();
+template <typename T> void Delete(T *&aPtr) {
+    if (aPtr)
+        aPtr->~T();
     free(aPtr);
     aPtr = NULL;
 }
 
-template <typename T>
-T *CopyBytes(const T *aPtr, u64 aSize) {
+template <typename T> T *CopyBytes(const T *aPtr, u64 aSize) {
     T *_Ptr = (T *) calloc(1, aSize);
     memcpy(_Ptr, aPtr, aSize);
     return _Ptr;
 }
 
 template <typename T = void>
-Array<String> Split(const char *aBuffer, const String &aDelimiters, const String &aEndCharacters = {}, bool aHandleDoubleQuotedStrings = false) {
+Array<String> Split(const char *aBuffer, const String &aDelimiters, const String &aEndCharacters = {},
+                    bool aHandleDoubleQuotedStrings = false) {
     Array<String> _Tokens;
     String _Token;
     bool _TreatSpaceAsChar = false;
@@ -564,50 +602,47 @@ Array<String> Split(const char *aBuffer, const String &aDelimiters, const String
     return _Tokens;
 }
 
-template <typename T>
-T ReadBytes(FILE* aFile) {
+template <typename T> T ReadBytes(FILE *aFile) {
     T _Item = { 0 };
     fread(&_Item, sizeof(T), 1, aFile);
     return _Item;
 }
 
-template <typename T>
-void WriteBytes(FILE* aFile, const T& aItem) {
+template <typename T> void WriteBytes(FILE *aFile, const T &aItem) {
     fwrite(&aItem, sizeof(T), 1, aFile);
 }
 
-template <typename... Args>
-void PrintNoNewLine(const char *aFmt, Args... aArgs) {
+template <typename... Args> void PrintNoNewLine(const char *aFmt, Args... aArgs) {
     printf(aFmt, aArgs...);
     fflush(stdout);
 }
 
-template <typename... Args>
-void Print(const char *aFmt, Args... aArgs) {
+template <typename... Args> void Print(const char *aFmt, Args... aArgs) {
     printf(aFmt, aArgs...);
     printf("\r\n");
     fflush(stdout);
 }
 
-#define PrintError(...) { \
-    if (aGfxData->mErrorCount == 0) Print("  ERROR!"); \
-    Print(__VA_ARGS__); \
-    aGfxData->mErrorCount++; \
-}
+#define PrintError(...)                                                                                \
+    {                                                                                                  \
+        if (aGfxData->mErrorCount == 0)                                                                \
+            Print("  ERROR!");                                                                         \
+        Print(__VA_ARGS__);                                                                            \
+        aGfxData->mErrorCount++;                                                                       \
+    }
 
-template <typename... Args>
-SysPath fstring(const char *aFmt, Args... aArgs) {
+template <typename... Args> SysPath fstring(const char *aFmt, Args... aArgs) {
     char buffer[1024];
     snprintf(buffer, 1024, aFmt, aArgs...);
     return SysPath(buffer);
 }
 
 // Wraps the static into a function, to call the constructor on first use
-#define STATIC_STORAGE(type, name)  \
-static type &__##name() {           \
-    static type s##name;            \
-    return s##name;                 \
-}
+#define STATIC_STORAGE(type, name)                                                                     \
+    static type &__##name() {                                                                          \
+        static type s##name;                                                                           \
+        return s##name;                                                                                \
+    }
 
 //
 // Main
@@ -639,15 +674,19 @@ bool DynOS_Opt_ControllerUpdate(DynosOption *aOpt, void *aData);
 s32 DynOS_Opt_ControllerGetKeyPressed();
 void DynOS_Opt_LoadConfig(DynosOption *aMenu);
 void DynOS_Opt_SaveConfig(DynosOption *aMenu);
-void DynOS_Opt_DrawMenu(DynosOption *aCurrentOption, DynosOption *aCurrentMenu, DynosOption *aOptionsMenu, DynosOption *aDynosMenu);
-void DynOS_Opt_DrawPrompt(DynosOption *aCurrentMenu, DynosOption *aOptionsMenu, DynosOption *aDynosMenu);
+void DynOS_Opt_DrawMenu(DynosOption *aCurrentOption, DynosOption *aCurrentMenu,
+                        DynosOption *aOptionsMenu, DynosOption *aDynosMenu);
+void DynOS_Opt_DrawPrompt(DynosOption *aCurrentMenu, DynosOption *aOptionsMenu,
+                          DynosOption *aDynosMenu);
 
 //
 // Gfx
 //
 
-u8 *DynOS_Gfx_TextureConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSize, const u8 *aPalette);
-bool DynOS_Gfx_ImportTexture(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize);
+u8 *DynOS_Gfx_TextureConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSize,
+                                     const u8 *aPalette);
+bool DynOS_Gfx_ImportTexture(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap,
+                             void *aPool, u32 *aPoolPos, u32 aPoolSize);
 Array<ActorGfx> &DynOS_Gfx_GetActorList();
 Array<PackData *> &DynOS_Gfx_GetPacks();
 Array<String> DynOS_Gfx_Init();
