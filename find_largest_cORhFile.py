@@ -1,32 +1,22 @@
 import glob
 import os
+import heapq
 
-def find_largest_file(files):
-    max_size = 0
-    largest_file = ""
-    for file in files:
-        size = os.path.getsize(file)
-        if size > max_size:
-            max_size = size
-            largest_file = file
-    return largest_file, max_size
+def find_largest_files(files, n=100):
+    sizes_files = [(os.path.getsize(file), file) for file in files]
+    return heapq.nlargest(n, sizes_files)
 
 directories = [
-    "src/**/*.c", "src/**/*.h",
-    "lib/src/*.c", "lib/src/*.h",
-    "enhancements/*.inc.c", "enhancements/*.inc.h"
+    "**/*.c", "**/*.h",
 ]
 
-largest_files = {}
+print("Largest files:")
 for directory in directories:
     files = glob.glob(directory, recursive=True)
     if files:
-        largest_file, max_size = find_largest_file(files)
-        largest_files[directory] = {"file": largest_file, "size": max_size}
-
-print("Largest files:")
-for directory, info in largest_files.items():
-    print(f"Directory: {directory}")
-    print(f"File: {info['file']}")
-    print(f"Size: {info['size']} bytes")
-    print()
+        largest_files = find_largest_files(files)
+        for size, file in largest_files:
+            print(f"Directory: {directory}")
+            print(f"File: {file}")
+            print(f"Size: {size} bytes")
+            print()
