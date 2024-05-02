@@ -5,6 +5,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <pthread.h>
+#include <semaphore.h>
 
 /* Platform-specific functions and whatnot */
 
@@ -18,6 +21,7 @@ char *sys_strdup(const char *src);
 char *sys_strlwr(char *src);
 int sys_strcasecmp(const char *s1, const char *s2);
 void sys_sleep(const uint64_t us);
+double sys_profile_time(void);
 
 // path stuff
 const char *sys_user_path(void);

@@ -1,5 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h> //Header file for sleep(). man 3 sleep for details.
+#include <time.h>
+#include <errno.h>
 
 #ifdef TARGET_WEB
 #include <emscripten.h>
@@ -25,6 +28,7 @@
 #include "audio/audio_null.h"
 
 #include "pc_main.h"
+#include "thread.h"
 #include "cliopts.h"
 #include "configfile.h"
 #include "controller/controller_api.h"
@@ -56,15 +60,57 @@ static struct AudioAPI *audio_api;
 static struct GfxWindowManagerAPI *wm_api;
 static struct GfxRenderingAPI *rendering_api;
 
+pthread_t pcthread_audio_id;
+pthread_mutex_t pcthread_audio_mutex = PTHREAD_MUTEX_INITIALIZER;
+bool pcthread_audio_init = false;
+bool pcthread_audio_rendering = false;
+sem_t pcthread_audio_sema;
+
+pthread_mutex_t pcthread_game_mutex = PTHREAD_MUTEX_INITIALIZER;
+bool pcthread_game_loop_iterating = false;
+bool pcthread_game_reset_sound = false;
+bool pcthread_wait_for_gameloop = false;
+sem_t pcthread_game_sema;
+
 extern void gfx_run(Gfx *commands);
 extern void thread5_game_loop(void *arg);
+extern void audio_game_loop_tick(void);
 extern void create_next_audio_buffer(s16 *samples, u32 num_samples);
 void game_loop_one_iteration(void);
+void *audio_thread();
 
 void dispatch_audio_sptask(struct SPTask *spTask) {
 }
 
 void set_vblank_handler(s32 index, struct VblankHandler *handler, OSMesgQueue *queue, OSMesg *msg) {
+}
+
+// Send a request for non-game threads to wait for the game thread to finish
+void pc_request_gameloop_wait(void) {
+    pcthread_mutex_lock(&pcthread_game_mutex);
+    pcthread_wait_for_gameloop = true;
+    pcthread_mutex_unlock(&pcthread_game_mutex);
+}
+
+// Wait for the audio thread to finish rendering audio
+void pc_wait_for_audio(void) {
+    pcthread_semaphore_wait(&pcthread_audio_sema);
+}
+
+// Check if the audio thread is currently rendering audio
+bool pc_check_audio_rendering(void) {
+    pcthread_mutex_lock(&pcthread_audio_mutex);
+    bool rendering = pcthread_audio_rendering;
+    pcthread_mutex_unlock(&pcthread_audio_mutex);
+    return rendering;
+}
+
+// Check if the game thread should finish before continuing
+bool pc_check_gameloop_wait(void) {
+    pcthread_mutex_lock(&pcthread_game_mutex);
+    bool waiting = pcthread_wait_for_gameloop;
+    pcthread_mutex_unlock(&pcthread_game_mutex);
+    return waiting;
 }
 
 static bool inited = false;
@@ -106,29 +152,17 @@ static inline void patch_interpolations(void) {
 void produce_one_frame(void) {
     gfx_start_frame();
 
-    const f32 master_mod = (f32) configMasterVolume / 127.0f;
-    set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32) configMusicVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_SFX, (f32) configSfxVolume / 127.0f * master_mod);
-    set_sequence_player_volume(SEQ_PLAYER_ENV, (f32) configEnvVolume / 127.0f * master_mod);
-
     game_loop_one_iteration();
-    thread6_rumble_loop(NULL);
 
-    int samples_left = audio_api->buffered();
-    u32 num_audio_samples =
-        samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-    // printf("Audio samples: %d %u\n", samples_left, num_audio_samples);
-    s16 audio_buffer[SAMPLES_HIGH * 2 * 2];
-    for (int i = 0; i < 2; i++) {
-        /*if (audio_cnt-- == 0) {
-            audio_cnt = 2;
-        }
-        u32 num_audio_samples = audio_cnt < 2 ? 528 : 544;*/
-        create_next_audio_buffer(audio_buffer + i * (num_audio_samples * 2), num_audio_samples);
+    // Post the game thread semaphore if the game thread requested it
+    pcthread_mutex_lock(&pcthread_game_mutex);
+    if (pcthread_wait_for_gameloop) {
+        pcthread_semaphore_post(&pcthread_game_sema);
+        pcthread_wait_for_gameloop = false;
     }
-    // printf("Audio samples before submitting: %d\n", audio_api->buffered());
+    pcthread_mutex_unlock(&pcthread_game_mutex);
 
-    audio_api->play((u8 *) audio_buffer, 2 * num_audio_samples * 4);
+    thread6_rumble_loop(NULL);
 
     gfx_end_frame();
 
@@ -138,7 +172,82 @@ void produce_one_frame(void) {
     gfx_end_frame();
 }
 
+// Seperate the audio thread from the main thread so that your ears won't bleed at a low framerate
+// RACE CONDITION:
+void *audio_thread() {
+    // Keep track of the time in microseconds
+    const f64 frametime_micro =
+        16666.666; // 16.666666 ms = 60Hz; run this thread 60 times a second like the original game
+    f64 start_time;
+    f64 end_time;
+    bool doloop = true;
+    pcthread_semaphore_wait(&pcthread_game_sema);
+    while (doloop) {
+
+        start_time = sys_profile_time();
+        const f32 master_mod = (f32) configMasterVolume / 127.0f;
+        set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32) configMusicVolume / 127.0f * master_mod);
+        set_sequence_player_volume(SEQ_PLAYER_SFX, (f32) configSfxVolume / 127.0f * master_mod);
+        set_sequence_player_volume(SEQ_PLAYER_ENV, (f32) configEnvVolume / 127.0f * master_mod);
+
+        // audio_game_loop_tick();
+
+        int samples_left = audio_api->buffered();
+        u32 num_audio_samples =
+            samples_left < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
+        // printf("Audio samples: %d %u\n", samples_left, num_audio_samples);
+        s16 audio_buffer[SAMPLES_HIGH * 2];
+        /*if (audio_cnt-- == 0) {
+            audio_cnt = 2;
+        }
+        u32 num_audio_samples = audio_cnt < 2 ? 528 : 544;*/
+
+        if (!pc_check_gameloop_wait()) {
+            pcthread_mutex_lock(&pcthread_audio_mutex);
+            pcthread_audio_rendering = true;
+            pcthread_mutex_unlock(&pcthread_audio_mutex);
+            create_next_audio_buffer(audio_buffer, num_audio_samples);
+            pcthread_semaphore_post(&pcthread_audio_sema);
+            pcthread_mutex_lock(&pcthread_audio_mutex);
+            pcthread_audio_rendering = false;
+            pcthread_mutex_unlock(&pcthread_audio_mutex);
+        } /* else {
+            printf("Audio thread: dropped frame\n");
+        } */
+
+        // printf("Audio samples before submitting: %d\n", audio_api->buffered());
+        audio_api->play((u8 *) audio_buffer, num_audio_samples * 4);
+
+        end_time = sys_profile_time();
+        // Sleep for the remaining time
+        f64 nap_time = frametime_micro - (end_time - start_time);
+        // printf("Audio thread nap time: %f\n", nap_time);
+        if (nap_time > 0.0)
+            sys_sleep(nap_time);
+        // Check if the game thread is still running
+        pcthread_mutex_lock(&pcthread_audio_mutex);
+        doloop = pcthread_audio_init;
+        pcthread_mutex_unlock(&pcthread_audio_mutex);
+    }
+    return NULL;
+}
+
+void audio_thread_init() {
+    pcthread_audio_init = true;
+    pcthread_semaphore_init(&pcthread_audio_sema, 0, 1);
+    pthread_create(&pcthread_audio_id, NULL, audio_thread, NULL);
+}
+
 void audio_shutdown(void) {
+    // Tell the audio thread to stop
+    pcthread_mutex_lock(&pcthread_audio_mutex);
+    pcthread_audio_init = false;
+    pcthread_mutex_unlock(&pcthread_audio_mutex);
+    pcthread_semaphore_wait(&pcthread_audio_sema); // Wait for the audio thread to finish rendering
+                                                   // audio, then destroy it all
+    pthread_join(pcthread_audio_id, NULL);
+    pcthread_semaphore_destroy(&pcthread_audio_sema);
+
     if (audio_api) {
         if (audio_api->shutdown)
             audio_api->shutdown();
@@ -154,6 +263,7 @@ void game_deinit(void) {
     controller_shutdown();
     audio_shutdown();
     gfx_shutdown();
+    pcthread_semaphore_destroy(&pcthread_game_sema);
     inited = false;
 }
 
@@ -282,6 +392,9 @@ void main_func(void) {
     emscripten_set_main_loop(em_main_loop, 0, 0);
     request_anim_frame(on_anim_frame);
 #else
+    // initialize multithreading
+    pcthread_semaphore_init(&pcthread_game_sema, 0, 0);
+    audio_thread_init();
     while (true) {
         wm_api->main_loop(produce_one_frame);
 #ifdef DISCORDRPC

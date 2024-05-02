@@ -8,6 +8,7 @@
 
 #include "pc/platform.h"
 #include "pc/fs/fs.h"
+#include "pc/thread.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 

@@ -77,6 +77,14 @@ void sys_sleep(const uint64_t us) {
     usleep(us);
 }
 
+// A high-resolution profiling timer. Returns the current time in microseconds.
+double sys_profile_time(void) {
+    // TODO: Platform specific stuff
+    struct timespec tv;
+    clock_gettime(CLOCK_MONOTONIC, &tv);
+    return (double) (tv.tv_nsec) / 1000.0 + (double) (tv.tv_sec) * 1000000.0;
+}
+
 /* this calls a platform-specific impl function after forming the error message */
 
 static void sys_fatal_impl(const char *msg) __attribute__((noreturn));

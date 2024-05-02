@@ -4,6 +4,7 @@
 #include "data.h"
 #include "seqplayer.h"
 #include "synthesis.h"
+#include "pc/thread.h"
 
 #ifdef VERSION_EU
 
@@ -53,6 +54,15 @@ void create_next_audio_buffer(s16 *samples, u32 num_samples) {
     }
     if (osRecvMesg(OSMesgQueues[1], &msg, OS_MESG_NOBLOCK) != -1) {
         func_802ad7ec((u32) msg);
+    }
+
+    // If the game thread is resetting the sound, don't process any audio commands
+    pcthread_mutex_lock(&pcthread_game_mutex);
+    bool reseting_sound = pcthread_game_reset_sound;
+    pcthread_mutex_unlock(&pcthread_game_mutex);
+    if (reseting_sound) {
+        printf("Audio thread: Dropped 1 frame\n");
+        return;
     }
     synthesis_execute(gAudioCmdBuffers[0], &writtenCmds, samples, num_samples);
     gAudioRandom = ((gAudioRandom + gAudioFrameCount) * gAudioFrameCount);
