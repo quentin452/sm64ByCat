@@ -6,10 +6,10 @@
 #include <ctype.h>
 #include <unistd.h>
 
-#include "cliopts.h"
-#include "fs/fs.h"
-#include "configfile.h"
-#include "platform.h"
+#include <!sm64/src/pc/cliopts.h>
+#include <!sm64/src/pc/fs/fs.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/platform.h>
 
 /* NULL terminated list of platform specific read-only data paths */
 /* priority is top first */

@@ -1,29 +1,29 @@
 #include <PR/ultratypes.h>
 
-#include "area.h"
+#include <!sm64/src/game/area.h>
 #include "actors/common1.h"
-#include "audio/external.h"
-#include "behavior_actions.h"
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/behavior_actions.h>
 #include "behavior_data.h"
-#include "camera.h"
+#include <!sm64/src/game/camera.h>
 #include "course_table.h"
 #include "dialog_ids.h"
-#include "engine/math_util.h"
-#include "engine/surface_collision.h"
-#include "game_init.h"
-#include "interaction.h"
-#include "level_update.h"
-#include "mario.h"
-#include "mario_step.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/mario_step.h>
 #include "memory.h"
-#include "obj_behaviors.h"
-#include "object_helpers.h"
-#include "save_file.h"
+#include <!sm64/src/game/obj_behaviors.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/save_file.h>
 #include "seq_ids.h"
 #include "sm64.h"
-#include "sound_init.h"
-#include "thread6.h"
-#include "pc/cheats.h"
+#include <!sm64/src/game/sound_init.h>
+#include <!sm64/src/game/thread6.h>
+#include <!sm64/src/pc/cheats.h>
 
 #define INT_GROUND_POUND_OR_TWIRL (1 << 0) // 0x01
 #define INT_PUNCH (1 << 1)                 // 0x02

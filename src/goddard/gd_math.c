@@ -1,12 +1,12 @@
 #include <PR/ultratypes.h>
 
-#include "debug_utils.h"
-#include "gd_macros.h"
-#include "gd_main.h"
-#include "gd_math.h"
-#include "gd_types.h"
+#include <!sm64/src/goddard/debug_utils.h>
+#include <!sm64/src/goddard/gd_macros.h>
+#include <!sm64/src/goddard/gd_main.h>
+#include <!sm64/src/goddard/gd_math.h>
+#include <!sm64/src/goddard/gd_types.h>
 #include "macros.h"
-#include "renderer.h"
+#include <!sm64/src/goddard/renderer.h>
 
 /**
  * Finds the square root of a float by treating

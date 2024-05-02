@@ -2,6 +2,20 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Remove build/us_pc directory",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                "Remove-Item ${workspaceFolder}/build/us_pc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },  
+        {
             "label": "Kill sm64.us.f3dex2e.exe",
             "type": "shell",
             "command": "powershell",

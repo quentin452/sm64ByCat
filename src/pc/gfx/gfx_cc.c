@@ -1,4 +1,4 @@
-#include "gfx_cc.h"
+#include <!sm64/src/pc/gfx/gfx_cc.h>
 
 void gfx_cc_get_features(uint32_t shader_id, struct CCFeatures *cc_features) {
     for (int i = 0; i < 4; i++) {

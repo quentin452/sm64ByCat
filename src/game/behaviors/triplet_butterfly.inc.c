@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 struct TripletButterflyActivationData {
     s32 model;
     const BehaviorScript *behavior;

@@ -17,15 +17,15 @@
 #endif
 #include <PR/gbi.h>
 
-#include "gfx_cc.h"
-#include "gfx_window_manager_api.h"
-#include "gfx_rendering_api.h"
-#include "gfx_direct3d_common.h"
+#include <!sm64/src/pc/gfx/gfx_cc.h>
+#include <!sm64/src/pc/gfx/gfx_window_manager_api.h>
+#include <!sm64/src/pc/gfx/gfx_rendering_api.h>
+#include <!sm64/src/pc/gfx/gfx_direct3d_common.h>
 
 #define DECLARE_GFX_DXGI_FUNCTIONS
-#include "gfx_dxgi.h"
+#include <!sm64/src/pc/gfx/gfx_dxgi.h>
 
-#include "gfx_screen_config.h"
+#include <!sm64/src/pc/gfx/gfx_screen_config.h>
 
 #define THREE_POINT_FILTERING 0
 #define DEBUG_D3D 0
@@ -73,12 +73,12 @@ struct ShaderProgramD3D11 {
 static struct {
     HMODULE d3d11_module;
     PFN_D3D11_CREATE_DEVICE D3D11CreateDevice;
-    
+
     HMODULE d3dcompiler_module;
     pD3DCompile D3DCompile;
-    
+
     D3D_FEATURE_LEVEL feature_level;
-    
+
     ComPtr<ID3D11Device> device;
     ComPtr<IDXGISwapChain1> swap_chain;
     ComPtr<ID3D11DeviceContext> context;
@@ -154,10 +154,12 @@ static void create_render_target_views(bool is_resize) {
     // Create back buffer
 
     ComPtr<ID3D11Texture2D> backbuffer_texture;
-    ThrowIfFailed(d3d.swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *) backbuffer_texture.GetAddressOf()),
+    ThrowIfFailed(d3d.swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+                                            (LPVOID *) backbuffer_texture.GetAddressOf()),
                   gfx_dxgi_get_h_wnd(), "Failed to get backbuffer from IDXGISwapChain.");
 
-    ThrowIfFailed(d3d.device->CreateRenderTargetView(backbuffer_texture.Get(), nullptr, d3d.backbuffer_view.GetAddressOf()),
+    ThrowIfFailed(d3d.device->CreateRenderTargetView(backbuffer_texture.Get(), nullptr,
+                                                     d3d.backbuffer_view.GetAddressOf()),
                   gfx_dxgi_get_h_wnd(), "Failed to create render target view.");
 
     // Create depth buffer
@@ -169,8 +171,9 @@ static void create_render_target_views(bool is_resize) {
     depth_stencil_texture_desc.Height = desc1.Height;
     depth_stencil_texture_desc.MipLevels = 1;
     depth_stencil_texture_desc.ArraySize = 1;
-    depth_stencil_texture_desc.Format = d3d.feature_level >= D3D_FEATURE_LEVEL_10_0 ?
-                                        DXGI_FORMAT_D32_FLOAT : DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depth_stencil_texture_desc.Format = d3d.feature_level >= D3D_FEATURE_LEVEL_10_0
+                                            ? DXGI_FORMAT_D32_FLOAT
+                                            : DXGI_FORMAT_D24_UNORM_S8_UINT;
     depth_stencil_texture_desc.SampleDesc = d3d.sample_description;
     depth_stencil_texture_desc.Usage = D3D11_USAGE_DEFAULT;
     depth_stencil_texture_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -178,8 +181,10 @@ static void create_render_target_views(bool is_resize) {
     depth_stencil_texture_desc.MiscFlags = 0;
 
     ComPtr<ID3D11Texture2D> depth_stencil_texture;
-    ThrowIfFailed(d3d.device->CreateTexture2D(&depth_stencil_texture_desc, nullptr, depth_stencil_texture.GetAddressOf()));
-    ThrowIfFailed(d3d.device->CreateDepthStencilView(depth_stencil_texture.Get(), nullptr, d3d.depth_stencil_view.GetAddressOf()));
+    ThrowIfFailed(d3d.device->CreateTexture2D(&depth_stencil_texture_desc, nullptr,
+                                              depth_stencil_texture.GetAddressOf()));
+    ThrowIfFailed(d3d.device->CreateDepthStencilView(depth_stencil_texture.Get(), nullptr,
+                                                     d3d.depth_stencil_view.GetAddressOf()));
 
     // Save resolution
 
@@ -191,19 +196,22 @@ static void gfx_d3d11_init(void) {
     // Load d3d11.dll
     d3d.d3d11_module = LoadLibraryW(L"d3d11.dll");
     if (d3d.d3d11_module == nullptr) {
-        ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_dxgi_get_h_wnd(), "d3d11.dll could not be loaded");
+        ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_dxgi_get_h_wnd(),
+                      "d3d11.dll could not be loaded");
     }
-    d3d.D3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)GetProcAddress(d3d.d3d11_module, "D3D11CreateDevice");
+    d3d.D3D11CreateDevice =
+        (PFN_D3D11_CREATE_DEVICE) GetProcAddress(d3d.d3d11_module, "D3D11CreateDevice");
 
     // Load D3DCompiler_47.dll or D3DCompiler_43.dll
     d3d.d3dcompiler_module = LoadLibraryW(L"D3DCompiler_47.dll");
     if (d3d.d3dcompiler_module == nullptr) {
         d3d.d3dcompiler_module = LoadLibraryW(L"D3DCompiler_43.dll");
         if (d3d.d3dcompiler_module == nullptr) {
-            ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_dxgi_get_h_wnd(), "D3DCompiler_47.dll or D3DCompiler_43.dll could not be loaded");
+            ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_dxgi_get_h_wnd(),
+                          "D3DCompiler_47.dll or D3DCompiler_43.dll could not be loaded");
         }
     }
-    d3d.D3DCompile = (pD3DCompile)GetProcAddress(d3d.d3dcompiler_module, "D3DCompile");
+    d3d.D3DCompile = (pD3DCompile) GetProcAddress(d3d.d3dcompiler_module, "D3DCompile");
 
     // Create D3D11 device
 
@@ -213,25 +221,15 @@ static void gfx_d3d11_init(void) {
 #else
         UINT device_creation_flags = 0;
 #endif
-        D3D_FEATURE_LEVEL FeatureLevels[] = {
-            D3D_FEATURE_LEVEL_11_0,
-            D3D_FEATURE_LEVEL_10_1,
-            D3D_FEATURE_LEVEL_10_0,
-            D3D_FEATURE_LEVEL_9_3,
-            D3D_FEATURE_LEVEL_9_2,
-            D3D_FEATURE_LEVEL_9_1
-        };
+        D3D_FEATURE_LEVEL FeatureLevels[] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1,
+                                              D3D_FEATURE_LEVEL_10_0, D3D_FEATURE_LEVEL_9_3,
+                                              D3D_FEATURE_LEVEL_9_2,  D3D_FEATURE_LEVEL_9_1 };
 
         HRESULT res = d3d.D3D11CreateDevice(
             adapter,
             D3D_DRIVER_TYPE_UNKNOWN, // since we use a specific adapter
-            nullptr,
-            device_creation_flags,
-            FeatureLevels,
-            ARRAYSIZE(FeatureLevels),
-            D3D11_SDK_VERSION,
-            test_only ? nullptr : d3d.device.GetAddressOf(),
-            &d3d.feature_level,
+            nullptr, device_creation_flags, FeatureLevels, ARRAYSIZE(FeatureLevels), D3D11_SDK_VERSION,
+            test_only ? nullptr : d3d.device.GetAddressOf(), &d3d.feature_level,
             test_only ? nullptr : d3d.context.GetAddressOf());
 
         if (test_only) {
@@ -272,8 +270,9 @@ static void gfx_d3d11_init(void) {
     vertex_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     vertex_buffer_desc.MiscFlags = 0;
 
-    ThrowIfFailed(d3d.device->CreateBuffer(&vertex_buffer_desc, nullptr, d3d.vertex_buffer.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to create vertex buffer.");
+    ThrowIfFailed(
+        d3d.device->CreateBuffer(&vertex_buffer_desc, nullptr, d3d.vertex_buffer.GetAddressOf()),
+        gfx_dxgi_get_h_wnd(), "Failed to create vertex buffer.");
 
     // Create per-frame constant buffer
 
@@ -286,8 +285,9 @@ static void gfx_d3d11_init(void) {
     constant_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     constant_buffer_desc.MiscFlags = 0;
 
-    ThrowIfFailed(d3d.device->CreateBuffer(&constant_buffer_desc, nullptr, d3d.per_frame_cb.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to create per-frame constant buffer.");
+    ThrowIfFailed(
+        d3d.device->CreateBuffer(&constant_buffer_desc, nullptr, d3d.per_frame_cb.GetAddressOf()),
+        gfx_dxgi_get_h_wnd(), "Failed to create per-frame constant buffer.");
 
     d3d.context->PSSetConstantBuffers(0, 1, d3d.per_frame_cb.GetAddressOf());
 
@@ -299,12 +299,12 @@ static void gfx_d3d11_init(void) {
     constant_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     constant_buffer_desc.MiscFlags = 0;
 
-    ThrowIfFailed(d3d.device->CreateBuffer(&constant_buffer_desc, nullptr, d3d.per_draw_cb.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to create per-draw constant buffer.");
+    ThrowIfFailed(
+        d3d.device->CreateBuffer(&constant_buffer_desc, nullptr, d3d.per_draw_cb.GetAddressOf()),
+        gfx_dxgi_get_h_wnd(), "Failed to create per-draw constant buffer.");
 
     d3d.context->PSSetConstantBuffers(1, 1, d3d.per_draw_cb.GetAddressOf());
 }
-
 
 static bool gfx_d3d11_z_is_from_0_to_1(void) {
     return true;
@@ -314,7 +314,7 @@ static void gfx_d3d11_unload_shader(struct ShaderProgram *old_prg) {
 }
 
 static void gfx_d3d11_load_shader(struct ShaderProgram *new_prg) {
-    d3d.shader_program = (struct ShaderProgramD3D11 *)new_prg;
+    d3d.shader_program = (struct ShaderProgramD3D11 *) new_prg;
 }
 
 static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(uint32_t shader_id) {
@@ -335,42 +335,70 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(uint32_t shade
     UINT compile_flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;
 #endif
 
-    HRESULT hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "VSMain", "vs_4_0_level_9_1", compile_flags, 0, vs.GetAddressOf(), error_blob.GetAddressOf());
+    HRESULT hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "VSMain", "vs_4_0_level_9_1",
+                                compile_flags, 0, vs.GetAddressOf(), error_blob.GetAddressOf());
 
     if (FAILED(hr)) {
-        MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
+        MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error",
+                   MB_OK | MB_ICONERROR);
         throw hr;
     }
 
-    hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "PSMain", "ps_4_0_level_9_1", compile_flags, 0, ps.GetAddressOf(), error_blob.GetAddressOf());
+    hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "PSMain", "ps_4_0_level_9_1",
+                        compile_flags, 0, ps.GetAddressOf(), error_blob.GetAddressOf());
 
     if (FAILED(hr)) {
-        MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
+        MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error",
+                   MB_OK | MB_ICONERROR);
         throw hr;
     }
 
     struct ShaderProgramD3D11 *prg = &d3d.shader_program_pool[d3d.shader_program_pool_size++];
 
-    ThrowIfFailed(d3d.device->CreateVertexShader(vs->GetBufferPointer(), vs->GetBufferSize(), nullptr, prg->vertex_shader.GetAddressOf()));
-    ThrowIfFailed(d3d.device->CreatePixelShader(ps->GetBufferPointer(), ps->GetBufferSize(), nullptr, prg->pixel_shader.GetAddressOf()));
+    ThrowIfFailed(d3d.device->CreateVertexShader(vs->GetBufferPointer(), vs->GetBufferSize(), nullptr,
+                                                 prg->vertex_shader.GetAddressOf()));
+    ThrowIfFailed(d3d.device->CreatePixelShader(ps->GetBufferPointer(), ps->GetBufferSize(), nullptr,
+                                                prg->pixel_shader.GetAddressOf()));
 
     // Input Layout
 
     D3D11_INPUT_ELEMENT_DESC ied[7];
     uint8_t ied_index = 0;
-    ied[ied_index++] = { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+    ied[ied_index++] = { "POSITION",
+                         0,
+                         DXGI_FORMAT_R32G32B32A32_FLOAT,
+                         0,
+                         D3D11_APPEND_ALIGNED_ELEMENT,
+                         D3D11_INPUT_PER_VERTEX_DATA,
+                         0 };
     if (cc_features.used_textures[0] || cc_features.used_textures[1]) {
-        ied[ied_index++] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+        ied[ied_index++] = { "TEXCOORD",
+                             0,
+                             DXGI_FORMAT_R32G32_FLOAT,
+                             0,
+                             D3D11_APPEND_ALIGNED_ELEMENT,
+                             D3D11_INPUT_PER_VERTEX_DATA,
+                             0 };
     }
     if (cc_features.opt_fog) {
-        ied[ied_index++] = { "FOG", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+        ied[ied_index++] = { "FOG",
+                             0,
+                             DXGI_FORMAT_R32G32B32A32_FLOAT,
+                             0,
+                             D3D11_APPEND_ALIGNED_ELEMENT,
+                             D3D11_INPUT_PER_VERTEX_DATA,
+                             0 };
     }
     for (unsigned int i = 0; i < cc_features.num_inputs; i++) {
-        DXGI_FORMAT format = cc_features.opt_alpha ? DXGI_FORMAT_R32G32B32A32_FLOAT : DXGI_FORMAT_R32G32B32_FLOAT;
-        ied[ied_index++] = { "INPUT", i, format, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+        DXGI_FORMAT format =
+            cc_features.opt_alpha ? DXGI_FORMAT_R32G32B32A32_FLOAT : DXGI_FORMAT_R32G32B32_FLOAT;
+        ied[ied_index++] = {
+            "INPUT", i, format, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0
+        };
     }
 
-    ThrowIfFailed(d3d.device->CreateInputLayout(ied, ied_index, vs->GetBufferPointer(), vs->GetBufferSize(), prg->input_layout.GetAddressOf()));
+    ThrowIfFailed(d3d.device->CreateInputLayout(ied, ied_index, vs->GetBufferPointer(),
+                                                vs->GetBufferSize(), prg->input_layout.GetAddressOf()));
 
     // Blend state
 
@@ -401,20 +429,21 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(uint32_t shade
     prg->used_textures[0] = cc_features.used_textures[0];
     prg->used_textures[1] = cc_features.used_textures[1];
 
-    return (struct ShaderProgram *)(d3d.shader_program = prg);
+    return (struct ShaderProgram *) (d3d.shader_program = prg);
 }
 
 static struct ShaderProgram *gfx_d3d11_lookup_shader(uint32_t shader_id) {
     for (size_t i = 0; i < d3d.shader_program_pool_size; i++) {
         if (d3d.shader_program_pool[i].shader_id == shader_id) {
-            return (struct ShaderProgram *)&d3d.shader_program_pool[i];
+            return (struct ShaderProgram *) &d3d.shader_program_pool[i];
         }
     }
     return nullptr;
 }
 
-static void gfx_d3d11_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
-    struct ShaderProgramD3D11 *p = (struct ShaderProgramD3D11 *)prg;
+static void gfx_d3d11_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs,
+                                      bool used_textures[2]) {
+    struct ShaderProgramD3D11 *p = (struct ShaderProgramD3D11 *) prg;
 
     *num_inputs = p->num_inputs;
     used_textures[0] = p->used_textures[0];
@@ -483,7 +512,8 @@ static void gfx_d3d11_upload_texture(const uint8_t *rgba32_buf, int width, int h
         texture_data->resource_view.Reset();
     }
 
-    ThrowIfFailed(d3d.device->CreateShaderResourceView(texture.Get(), &resource_view_desc, texture_data->resource_view.GetAddressOf()));
+    ThrowIfFailed(d3d.device->CreateShaderResourceView(texture.Get(), &resource_view_desc,
+                                                       texture_data->resource_view.GetAddressOf()));
 }
 
 static void gfx_d3d11_set_sampler_parameters(int tile, bool linear_filter, uint32_t cms, uint32_t cmt) {
@@ -493,7 +523,8 @@ static void gfx_d3d11_set_sampler_parameters(int tile, bool linear_filter, uint3
 #if THREE_POINT_FILTERING
     sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 #else
-    sampler_desc.Filter = linear_filter ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
+    sampler_desc.Filter =
+        linear_filter ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
 #endif
     sampler_desc.AddressU = gfx_cm_to_d3d11(cms);
     sampler_desc.AddressV = gfx_cm_to_d3d11(cmt);
@@ -509,7 +540,8 @@ static void gfx_d3d11_set_sampler_parameters(int tile, bool linear_filter, uint3
     // state before setting the actual one.
     texture_data->sampler_state.Reset();
 
-    ThrowIfFailed(d3d.device->CreateSamplerState(&sampler_desc, texture_data->sampler_state.GetAddressOf()));
+    ThrowIfFailed(
+        d3d.device->CreateSamplerState(&sampler_desc, texture_data->sampler_state.GetAddressOf()));
 }
 
 static void gfx_d3d11_set_depth_test(bool depth_test) {
@@ -562,11 +594,13 @@ static void gfx_d3d11_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t
         ZeroMemory(&depth_stencil_desc, sizeof(D3D11_DEPTH_STENCIL_DESC));
 
         depth_stencil_desc.DepthEnable = d3d.depth_test;
-        depth_stencil_desc.DepthWriteMask = d3d.depth_mask ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+        depth_stencil_desc.DepthWriteMask =
+            d3d.depth_mask ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
         depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
         depth_stencil_desc.StencilEnable = false;
 
-        ThrowIfFailed(d3d.device->CreateDepthStencilState(&depth_stencil_desc, d3d.depth_stencil_state.GetAddressOf()));
+        ThrowIfFailed(d3d.device->CreateDepthStencilState(&depth_stencil_desc,
+                                                          d3d.depth_stencil_state.GetAddressOf()));
         d3d.context->OMSetDepthStencilState(d3d.depth_stencil_state.Get(), 0);
     }
 
@@ -589,7 +623,8 @@ static void gfx_d3d11_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t
         rasterizer_desc.MultisampleEnable = false;
         rasterizer_desc.AntialiasedLineEnable = false;
 
-        ThrowIfFailed(d3d.device->CreateRasterizerState(&rasterizer_desc, d3d.rasterizer_state.GetAddressOf()));
+        ThrowIfFailed(
+            d3d.device->CreateRasterizerState(&rasterizer_desc, d3d.rasterizer_state.GetAddressOf()));
         d3d.context->RSSetState(d3d.rasterizer_state.Get());
     }
 
@@ -597,20 +632,28 @@ static void gfx_d3d11_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t
 
     for (int i = 0; i < 2; i++) {
         if (d3d.shader_program->used_textures[i]) {
-            if (d3d.last_resource_views[i].Get() != d3d.textures[d3d.current_texture_ids[i]].resource_view.Get()) {
-                d3d.last_resource_views[i] = d3d.textures[d3d.current_texture_ids[i]].resource_view.Get();
-                d3d.context->PSSetShaderResources(i, 1, d3d.textures[d3d.current_texture_ids[i]].resource_view.GetAddressOf());
+            if (d3d.last_resource_views[i].Get()
+                != d3d.textures[d3d.current_texture_ids[i]].resource_view.Get()) {
+                d3d.last_resource_views[i] =
+                    d3d.textures[d3d.current_texture_ids[i]].resource_view.Get();
+                d3d.context->PSSetShaderResources(
+                    i, 1, d3d.textures[d3d.current_texture_ids[i]].resource_view.GetAddressOf());
 
 #if THREE_POINT_FILTERING
                 d3d.per_draw_cb_data.textures[i].width = d3d.textures[d3d.current_texture_ids[i]].width;
-                d3d.per_draw_cb_data.textures[i].height = d3d.textures[d3d.current_texture_ids[i]].height;
-                d3d.per_draw_cb_data.textures[i].linear_filtering = d3d.textures[d3d.current_texture_ids[i]].linear_filtering;
+                d3d.per_draw_cb_data.textures[i].height =
+                    d3d.textures[d3d.current_texture_ids[i]].height;
+                d3d.per_draw_cb_data.textures[i].linear_filtering =
+                    d3d.textures[d3d.current_texture_ids[i]].linear_filtering;
                 textures_changed = true;
 #endif
 
-                if (d3d.last_sampler_states[i].Get() != d3d.textures[d3d.current_texture_ids[i]].sampler_state.Get()) {
-                    d3d.last_sampler_states[i] = d3d.textures[d3d.current_texture_ids[i]].sampler_state.Get();
-                    d3d.context->PSSetSamplers(i, 1, d3d.textures[d3d.current_texture_ids[i]].sampler_state.GetAddressOf());
+                if (d3d.last_sampler_states[i].Get()
+                    != d3d.textures[d3d.current_texture_ids[i]].sampler_state.Get()) {
+                    d3d.last_sampler_states[i] =
+                        d3d.textures[d3d.current_texture_ids[i]].sampler_state.Get();
+                    d3d.context->PSSetSamplers(
+                        i, 1, d3d.textures[d3d.current_texture_ids[i]].sampler_state.GetAddressOf());
                 }
             }
         }
@@ -669,7 +712,8 @@ static void gfx_d3d11_on_resize(void) {
 static void gfx_d3d11_start_frame(void) {
     // Set render targets
 
-    d3d.context->OMSetRenderTargets(1, d3d.backbuffer_view.GetAddressOf(), d3d.depth_stencil_view.Get());
+    d3d.context->OMSetRenderTargets(1, d3d.backbuffer_view.GetAddressOf(),
+                                    d3d.depth_stencil_view.Get());
 
     // Clear render targets
 
@@ -704,28 +748,17 @@ static void gfx_d3d11_finish_render(void) {
 } // namespace
 
 struct GfxRenderingAPI gfx_direct3d11_api = {
-    gfx_d3d11_z_is_from_0_to_1,
-    gfx_d3d11_unload_shader,
-    gfx_d3d11_load_shader,
-    gfx_d3d11_create_and_load_new_shader,
-    gfx_d3d11_lookup_shader,
-    gfx_d3d11_shader_get_info,
-    gfx_d3d11_new_texture,
-    gfx_d3d11_select_texture,
-    gfx_d3d11_upload_texture,
-    gfx_d3d11_set_sampler_parameters,
-    gfx_d3d11_set_depth_test,
-    gfx_d3d11_set_depth_mask,
-    gfx_d3d11_set_zmode_decal,
-    gfx_d3d11_set_viewport,
-    gfx_d3d11_set_scissor,
-    gfx_d3d11_set_use_alpha,
-    gfx_d3d11_draw_triangles,
-    gfx_d3d11_init,
-    gfx_d3d11_on_resize,
-    gfx_d3d11_start_frame,
-    gfx_d3d11_end_frame,
-    gfx_d3d11_finish_render
+    gfx_d3d11_z_is_from_0_to_1, gfx_d3d11_unload_shader,
+    gfx_d3d11_load_shader,      gfx_d3d11_create_and_load_new_shader,
+    gfx_d3d11_lookup_shader,    gfx_d3d11_shader_get_info,
+    gfx_d3d11_new_texture,      gfx_d3d11_select_texture,
+    gfx_d3d11_upload_texture,   gfx_d3d11_set_sampler_parameters,
+    gfx_d3d11_set_depth_test,   gfx_d3d11_set_depth_mask,
+    gfx_d3d11_set_zmode_decal,  gfx_d3d11_set_viewport,
+    gfx_d3d11_set_scissor,      gfx_d3d11_set_use_alpha,
+    gfx_d3d11_draw_triangles,   gfx_d3d11_init,
+    gfx_d3d11_on_resize,        gfx_d3d11_start_frame,
+    gfx_d3d11_end_frame,        gfx_d3d11_finish_render
 };
 
 #endif

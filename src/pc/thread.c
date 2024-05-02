@@ -1,4 +1,4 @@
-#include "thread.h"
+#include <!sm64/src/pc/thread.h>
 
 // TODO: Cross-platform stuff
 

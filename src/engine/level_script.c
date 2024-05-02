@@ -3,26 +3,26 @@
 
 #include "sm64.h"
 #include "data/dynos.c.h"
-#include "audio/external.h"
-#include "buffers/framebuffers.h"
-#include "buffers/zbuffer.h"
-#include "game/area.h"
-#include "game/game_init.h"
-#include "game/mario.h"
-#include "game/memory.h"
-#include "game/object_helpers.h"
-#include "game/object_list_processor.h"
-#include "game/profiler.h"
-#include "game/save_file.h"
-#include "game/sound_init.h"
-#include "goddard/renderer.h"
-#include "geo_layout.h"
-#include "graph_node.h"
-#include "level_script.h"
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/buffers/framebuffers.h>
+#include <!sm64/src/buffers/zbuffer.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/profiler.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/sound_init.h>
+#include <!sm64/src/goddard/renderer.h>
+#include <!sm64/src/engine/geo_layout.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/level_script.h>
 #include "level_misc_macros.h"
-#include "math_util.h"
-#include "surface_collision.h"
-#include "surface_load.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/engine/surface_load.h>
 #include "level_table.h"
 
 #define CMD_GET(type, offset) (*(type *) (CMD_PROCESS_OFFSET(offset) + (u8 *) sCurrentCmd))

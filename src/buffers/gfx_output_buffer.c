@@ -1,5 +1,5 @@
 #include <ultra64.h>
-#include "gfx_output_buffer.h"
+#include <!sm64/src/buffers/gfx_output_buffer.h>
 
 #ifdef VERSION_EU
 // 0x17e00 bytes, aligned to a 0x200-byte boundary through sm64.ld. The alignment

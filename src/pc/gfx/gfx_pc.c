@@ -16,15 +16,15 @@
 
 #include "config.h"
 
-#include "gfx_pc.h"
-#include "gfx_cc.h"
-#include "gfx_window_manager_api.h"
-#include "gfx_rendering_api.h"
-#include "gfx_screen_config.h"
+#include <!sm64/src/pc/gfx/gfx_pc.h>
+#include <!sm64/src/pc/gfx/gfx_cc.h>
+#include <!sm64/src/pc/gfx/gfx_window_manager_api.h>
+#include <!sm64/src/pc/gfx/gfx_rendering_api.h>
+#include <!sm64/src/pc/gfx/gfx_screen_config.h>
 
-#include "../platform.h"
-#include "../configfile.h"
-#include "../fs/fs.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/fs/fs.h>
 
 #define SUPPORT_CHECK(x) assert(x)
 

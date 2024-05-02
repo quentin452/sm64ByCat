@@ -4,17 +4,17 @@
 #include "sm64.h"
 #include "actors/common1.h"
 #include "gfx_dimensions.h"
-#include "game_init.h"
-#include "level_update.h"
-#include "camera.h"
-#include "print.h"
-#include "ingame_menu.h"
-#include "hud.h"
-#include "segment2.h"
-#include "area.h"
-#include "save_file.h"
-#include "print.h"
-#include "pc/configfile.h"
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/ingame_menu.h>
+#include <!sm64/src/game/hud.h>
+#include <!sm64/src/game/segment2.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/pc/configfile.h>
 
 /* @file hud.c
  * This file implements HUD rendering and power meter animations.

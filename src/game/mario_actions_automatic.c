@@ -2,20 +2,20 @@
 
 #include "sm64.h"
 #include "behavior_data.h"
-#include "mario_actions_automatic.h"
-#include "audio/external.h"
-#include "area.h"
-#include "mario.h"
-#include "mario_step.h"
-#include "engine/math_util.h"
+#include <!sm64/src/game/mario_actions_automatic.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/mario_step.h>
+#include <!sm64/src/engine/math_util.h>
 #include "memory.h"
-#include "engine/graph_node.h"
-#include "save_file.h"
-#include "engine/surface_collision.h"
-#include "interaction.h"
-#include "camera.h"
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/camera.h>
 #include "level_table.h"
-#include "thread6.h"
+#include <!sm64/src/game/thread6.h>
 
 #define POLE_NONE 0
 #define POLE_TOUCHED_FLOOR 1

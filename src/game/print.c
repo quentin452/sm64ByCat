@@ -2,10 +2,10 @@
 #include <PR/gbi.h>
 
 #include "config.h"
-#include "game_init.h"
+#include <!sm64/src/game/game_init.h>
 #include "memory.h"
-#include "print.h"
-#include "segment2.h"
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/segment2.h>
 
 /**
  * This file handles printing and formatting the colorful text that

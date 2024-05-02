@@ -3,20 +3,20 @@
 #include "prevent_bss_reordering.h"
 
 #include "sm64.h"
-#include "game/ingame_menu.h"
-#include "graph_node.h"
-#include "behavior_script.h"
+#include <!sm64/src/game/ingame_menu.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/behavior_script.h>
 #include "behavior_data.h"
-#include "game/memory.h"
-#include "game/object_helpers.h"
-#include "game/macro_special_objects.h"
-#include "surface_collision.h"
-#include "game/mario.h"
-#include "game/object_list_processor.h"
-#include "surface_load.h"
-#include "game/game_init.h"
-#include "math_util.h"
-#include "../pc/configfile.h"
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/macro_special_objects.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/engine/surface_load.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/pc/configfile.h>
 s32 unused8038BE90;
 
 /**

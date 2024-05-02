@@ -28,10 +28,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "gfx_window_manager_api.h"
-#include "gfx_screen_config.h"
-#include "../pc_main.h"
-#include "../configfile.h"
+#include <!sm64/src/pc/gfx/gfx_window_manager_api.h>
+#include <!sm64/src/pc/gfx/gfx_screen_config.h>
+#include <!sm64/src/pc/pc_main.h>
+#include <!sm64/src/pc/configfile.h>
 #include "../cliopts.h"
 
 #include "src/pc/controller/controller_keyboard.h"

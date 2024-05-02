@@ -1,28 +1,28 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "area.h"
-#include "audio/external.h"
-#include "behavior_actions.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/behavior_actions.h>
 #include "behavior_data.h"
-#include "camera.h"
+#include <!sm64/src/game/camera.h>
 #include "dialog_ids.h"
-#include "engine/behavior_script.h"
-#include "engine/graph_node.h"
-#include "engine/math_util.h"
-#include "envfx_snow.h"
-#include "game_init.h"
-#include "goddard/renderer.h"
-#include "interaction.h"
-#include "level_update.h"
-#include "mario_misc.h"
+#include <!sm64/src/engine/behavior_script.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/envfx_snow.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/goddard/renderer.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/mario_misc.h>
 #include "memory.h"
-#include "object_helpers.h"
-#include "object_list_processor.h"
-#include "rendering_graph_node.h"
-#include "save_file.h"
-#include "skybox.h"
-#include "sound_init.h"
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/rendering_graph_node.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/skybox.h>
+#include <!sm64/src/game/sound_init.h>
 
 #define TOAD_STAR_1_REQUIREMENT 12
 #define TOAD_STAR_2_REQUIREMENT 25

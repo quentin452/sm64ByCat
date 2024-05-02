@@ -2,15 +2,15 @@
 #include <stdio.h>
 
 #include "sm64.h"
-#include "audio/external.h"
-#include "game_init.h"
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/game_init.h>
 #include "memory.h"
-#include "sound_init.h"
-#include "profiler.h"
-#include "buffers/buffers.h"
+#include <!sm64/src/game/sound_init.h>
+#include <!sm64/src/game/profiler.h>
+#include <!sm64/src/buffers/buffers.h>
 #include "segments.h"
-#include "main.h"
-#include "thread6.h"
+#include <!sm64/src/game/main.h>
+#include <!sm64/src/game/thread6.h>
 
 /**
  * WARNING!

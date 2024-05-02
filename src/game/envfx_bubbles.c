@@ -1,14 +1,14 @@
 #include <ultra64.h>
 
 #include "sm64.h"
-#include "game_init.h"
+#include <!sm64/src/game/game_init.h>
 #include "memory.h"
-#include "envfx_snow.h"
-#include "envfx_bubbles.h"
-#include "engine/surface_collision.h"
-#include "engine/math_util.h"
-#include "engine/behavior_script.h"
-#include "audio/external.h"
+#include <!sm64/src/game/envfx_snow.h>
+#include <!sm64/src/game/envfx_bubbles.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/behavior_script.h>
+#include <!sm64/src/audio/external.h>
 #include "textures.h"
 
 extern void interpolate_vectors_s16(Vec3s res, Vec3s a, Vec3s b);

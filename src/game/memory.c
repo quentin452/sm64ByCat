@@ -5,10 +5,10 @@
 
 #define INCLUDED_FROM_MEMORY_C
 
-#include "buffers/buffers.h"
-#include "decompress.h"
-#include "game_init.h"
-#include "main.h"
+#include <!sm64/src/buffers/buffers.h>
+#include <!sm64/src/game/decompress.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/main.h>
 #include "memory.h"
 #include "segment_symbols.h"
 #include "segments.h"

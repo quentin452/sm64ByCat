@@ -1,7 +1,7 @@
 #ifndef MOVING_TEXTURE_MACROS_H
 #define MOVING_TEXTURE_MACROS_H
 
-#include "game/moving_texture.h"
+#include <!sm64/src/game/moving_texture.h>
 
 // From gMovingTextureIdList
 #define TEXTURE_WATER 0

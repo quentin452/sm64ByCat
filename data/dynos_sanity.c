@@ -1,6 +1,6 @@
 #include "dynos.c.h"
-#include "audio/internal.h"
-#include "engine/graph_node.h"
+#include <!sm64/src/audio/internal.h>
+#include <!sm64/src/engine/graph_node.h>
 
 bool dynos_sanity_check_geo(s16 graphNodeType) {
     return (graphNodeType == GRAPH_NODE_TYPE_ROOT)

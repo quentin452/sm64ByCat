@@ -1,14 +1,14 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "game/debug.h"
-#include "game/level_update.h"
-#include "game/mario.h"
-#include "game/object_list_processor.h"
-#include "surface_collision.h"
-#include "surface_load.h"
-#include "math_util.h"
-#include "game/game_init.h"
+#include <!sm64/src/game/debug.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/engine/surface_load.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/game_init.h>
 
 /**************************************************
  *                      WALLS                     *

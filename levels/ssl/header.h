@@ -2,7 +2,7 @@
 #define SSL_HEADER_H
 
 #include "types.h"
-#include "game/moving_texture.h"
+#include <!sm64/src/game/moving_texture.h>
 
 // geo
 extern const GeoLayout ssl_geo_0005C0[];

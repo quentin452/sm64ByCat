@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <ultra64.h>
 
-#include "controller_api.h"
+#include <!sm64/src/pc/controller/controller_api.h>
 
 static FILE *fp;
 

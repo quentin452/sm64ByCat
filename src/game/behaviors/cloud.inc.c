@@ -1,5 +1,5 @@
 
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 /**
  * Behavior for bhvCloud and bhvCloudPart.
  * bhvCloud includes both fwoosh and the cloud that lakitu rides (both nice and

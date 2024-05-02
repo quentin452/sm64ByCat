@@ -1,6 +1,6 @@
 #include <ultra64.h>
 #include "sm64.h"
-#include "game/ingame_menu.h"
+#include <!sm64/src/game/ingame_menu.h>
 
 #include "make_const_nonconst.h"
 

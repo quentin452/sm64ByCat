@@ -1,10 +1,10 @@
 #include <ultra64.h>
 #include "sm64.h"
 
-#include "geo_layout.h"
-#include "math_util.h"
-#include "game/memory.h"
-#include "graph_node.h"
+#include <!sm64/src/engine/geo_layout.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/engine/graph_node.h>
 
 typedef void (*GeoLayoutCommandProc)(void);
 

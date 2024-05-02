@@ -5,7 +5,7 @@
 #include <string.h>
 #include <SDL/SDL.h>
 
-#include "audio_api.h"
+#include <!sm64/src/pc/audio/audio_api.h>
 
 #define SNDPACKETLEN (8 * 1024)
 

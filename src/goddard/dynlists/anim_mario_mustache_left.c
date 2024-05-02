@@ -1,7 +1,7 @@
 #include <PR/ultratypes.h>
 
-#include "animdata.h"
-#include "../gd_types.h"
+#include <!sm64/src/goddard/dynlists/animdata.h>
+#include <!sm64/src/goddard/gd_types.h>
 
 /* @ 0400C700 */
 s16 animdata_mario_mustache_left_1[820][3] = {

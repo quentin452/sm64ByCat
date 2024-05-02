@@ -1,15 +1,15 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "mario_actions_object.h"
+#include <!sm64/src/game/mario_actions_object.h>
 #include "types.h"
-#include "mario_step.h"
-#include "mario.h"
-#include "audio/external.h"
-#include "interaction.h"
+#include <!sm64/src/game/mario_step.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/interaction.h>
 #include "audio_defines.h"
-#include "engine/math_util.h"
-#include "thread6.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/thread6.h>
 
 /**
  * Used by act_punching() to determine Mario's forward velocity during each

@@ -1,5 +1,5 @@
 
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 /**
  * Behavior for bhvEnemyLakitu.
  * Lakitu comes before it spawned spinies in processing order.

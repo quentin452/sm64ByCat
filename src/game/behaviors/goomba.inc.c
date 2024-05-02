@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 /**
  * Behavior for bhvGoomba and bhvGoombaTripletSpawner,
  * Goombas can either be spawned individually, or spawned by a triplet spawner.

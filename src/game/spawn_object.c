@@ -1,16 +1,16 @@
 #include <PR/ultratypes.h>
-#include "../pc/configfile.h"
-#include "audio/external.h"
-#include "engine/geo_layout.h"
-#include "engine/graph_node.h"
-#include "engine/math_util.h"
-#include "engine/surface_collision.h"
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/engine/geo_layout.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/surface_collision.h>
 #include "level_table.h"
 #include "object_constants.h"
 #include "object_fields.h"
-#include "object_helpers.h"
-#include "object_list_processor.h"
-#include "spawn_object.h"
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/spawn_object.h>
 #include "types.h"
 
 /**

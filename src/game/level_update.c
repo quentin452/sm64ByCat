@@ -4,23 +4,23 @@
 #include "sm64.h"
 #include "seq_ids.h"
 #include "dialog_ids.h"
-#include "audio/external.h"
-#include "level_update.h"
-#include "game_init.h"
-#include "level_update.h"
-#include "main.h"
-#include "engine/math_util.h"
-#include "engine/graph_node.h"
-#include "area.h"
-#include "save_file.h"
-#include "sound_init.h"
-#include "mario.h"
-#include "camera.h"
-#include "object_list_processor.h"
-#include "ingame_menu.h"
-#include "obj_behaviors.h"
-#include "save_file.h"
-#include "debug_course.h"
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/main.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/sound_init.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/ingame_menu.h>
+#include <!sm64/src/game/obj_behaviors.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/debug_course.h>
 #ifdef VERSION_EU
 #include "memory.h"
 #include "eu_translation.h"
@@ -28,12 +28,12 @@
 #endif
 #include "level_table.h"
 #include "course_table.h"
-#include "thread6.h"
+#include <!sm64/src/game/thread6.h>
 #include "../../include/libc/stdlib.h"
 
-#include "pc/pc_main.h"
-#include "pc/cliopts.h"
-#include "pc/configfile.h"
+#include <!sm64/src/pc/pc_main.h>
+#include <!sm64/src/pc/cliopts.h>
+#include <!sm64/src/pc/configfile.h>
 
 #define PLAY_MODE_NORMAL 0
 #define PLAY_MODE_PAUSED 2

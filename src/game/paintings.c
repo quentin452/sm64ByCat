@@ -1,21 +1,21 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "area.h"
-#include "engine/graph_node.h"
-#include "engine/surface_collision.h"
-#include "game_init.h"
-#include "geo_misc.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/geo_misc.h>
 #include "levels/castle_inside/header.h"
 #include "levels/hmc/header.h"
 #include "levels/ttm/header.h"
-#include "mario.h"
+#include <!sm64/src/game/mario.h>
 #include "memory.h"
-#include "moving_texture.h"
-#include "object_list_processor.h"
-#include "paintings.h"
-#include "save_file.h"
-#include "segment2.h"
+#include <!sm64/src/game/moving_texture.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/paintings.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/segment2.h>
 
 /**
  * @file paintings.c

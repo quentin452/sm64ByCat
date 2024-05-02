@@ -12,8 +12,8 @@
 #endif
 
 #include "macros.h"
-#include "../platform.h"
-#include "fs.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/fs/fs.h>
 
 char fs_gamedir[SYS_MAX_PATH] = "";
 char fs_writepath[SYS_MAX_PATH] = "";

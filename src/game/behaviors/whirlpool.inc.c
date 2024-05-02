@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 // whirlpool.c.inc
 
 static struct ObjectHitbox sWhirlpoolHitbox = {

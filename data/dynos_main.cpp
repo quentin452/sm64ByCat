@@ -2,9 +2,9 @@
 extern "C" {
 #include "sm64.h"
 #include "level_commands.h"
-#include "game/level_update.h"
-#include "game/options_menu.h"
-#include "game/object_list_processor.h"
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/options_menu.h>
+#include <!sm64/src/game/object_list_processor.h>
 extern s16 gMenuMode;
 extern s8 gDialogBoxState;
 #ifdef OMM_DEFINES_H
@@ -40,13 +40,15 @@ static void DynOS_Coop_ReceivePacket(struct Packet *p) {
 static void DynOS_Coop_Update() {
     if (sDynosCoopCustomPacketId == 0xFF) {
         network_register_mod((char *) "DynOS.1.0.coop");
-        sDynosCoopCustomPacketId = network_register_custom_packet(DynOS_Coop_SendPacket, DynOS_Coop_ReceivePacket);
+        sDynosCoopCustomPacketId =
+            network_register_custom_packet(DynOS_Coop_SendPacket, DynOS_Coop_ReceivePacket);
     }
 
     // Commands
     switch (sDynosCoopCommand.mType) {
         case DYNOS_COOP_COMMAND_WARP_TO_LEVEL: {
-            DynOS_Warp_ToLevel(sDynosCoopCommand.mLevel, sDynosCoopCommand.mArea, sDynosCoopCommand.mAct);
+            DynOS_Warp_ToLevel(sDynosCoopCommand.mLevel, sDynosCoopCommand.mArea,
+                               sDynosCoopCommand.mAct);
         } break;
 
         case DYNOS_COOP_COMMAND_WARP_TO_CASTLE: {

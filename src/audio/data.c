@@ -1,7 +1,7 @@
 #include <ultra64.h>
 
-#include "data.h"
-#include "effects.h"
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/effects.h>
 
 extern struct OSMesgQueue OSMesgQueue0;
 extern struct OSMesgQueue OSMesgQueue1;

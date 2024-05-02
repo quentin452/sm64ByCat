@@ -1,19 +1,19 @@
 #include <ultra64.h>
 #include "sm64.h"
-#include "heap.h"
-#include "load.h"
-#include "data.h"
-#include "seqplayer.h"
-#include "external.h"
-#include "playback.h"
-#include "synthesis.h"
-#include "game/level_update.h"
-#include "game/object_list_processor.h"
-#include "game/camera.h"
+#include <!sm64/src/audio/heap.h>
+#include <!sm64/src/audio/load.h>
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/seqplayer.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/audio/playback.h>
+#include <!sm64/src/audio/synthesis.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/camera.h>
 #include "seq_ids.h"
 #include "dialog_ids.h"
 #include "level_table.h"
-#include "pc/pc_main.h"
+#include <!sm64/src/pc/pc_main.h>
 
 #ifdef VERSION_EU
 #define EU_FLOAT(x) x##f

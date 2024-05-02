@@ -1,11 +1,11 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "debug.h"
-#include "interaction.h"
-#include "mario.h"
-#include "object_list_processor.h"
-#include "spawn_object.h"
+#include <!sm64/src/game/debug.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/spawn_object.h>
 
 struct Object *debug_print_obj_collision(struct Object *a) {
     struct Object *sp24;

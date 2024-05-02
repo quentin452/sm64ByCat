@@ -1,21 +1,21 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "level_update.h"
+#include <!sm64/src/game/level_update.h>
 #include "memory.h"
-#include "engine/math_util.h"
-#include "area.h"
-#include "save_file.h"
-#include "sound_init.h"
-#include "engine/surface_collision.h"
-#include "interaction.h"
-#include "mario.h"
-#include "mario_step.h"
-#include "camera.h"
-#include "audio/external.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/sound_init.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/mario_step.h>
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/audio/external.h>
 #include "behavior_data.h"
 #include "level_table.h"
-#include "thread6.h"
+#include <!sm64/src/game/thread6.h>
 
 #define MIN_SWIM_STRENGTH 160
 #define MIN_SWIM_SPEED 16.0f

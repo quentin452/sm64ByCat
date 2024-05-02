@@ -1,13 +1,13 @@
 #include <ultra64.h>
 
-#include "synthesis.h"
-#include "heap.h"
-#include "data.h"
-#include "load.h"
-#include "seqplayer.h"
-#include "external.h"
+#include <!sm64/src/audio/synthesis.h>
+#include <!sm64/src/audio/heap.h>
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/load.h>
+#include <!sm64/src/audio/seqplayer.h>
+#include <!sm64/src/audio/external.h>
 
-#include "../pc/mixer.h"
+#include <!sm64/src/pc/mixer.h>
 
 #define DMEM_ADDR_TEMP 0x0
 #define DMEM_ADDR_UNCOMPRESSED_NOTE 0x180

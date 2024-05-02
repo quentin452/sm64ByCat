@@ -1,20 +1,20 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "mario.h"
-#include "audio/external.h"
-#include "engine/math_util.h"
-#include "engine/surface_collision.h"
-#include "mario_step.h"
-#include "game_init.h"
-#include "area.h"
-#include "interaction.h"
-#include "mario_actions_object.h"
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/mario_step.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/mario_actions_object.h>
 #include "memory.h"
 #include "behavior_data.h"
-#include "thread6.h"
-#include "pc/configfile.h"
-#include "pc/cheats.h"
+#include <!sm64/src/game/thread6.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/cheats.h>
 
 struct LandingAction {
     s16 numFrames;

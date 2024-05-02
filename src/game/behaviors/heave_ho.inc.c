@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 // heave_ho.c.inc
 
 s16 D_8032F460[][2] = {

@@ -1,13 +1,13 @@
 #include <PR/ultratypes.h>
 
-#include "area.h"
-#include "engine/math_util.h"
-#include "geo_misc.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/geo_misc.h>
 #include "gfx_dimensions.h"
-#include "level_update.h"
+#include <!sm64/src/game/level_update.h>
 #include "memory.h"
-#include "save_file.h"
-#include "segment2.h"
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/segment2.h>
 #include "sm64.h"
 
 /**

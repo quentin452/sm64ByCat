@@ -1,6 +1,6 @@
 #include <ultra64.h>
 
-#include "buffers.h"
+#include <!sm64/src/buffers/buffers.h>
 
 ALIGNED8 u8 gDecompressionHeap[0xD000];
 #if defined(VERSION_EU) || defined(VERSION_SH)

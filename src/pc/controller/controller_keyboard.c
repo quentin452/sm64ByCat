@@ -1,14 +1,14 @@
 #include <stdbool.h>
 #include <ultra64.h>
 
-#include "controller_api.h"
+#include <!sm64/src/pc/controller/controller_api.h>
 
 #ifdef TARGET_WEB
 #include "controller_emscripten_keyboard.h"
 #endif
 
-#include "../configfile.h"
-#include "controller_keyboard.h"
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/controller/controller_keyboard.h>
 
 static int keyboard_buttons_down;
 

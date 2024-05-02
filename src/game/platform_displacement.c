@@ -1,12 +1,12 @@
 #include <PR/ultratypes.h>
 
-#include "engine/math_util.h"
-#include "engine/surface_collision.h"
-#include "level_update.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/level_update.h>
 #include "object_fields.h"
-#include "object_helpers.h"
-#include "object_list_processor.h"
-#include "platform_displacement.h"
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/platform_displacement.h>
 #include "types.h"
 
 u16 D_8032FEC0 = 0;

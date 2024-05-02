@@ -1,9 +1,9 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "object_helpers.h"
-#include "macro_special_objects.h"
-#include "object_list_processor.h"
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/macro_special_objects.h>
+#include <!sm64/src/game/object_list_processor.h>
 
 #include "behavior_data.h"
 

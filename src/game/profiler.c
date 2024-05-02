@@ -3,8 +3,8 @@
 #include <PR/gbi.h>
 
 #include "sm64.h"
-#include "profiler.h"
-#include "game_init.h"
+#include <!sm64/src/game/profiler.h>
+#include <!sm64/src/game/game_init.h>
 
 s16 gProfilerMode = 0;
 

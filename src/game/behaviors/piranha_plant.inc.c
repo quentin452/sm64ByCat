@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 /**
  * Behavior for bhvPiranhaPlant.
  * This controls Piranha Plants, which alternate between sleeping, attacking,

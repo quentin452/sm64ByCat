@@ -5,8 +5,8 @@
 #include <stdio.h>
 
 #include "macros.h"
-#include "../platform.h"
-#include "fs.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/fs/fs.h>
 
 static void *pack_dir_mount(const char *realpath) {
     if (!fs_sys_dir_exists(realpath))

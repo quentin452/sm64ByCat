@@ -11,36 +11,36 @@
 
 #include "sm64.h"
 
-#include "game/memory.h"
-#include "audio/external.h"
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/audio/external.h>
 
-#include "gfx/gfx_pc.h"
+#include <!sm64/src/pc/gfx/gfx_pc.h>
 
-#include "gfx/gfx_opengl.h"
-#include "gfx/gfx_direct3d11.h"
-#include "gfx/gfx_direct3d12.h"
+#include <!sm64/src/pc/gfx/gfx_opengl.h>
+#include <!sm64/src/pc/gfx/gfx_direct3d11.h>
+#include <!sm64/src/pc/gfx/gfx_direct3d12.h>
 
-#include "gfx/gfx_dxgi.h"
-#include "gfx/gfx_sdl.h"
+#include <!sm64/src/pc/gfx/gfx_dxgi.h>
+#include <!sm64/src/pc/gfx/gfx_sdl.h>
 
-#include "audio/audio_api.h"
-#include "audio/audio_sdl.h"
-#include "audio/audio_null.h"
+#include <!sm64/src/pc/audio/audio_api.h>
+#include <!sm64/src/pc/audio/audio_sdl.h>
+#include <!sm64/src/pc/audio/audio_null.h>
 
-#include "pc_main.h"
-#include "thread.h"
-#include "cliopts.h"
-#include "configfile.h"
-#include "controller/controller_api.h"
-#include "controller/controller_keyboard.h"
-#include "fs/fs.h"
+#include <!sm64/src/pc/pc_main.h>
+#include <!sm64/src/pc/thread.h>
+#include <!sm64/src/pc/cliopts.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/controller/controller_api.h>
+#include <!sm64/src/pc/controller/controller_keyboard.h>
+#include <!sm64/src/pc/fs/fs.h>
 
-#include "game/game_init.h"
-#include "game/main.h"
-#include "game/thread6.h"
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/main.h>
+#include <!sm64/src/game/thread6.h>
 
 #ifdef DISCORDRPC
-#include "pc/discord/discordrpc.h"
+#include <!sm64/src/pc/discord/discordrpc.h>
 #endif
 
 OSMesg D_80339BEC;
@@ -115,7 +115,7 @@ bool pc_check_gameloop_wait(void) {
 
 static bool inited = false;
 
-#include "game/display.h" // for gGlobalTimer
+#include <!sm64/src/game/display.h> // for gGlobalTimer
 void send_display_list(struct SPTask *spTask) {
     if (!inited)
         return;

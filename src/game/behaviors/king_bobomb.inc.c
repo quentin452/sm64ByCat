@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 // king_bobomb.c.inc
 
 // Copy of geo_update_projectile_pos_from_parent

@@ -1,8 +1,8 @@
 #include <PR/ultratypes.h>
 
-#include "dynlist_macros.h"
-#include "dynlists.h"
-#include "../dynlist_proc.h"
+#include <!sm64/src/goddard/dynlists/dynlist_macros.h>
+#include <!sm64/src/goddard/dynlists/dynlists.h>
+#include <!sm64/src/goddard/dynlist_proc.h>
 
 #define VTX_NUM 48
 /* @ 04003610 */

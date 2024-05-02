@@ -1,9 +1,9 @@
 // early unused test dynlist
 #include <PR/ultratypes.h>
 
-#include "dynlist_macros.h"
-#include "dynlists.h"
-#include "../dynlist_proc.h"
+#include <!sm64/src/goddard/dynlists/dynlist_macros.h>
+#include <!sm64/src/goddard/dynlists/dynlists.h>
+#include <!sm64/src/goddard/dynlist_proc.h>
 // maybe move types into the dynlists.h file?
 
 struct DynList dynlist_test_cube[67] = {

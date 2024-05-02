@@ -1,21 +1,21 @@
-#include "../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 
 #include <ultra64.h>
 
 #include "sm64.h"
 #include "behavior_data.h"
-#include "behavior_script.h"
-#include "game/area.h"
-#include "game/behavior_actions.h"
-#include "game/game_init.h"
-#include "game/mario.h"
-#include "game/memory.h"
-#include "game/obj_behaviors_2.h"
-#include "game/object_helpers.h"
-#include "game/object_list_processor.h"
-#include "graph_node.h"
-#include "surface_collision.h"
-#include "pc/configfile.h"
+#include <!sm64/src/engine/behavior_script.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/behavior_actions.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/game/obj_behaviors_2.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/pc/configfile.h>
 // Macros for retrieving arguments from behavior scripts.
 #define BHV_CMD_GET_1ST_U8(index) (u8)((gCurBhvCommand[index] >> 24) & 0xFF) // unused
 #define BHV_CMD_GET_2ND_U8(index) (u8)((gCurBhvCommand[index] >> 16) & 0xFF)

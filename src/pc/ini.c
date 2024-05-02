@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "ini.h"
+#include <!sm64/src/pc/ini.h>
 
 /* Case insensitive string compare */
 static int strcmpci(const char *a, const char *b) {

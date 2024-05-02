@@ -1,13 +1,13 @@
 #include <ultra64.h>
 
 #include "sm64.h"
-#include "rendering_graph_node.h"
-#include "mario_misc.h"
-#include "skybox.h"
-#include "engine/math_util.h"
-#include "camera.h"
-#include "envfx_snow.h"
-#include "level_geo.h"
+#include <!sm64/src/game/rendering_graph_node.h>
+#include <!sm64/src/game/mario_misc.h>
+#include <!sm64/src/game/skybox.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/game/envfx_snow.h>
+#include <!sm64/src/game/level_geo.h>
 
 /**
  * Geo function that generates a displaylist for environment effects such as

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <emscripten/html5.h>
 #include "macros.h"
-#include "controller_keyboard.h"
+#include <!sm64/src/pc/controller/controller_keyboard.h>
 
 static const struct {
     const char *code;

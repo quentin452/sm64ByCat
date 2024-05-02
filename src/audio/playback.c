@@ -1,13 +1,13 @@
 #include <ultra64.h>
 
-#include "heap.h"
-#include "data.h"
-#include "load.h"
-#include "seqplayer.h"
-#include "playback.h"
-#include "synthesis.h"
-#include "effects.h"
-#include "external.h"
+#include <!sm64/src/audio/heap.h>
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/load.h>
+#include <!sm64/src/audio/seqplayer.h>
+#include <!sm64/src/audio/playback.h>
+#include <!sm64/src/audio/synthesis.h>
+#include <!sm64/src/audio/effects.h>
+#include <!sm64/src/audio/external.h>
 
 #ifdef VERSION_EU
 void note_set_vel_pan_reverb(struct Note *note, f32 velocity, u8 pan, u8 reverb) {

@@ -1,6 +1,6 @@
 #include <PR/ultratypes.h>
 
-#include "sfx.h"
+#include <!sm64/src/goddard/sfx.h>
 
 static u32 sSfxToPlay;
 static u32 sLastPlayedSfx;

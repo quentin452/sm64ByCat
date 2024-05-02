@@ -6,10 +6,10 @@
 #include "segment_symbols.h"
 #include "level_commands.h"
 
-#include "game/area.h"
-#include "game/level_update.h"
-#include "menu/file_select.h"
-#include "menu/star_select.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/menu/file_select.h>
+#include <!sm64/src/menu/star_select.h>
 
 #include "levels/scripts.h"
 

@@ -1,20 +1,20 @@
 #include <ultra64.h>
 
-#include "area.h"
-#include "audio/external.h"
-#include "engine/graph_node.h"
-#include "engine/math_util.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/math_util.h>
 #include "level_table.h"
-#include "level_update.h"
-#include "main.h"
-#include "paintings.h"
-#include "print.h"
-#include "profiler.h"
-#include "save_file.h"
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/main.h>
+#include <!sm64/src/game/paintings.h>
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/profiler.h>
+#include <!sm64/src/game/save_file.h>
 #include "seq_ids.h"
 #include "sm64.h"
-#include "sound_init.h"
-#include "thread6.h"
+#include <!sm64/src/game/sound_init.h>
+#include <!sm64/src/game/thread6.h>
 
 #define MUSIC_NONE 0xFFFF
 

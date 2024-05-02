@@ -1,21 +1,21 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "area.h"
-#include "audio/data.h"
-#include "audio/external.h"
-#include "camera.h"
-#include "engine/graph_node.h"
-#include "engine/math_util.h"
-#include "game_init.h"
-#include "interaction.h"
-#include "level_update.h"
-#include "mario.h"
-#include "mario_step.h"
-#include "save_file.h"
-#include "thread6.h"
-#include "bettercamera.h"
-#include "pc/cheats.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/mario_step.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/thread6.h>
+#include <!sm64/src/game/bettercamera.h>
+#include <!sm64/src/pc/cheats.h>
 
 void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3) {
     s32 animFrame = m->marioObj->header.gfx.unk38.animFrame;

@@ -1,23 +1,23 @@
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 
-#include "audio/external.h"
+#include <!sm64/src/audio/external.h>
 #include "behavior_data.h"
 #include "dialog_ids.h"
-#include "engine/behavior_script.h"
-#include "engine/graph_node.h"
-#include "engine/math_util.h"
-#include "file_select.h"
-#include "game/area.h"
-#include "game/game_init.h"
-#include "game/ingame_menu.h"
-#include "game/object_helpers.h"
-#include "game/object_list_processor.h"
-#include "game/print.h"
-#include "game/save_file.h"
-#include "game/segment2.h"
-#include "game/segment7.h"
-#include "game/spawn_object.h"
+#include <!sm64/src/engine/behavior_script.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/menu/file_select.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/ingame_menu.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/segment2.h>
+#include <!sm64/src/game/segment7.h>"
+#include <!sm64/src/game/spawn_object.h>
 #include "sm64.h"
 #include "text_strings.h"
 
@@ -2624,7 +2624,7 @@ void print_score_file_star_score(s8 fileIndex, s16 courseIndex, s16 x, s16 y) {
 #endif
 
 #ifdef VERSION_EU
-#include "game/segment7.h"
+#include <!sm64/src/game/segment7.h>"
 #endif
 
 /**

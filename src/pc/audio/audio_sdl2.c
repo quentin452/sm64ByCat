@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "audio_api.h"
+#include <!sm64/src/pc/audio/audio_api.h>
 
 static SDL_AudioDeviceID dev;
 

@@ -1,8 +1,8 @@
 #include "dynos.cpp.h"
 extern "C" {
 #include "object_fields.h"
-#include "game/level_update.h"
-#include "game/object_list_processor.h"
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/object_list_processor.h>
 }
 
 //
@@ -17,8 +17,10 @@ STATIC_STORAGE(Array<GraphNode *>, GraphNodeFreeList);
 #define sGraphNodeFreeList __GraphNodeFreeList()
 
 static void DynOS_Gfx_FreeUnloaded() {
-    for (auto &_GfxData : sGfxDataFreeList) DynOS_Gfx_Free(_GfxData);
-    for (auto &_GraphNode : sGraphNodeFreeList) Delete(_GraphNode);
+    for (auto &_GfxData : sGfxDataFreeList)
+        DynOS_Gfx_Free(_GfxData);
+    for (auto &_GraphNode : sGraphNodeFreeList)
+        Delete(_GraphNode);
     sGfxDataFreeList.Clear();
     sGraphNodeFreeList.Clear();
 }
@@ -56,7 +58,7 @@ static s32 RetrieveCurrentAnimationIndex(struct Object *aObject) {
 // Must be called twice, before and after geo_set_animation_globals
 void DynOS_Gfx_SwapAnimations(void *aPtr) {
     static Animation *pDefaultAnimation = NULL;
-    static Animation  sGfxDataAnimation;
+    static Animation sGfxDataAnimation;
 
     // Does the object has a model?
     struct Object *_Object = (struct Object *) aPtr;
@@ -86,7 +88,8 @@ void DynOS_Gfx_SwapAnimations(void *aPtr) {
         }
 
         // Animation index
-        s32 _AnimIndex = (_Object == gMarioObject ? RetrieveCurrentMarioAnimationIndex() : RetrieveCurrentAnimationIndex(_Object));
+        s32 _AnimIndex = (_Object == gMarioObject ? RetrieveCurrentMarioAnimationIndex()
+                                                  : RetrieveCurrentAnimationIndex(_Object));
         if (_AnimIndex == -1) {
             return;
         }
@@ -106,7 +109,7 @@ void DynOS_Gfx_SwapAnimations(void *aPtr) {
             _Object->header.gfx.unk38.curAnim = &sGfxDataAnimation;
         }
 
-    // Restore the default animation
+        // Restore the default animation
     } else {
         _Object->header.gfx.unk38.curAnim = pDefaultAnimation;
         pDefaultAnimation = NULL;
@@ -130,20 +133,24 @@ static void DynOS_Gfx_UpdateModelData(struct Object *aObject, s32 aActorIndex) {
         if (_Enabled && _ActorGfx->mPackIndex == -1) {
 
             // Load Gfx data from binary
-            SysPath _Filename = fstring("%s/%s.bin", pDynosPacks[i]->mPath.begin(), DynOS_Geo_GetActorName(aActorIndex));
+            SysPath _Filename = fstring("%s/%s.bin", pDynosPacks[i]->mPath.begin(),
+                                        DynOS_Geo_GetActorName(aActorIndex));
             GfxData *_GfxData = DynOS_Gfx_LoadFromBinary(_Filename);
             if (_GfxData == NULL) {
                 continue;
             }
 
             // Mark previous model data as unload
-            if (_ActorGfx->mGfxData) sGfxDataFreeList.Add(_ActorGfx->mGfxData);
-            if (_ActorGfx->mGraphNode) sGraphNodeFreeList.Add(_ActorGfx->mGraphNode);
+            if (_ActorGfx->mGfxData)
+                sGfxDataFreeList.Add(_ActorGfx->mGfxData);
+            if (_ActorGfx->mGraphNode)
+                sGraphNodeFreeList.Add(_ActorGfx->mGraphNode);
 
             // Load graph node and animations
             _ActorGfx->mPackIndex = i;
-            _ActorGfx->mGfxData   = _GfxData;
-            _ActorGfx->mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode((*(_GfxData->mGeoLayouts.end() - 1))->mData, false);
+            _ActorGfx->mGfxData = _GfxData;
+            _ActorGfx->mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(
+                (*(_GfxData->mGeoLayouts.end() - 1))->mData, false);
             _ActorGfx->mGraphNode->georef = DynOS_Geo_GetActorLayout(aActorIndex);
             break;
         }
@@ -153,13 +160,16 @@ static void DynOS_Gfx_UpdateModelData(struct Object *aObject, s32 aActorIndex) {
         else if (!_Enabled && _ActorGfx->mPackIndex == i) {
 
             // Mark previous model data as unload
-            if (_ActorGfx->mGfxData) sGfxDataFreeList.Add(_ActorGfx->mGfxData);
-            if (_ActorGfx->mGraphNode) sGraphNodeFreeList.Add(_ActorGfx->mGraphNode);
+            if (_ActorGfx->mGfxData)
+                sGfxDataFreeList.Add(_ActorGfx->mGfxData);
+            if (_ActorGfx->mGraphNode)
+                sGraphNodeFreeList.Add(_ActorGfx->mGraphNode);
 
             // Default
             _ActorGfx->mPackIndex = -1;
-            _ActorGfx->mGfxData   = NULL;
-            _ActorGfx->mGraphNode = (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Geo_GetActorLayout(aActorIndex), false);
+            _ActorGfx->mGfxData = NULL;
+            _ActorGfx->mGraphNode =
+                (GraphNode *) DynOS_Geo_GetGraphNode(DynOS_Geo_GetActorLayout(aActorIndex), false);
         }
     }
 
@@ -180,7 +190,8 @@ void DynOS_Gfx_Update() {
     // Update per object
     for (s32 _List = 0; _List != NUM_OBJ_LISTS; ++_List) {
         struct Object *_Head = (struct Object *) &gObjectLists[_List];
-        for (struct Object *_Object = (struct Object *) _Head->header.next; _Object != _Head; _Object = (struct Object *) _Object->header.next) {
+        for (struct Object *_Object = (struct Object *) _Head->header.next; _Object != _Head;
+             _Object = (struct Object *) _Object->header.next) {
 
             // Does the object has a model?
             if (!_Object->header.gfx.sharedChild) {

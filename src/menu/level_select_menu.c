@@ -1,15 +1,15 @@
 #include <PR/ultratypes.h>
 
-#include "audio/external.h"
-#include "engine/math_util.h"
-#include "game/area.h"
-#include "game/game_init.h"
-#include "game/level_update.h"
-#include "game/main.h"
-#include "game/memory.h"
-#include "game/print.h"
-#include "game/save_file.h"
-#include "game/sound_init.h"
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/main.h>
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/sound_init.h>
 #include "level_table.h"
 #include "seq_ids.h"
 #include "sm64.h"

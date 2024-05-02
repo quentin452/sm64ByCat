@@ -2,11 +2,11 @@
 #include "lib/src/osContInternal.h"
 #include "macros.h"
 
-#include "../configfile.h"
+#include <!sm64/src/pc/configfile.h>
 
-#include "controller_recorded_tas.h"
-#include "controller_keyboard.h"
-#include "controller_sdl.h"
+#include <!sm64/src/pc/controller/controller_recorded_tas.h>
+#include <!sm64/src/pc/controller/controller_keyboard.h>
+#include <!sm64/src/pc/controller/controller_sdl.h>
 
 // Analog camera movement by Pathétique (github.com/vrmiguel), y0shin and Mors
 // Contribute or communicate bugs at github.com/vrmiguel/sm64-analog-camera

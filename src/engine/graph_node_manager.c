@@ -2,7 +2,7 @@
 
 #include "types.h"
 
-#include "graph_node.h"
+#include <!sm64/src/engine/graph_node.h>
 
 #if IS_64_BIT
 static s16 next_s16_in_geo_script(s16 **src) {

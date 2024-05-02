@@ -1,16 +1,16 @@
 #include <PR/ultratypes.h>
 
 #include "behavior_data.h"
-#include "debug.h"
-#include "engine/behavior_script.h"
-#include "engine/surface_collision.h"
-#include "game_init.h"
-#include "main.h"
+#include <!sm64/src/game/debug.h>
+#include <!sm64/src/engine/behavior_script.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/main.h>
 #include "object_constants.h"
 #include "object_fields.h"
-#include "object_helpers.h"
-#include "object_list_processor.h"
-#include "print.h"
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/print.h>
 #include "sm64.h"
 #include "types.h"
 

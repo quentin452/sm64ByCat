@@ -1,10 +1,10 @@
 #include <PR/ultratypes.h>
 
-#include "dynlist_macros.h"
-#include "dynlists.h"
-#include "animdata.h"
-#include "../dynlist_proc.h"
-#include "../shape_helper.h"
+#include <!sm64/src/goddard/dynlists/dynlist_macros.h>
+#include <!sm64/src/goddard/dynlists/dynlists.h>
+#include <!sm64/src/goddard/dynlists/animdata.h>
+#include <!sm64/src/goddard/dynlist_proc.h>
+#include <!sm64/src/goddard/shape_helper.h>
 
 /* @ 04004F90 */
 struct DynList dynlist_mario_master[1026] = {

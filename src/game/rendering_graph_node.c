@@ -1,15 +1,15 @@
 #include <PR/ultratypes.h>
 
-#include "area.h"
+#include <!sm64/src/game/area.h>
 #include "data/dynos.c.h"
-#include "engine/math_util.h"
-#include "game_init.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/game_init.h>
 #include "gfx_dimensions.h"
-#include "main.h"
+#include <!sm64/src/game/main.h>
 #include "memory.h"
-#include "print.h"
-#include "rendering_graph_node.h"
-#include "shadow.h"
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/rendering_graph_node.h>
+#include <!sm64/src/game/shadow.h>
 #include "sm64.h"
 
 /**

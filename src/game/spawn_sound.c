@@ -1,14 +1,14 @@
 #include <PR/ultratypes.h>
 
-#include "audio/external.h"
+#include <!sm64/src/audio/external.h>
 #include "behavior_data.h"
-#include "engine/behavior_script.h"
-#include "engine/graph_node.h"
-#include "object_helpers.h"
-#include "object_list_processor.h"
+#include <!sm64/src/engine/behavior_script.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
 #include "sm64.h"
-#include "spawn_sound.h"
-#include "thread6.h"
+#include <!sm64/src/game/spawn_sound.h>
+#include <!sm64/src/game/thread6.h>
 
 /*
  * execute an object's current sound state with a provided array

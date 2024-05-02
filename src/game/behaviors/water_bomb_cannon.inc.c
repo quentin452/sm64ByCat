@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 // water_bomb_cannon.inc.c
 
 void bhv_bubble_cannon_barrel_loop(void) {

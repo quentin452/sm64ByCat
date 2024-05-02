@@ -1,11 +1,11 @@
 #include <PR/ultratypes.h>
 
-#include "debug_utils.h"
-#include "gd_main.h"
-#include "gd_memory.h"
+#include <!sm64/src/goddard/debug_utils.h>
+#include <!sm64/src/goddard/gd_main.h>
+#include <!sm64/src/goddard/gd_memory.h>
 #include "macros.h"
-#include "objects.h"
-#include "renderer.h"
+#include <!sm64/src/goddard/objects.h>
+#include <!sm64/src/goddard/renderer.h>
 
 /* This file was spilt out of debug_memory.asm based on rodata.
  * The rodata for functions after this "__main__" function have string literals following

@@ -1,16 +1,16 @@
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 
-#include "area.h"
-#include "camera.h"
-#include "engine/graph_node.h"
-#include "engine/math_util.h"
-#include "game/game_init.h"
-#include "geo_misc.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/geo_misc.h>
 #include "gfx_dimensions.h"
 #include "memory.h"
-#include "screen_transition.h"
-#include "segment2.h"
+#include <!sm64/src/game/screen_transition.h>
+#include <!sm64/src/game/segment2.h>
 #include "sm64.h"
 
 u8 sTransitionColorFadeCount[4] = { 0 };

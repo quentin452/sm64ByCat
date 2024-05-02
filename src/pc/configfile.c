@@ -6,13 +6,13 @@
 #include <assert.h>
 #include <ctype.h>
 
-#include "platform.h"
-#include "configfile.h"
-#include "cliopts.h"
-#include "gfx/gfx_screen_config.h"
-#include "gfx/gfx_window_manager_api.h"
-#include "controller/controller_api.h"
-#include "fs/fs.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/cliopts.h>
+#include <!sm64/src/pc/gfx/gfx_screen_config.h>
+#include <!sm64/src/pc/gfx/gfx_window_manager_api.h>
+#include <!sm64/src/pc/controller/controller_api.h>
+#include <!sm64/src/pc/fs/fs.h>
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 

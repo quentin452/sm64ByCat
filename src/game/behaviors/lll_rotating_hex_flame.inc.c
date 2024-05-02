@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 // lll_rotating_hex_flame.c.inc
 
 void bhv_lll_rotating_hex_flame_loop(void) {

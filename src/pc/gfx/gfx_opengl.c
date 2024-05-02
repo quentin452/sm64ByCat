@@ -35,10 +35,10 @@
 #endif
 #endif
 
-#include "../platform.h"
-#include "../configfile.h"
-#include "gfx_cc.h"
-#include "gfx_rendering_api.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/gfx/gfx_cc.h>
+#include <!sm64/src/pc/gfx/gfx_rendering_api.h>
 
 #define TEX_CACHE_STEP 512
 

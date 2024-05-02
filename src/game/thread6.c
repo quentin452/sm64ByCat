@@ -1,9 +1,9 @@
 #include <ultra64.h>
 #include "macros.h"
 
-#include "buffers/buffers.h"
-#include "main.h"
-#include "thread6.h"
+#include <!sm64/src/buffers/buffers.h>
+#include <!sm64/src/game/main.h>
+#include <!sm64/src/game/thread6.h>
 
 static s8 D_SH_8030CCB4;
 static s32 sUnusedDisableRumble;

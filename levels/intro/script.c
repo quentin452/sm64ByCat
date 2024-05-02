@@ -6,9 +6,9 @@
 #include "segment_symbols.h"
 #include "level_commands.h"
 
-#include "game/area.h"
-#include "game/level_update.h"
-#include "menu/level_select_menu.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/menu/level_select_menu.h>
 
 #include "levels/scripts.h"
 #include "levels/menu/header.h"

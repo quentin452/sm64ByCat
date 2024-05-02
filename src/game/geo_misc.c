@@ -1,21 +1,21 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "geo_misc.h"
+#include <!sm64/src/game/geo_misc.h>
 
-#include "area.h"
-#include "engine/math_util.h"
-#include "level_update.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/level_update.h>
 #include "levels/castle_inside/header.h"
 #include "levels/ending/header.h"
 #include "levels/rr/header.h"
-#include "mario.h"
-#include "mario_actions_cutscene.h"
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/mario_actions_cutscene.h>
 #include "memory.h"
-#include "object_list_processor.h"
-#include "rendering_graph_node.h"
-#include "save_file.h"
-#include "segment2.h"
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/rendering_graph_node.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/segment2.h>
 
 /**
  * @file geo_misc.c

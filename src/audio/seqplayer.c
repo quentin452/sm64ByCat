@@ -1,12 +1,12 @@
 #include <PR/ultratypes.h>
 
-#include "data.h"
+#include <!sm64/src/audio/data.h>
 #include "data/dynos.c.h"
-#include "effects.h"
-#include "external.h"
-#include "heap.h"
-#include "load.h"
-#include "seqplayer.h"
+#include <!sm64/src/audio/effects.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/audio/heap.h>
+#include <!sm64/src/audio/load.h>
+#include <!sm64/src/audio/seqplayer.h>
 
 #define PORTAMENTO_IS_SPECIAL(x) ((x).mode & 0x80)
 #define PORTAMENTO_MODE(x) ((x).mode & ~0x80)
@@ -897,7 +897,7 @@ void seq_channel_layer_process_script(struct SequenceChannelLayer *layer) {
 }
 #elif defined(NON_MATCHING)
 // US/JP version with macros to simulate inlining by copt. Edit if you dare.
-#include "seq_channel_layer_process_script.h"
+#include <!sm64/src/audio/seq_channel_layer_process_script.h>
 #elif defined(VERSION_JP)
 GLOBAL_ASM("asm/non_matchings/seq_channel_layer_process_script_jp.s")
 #else

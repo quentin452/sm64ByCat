@@ -1,13 +1,13 @@
 #include <ultra64.h>
 
 #include "sm64.h"
-#include "engine/math_util.h"
-#include "engine/surface_collision.h"
-#include "mario.h"
-#include "audio/external.h"
-#include "game_init.h"
-#include "interaction.h"
-#include "mario_step.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/mario_step.h>
 
 static s16 sMovingSandSpeeds[] = { 12, 8, 4, 0 };
 

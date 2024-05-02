@@ -1,9 +1,9 @@
 #include <ultra64.h>
 
 #include "sm64.h"
-#include "engine/graph_node.h"
-#include "math_util.h"
-#include "surface_collision.h"
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/surface_collision.h>
 
 #include "trig_tables.inc.c"
 

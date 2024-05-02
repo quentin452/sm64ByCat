@@ -1,13 +1,13 @@
 #include <PR/ultratypes.h>
 
-#include "debug_utils.h"
-#include "gd_math.h"
-#include "gd_types.h"
-#include "joints.h"
+#include <!sm64/src/goddard/debug_utils.h>
+#include <!sm64/src/goddard/gd_math.h>
+#include <!sm64/src/goddard/gd_types.h>
+#include <!sm64/src/goddard/joints.h>
 #include "macros.h"
-#include "objects.h"
-#include "skin.h"
-#include "skin_movement.h"
+#include <!sm64/src/goddard/objects.h>
+#include <!sm64/src/goddard/skin.h>
+#include <!sm64/src/goddard/skin_movement.h>
 
 /* bss */
 struct ObjWeight *sSkinNetCurWeight;

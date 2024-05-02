@@ -1,18 +1,18 @@
 #include <ultra64.h>
 
 #include "sm64.h"
-#include "moving_texture.h"
-#include "area.h"
-#include "camera.h"
-#include "rendering_graph_node.h"
-#include "engine/math_util.h"
+#include <!sm64/src/game/moving_texture.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/game/rendering_graph_node.h>
+#include <!sm64/src/engine/math_util.h>
 #include "memory.h"
-#include "save_file.h"
-#include "segment2.h"
-#include "engine/surface_collision.h"
-#include "geo_misc.h"
-#include "rendering_graph_node.h"
-#include "object_list_processor.h"
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/segment2.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/geo_misc.h>
+#include <!sm64/src/game/rendering_graph_node.h>
+#include <!sm64/src/game/object_list_processor.h>
 
 /**
  * This file contains functions for generating display lists with moving textures

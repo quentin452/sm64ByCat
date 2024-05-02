@@ -1,10 +1,10 @@
 #include <PR/ultratypes.h>
 
-#include "engine/math_util.h"
-#include "game/memory.h"
-#include "game/segment2.h"
-#include "game/segment7.h"
-#include "intro_geo.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/game/segment2.h>
+#include <!sm64/src/game/segment7.h>"
+#include <!sm64/src/menu/intro_geo.h>
 #include "sm64.h"
 #include "textures.h"
 #include "types.h"

@@ -1,32 +1,32 @@
 #include <ultra64.h>
 
 #include "actors/common1.h"
-#include "area.h"
-#include "audio/external.h"
-#include "camera.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/camera.h>
 #include "course_table.h"
 #include "dialog_ids.h"
-#include "engine/math_util.h"
+#include <!sm64/src/engine/math_util.h>
 #include "eu_translation.h"
-#include "game_init.h"
+#include <!sm64/src/game/game_init.h>
 #include "gfx_dimensions.h"
-#include "ingame_menu.h"
-#include "level_update.h"
+#include <!sm64/src/game/ingame_menu.h>
+#include <!sm64/src/game/level_update.h>
 #include "levels/castle_grounds/header.h"
 #include "memory.h"
-#include "print.h"
-#include "save_file.h"
-#include "segment2.h"
-#include "segment7.h"
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/segment2.h>
+#include <!sm64/src/game/segment7.h>
 #include "seq_ids.h"
 #include "sm64.h"
 #include "text_strings.h"
 #include "types.h"
 #include "macros.h"
-#include "pc/cheats.h"
-#include "bettercamera.h"
+#include <!sm64/src/pc/cheats.h>
+#include <!sm64/src/game/bettercamera.h>
 #ifdef EXT_OPTIONS_MENU
-#include "options_menu.h"
+#include <!sm64/src/game/options_menu.h>
 #endif
 
 u16 gDialogColorFadeTimer;

@@ -1,14 +1,14 @@
 #include <ultra64.h>
 
-#include "data.h"
-#include "external.h"
-#include "heap.h"
-#include "load.h"
-#include "seqplayer.h"
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/audio/heap.h>
+#include <!sm64/src/audio/load.h>
+#include <!sm64/src/audio/seqplayer.h>
 
-#include "pc/platform.h"
-#include "pc/fs/fs.h"
-#include "pc/thread.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/fs/fs.h>
+#include <!sm64/src/pc/thread.h>
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 

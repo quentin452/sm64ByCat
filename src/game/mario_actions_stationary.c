@@ -1,22 +1,22 @@
 #include <PR/ultratypes.h>
 
 #include "sm64.h"
-#include "area.h"
-#include "audio/data.h"
-#include "audio/external.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/external.h>
 #include "behavior_data.h"
-#include "camera.h"
-#include "engine/math_util.h"
-#include "interaction.h"
-#include "level_update.h"
-#include "mario.h"
-#include "mario_actions_stationary.h"
-#include "mario_step.h"
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/mario.h>
+#include <!sm64/src/game/mario_actions_stationary.h>
+#include <!sm64/src/game/mario_step.h>
 #include "memory.h"
-#include "save_file.h"
-#include "sound_init.h"
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/sound_init.h>
 #include "surface_terrains.h"
-#include "thread6.h"
+#include <!sm64/src/game/thread6.h>
 
 s32 check_common_idle_cancels(struct MarioState *m) {
     mario_drop_held_object(m);

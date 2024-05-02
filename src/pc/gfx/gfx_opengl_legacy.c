@@ -33,9 +33,9 @@
 #endif
 #endif
 
-#include "../platform.h"
-#include "gfx_cc.h"
-#include "gfx_rendering_api.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/gfx/gfx_cc.h>
+#include <!sm64/src/pc/gfx/gfx_rendering_api.h>
 #include "macros.h"
 
 enum MixType {

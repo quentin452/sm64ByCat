@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 // lll_floating_wood_piece.c.inc
 
 void bhv_lll_wood_piece_loop(void) {

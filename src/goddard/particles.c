@@ -1,15 +1,15 @@
 #include <PR/ultratypes.h>
 
-#include "debug_utils.h"
-#include "draw_objects.h"
-#include "dynlist_proc.h"
-#include "gd_math.h"
-#include "gd_types.h"
+#include <!sm64/src/goddard/debug_utils.h>
+#include <!sm64/src/goddard/draw_objects.h>
+#include <!sm64/src/goddard/dynlist_proc.h>
+#include <!sm64/src/goddard/gd_math.h>
+#include <!sm64/src/goddard/gd_types.h>
 #include "macros.h"
-#include "objects.h"
-#include "particles.h"
-#include "renderer.h"
-#include "skin.h"
+#include <!sm64/src/goddard/objects.h>
+#include <!sm64/src/goddard/particles.h>
+#include <!sm64/src/goddard/renderer.h>
+#include <!sm64/src/goddard/skin.h>
 
 // static types
 typedef union {

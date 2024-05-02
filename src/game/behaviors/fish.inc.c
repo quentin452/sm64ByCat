@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 /**
  * @file fish.inc.c
  * Implements behaviour and spawning for fish located in the Secret Aquarium and other levels.

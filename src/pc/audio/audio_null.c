@@ -1,4 +1,4 @@
-#include "audio_api.h"
+#include <!sm64/src/pc/audio/audio_api.h>
 
 static bool audio_null_init(void) {
     return true;

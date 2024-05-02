@@ -2,8 +2,8 @@
 #include <string.h>
 #include "lib/src/libultra_internal.h"
 #include "macros.h"
-#include "platform.h"
-#include "fs/fs.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/fs/fs.h>
 
 #ifdef TARGET_WEB
 #include <emscripten.h>

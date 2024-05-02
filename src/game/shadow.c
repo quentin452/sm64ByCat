@@ -2,15 +2,15 @@
 #include <PR/gbi.h>
 #include <math.h>
 
-#include "engine/math_util.h"
-#include "engine/surface_collision.h"
-#include "geo_misc.h"
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/game/geo_misc.h>
 #include "level_table.h"
 #include "memory.h"
-#include "object_list_processor.h"
-#include "rendering_graph_node.h"
-#include "segment2.h"
-#include "shadow.h"
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/rendering_graph_node.h>
+#include <!sm64/src/game/segment2.h>
+#include <!sm64/src/game/shadow.h>
 #include "sm64.h"
 
 // Avoid Z-fighting

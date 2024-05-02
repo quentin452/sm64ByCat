@@ -14,25 +14,24 @@
 
 #include <shellscalingapi.h>
 
-
 #ifndef _LANGUAGE_C
 #define _LANGUAGE_C
 #endif
 #include <PR/gbi.h>
 
-#include "../configfile.h"
-#include "../pc_main.h"
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/pc_main.h>
 
-#include "gfx_window_manager_api.h"
-#include "gfx_rendering_api.h"
-#include "gfx_direct3d_common.h"
-#include "gfx_screen_config.h"
-#include "gfx_pc.h"
+#include <!sm64/src/pc/gfx/gfx_window_manager_api.h>
+#include <!sm64/src/pc/gfx/gfx_rendering_api.h>
+#include <!sm64/src/pc/gfx/gfx_direct3d_common.h>
+#include <!sm64/src/pc/gfx/gfx_screen_config.h>
+#include <!sm64/src/pc/gfx/gfx_pc.h>
 
 #define WINCLASS_NAME L"N64GAME"
 
 #define DECLARE_GFX_DXGI_FUNCTIONS
-#include "gfx_dxgi.h"
+#include <!sm64/src/pc/gfx/gfx_dxgi.h>
 
 #ifdef VERSION_EU
 #define FRAME_INTERVAL_US_NUMERATOR 40000
@@ -51,8 +50,8 @@ static struct {
     std::string window_title;
 
     HMODULE dxgi_module;
-    HRESULT (__stdcall *CreateDXGIFactory1)(REFIID riid, void **factory);
-    HRESULT (__stdcall *CreateDXGIFactory2)(UINT flags, REFIID iid, void **factory);
+    HRESULT(__stdcall *CreateDXGIFactory1)(REFIID riid, void **factory);
+    HRESULT(__stdcall *CreateDXGIFactory2)(UINT flags, REFIID iid, void **factory);
 
     bool process_dpi_awareness_done;
 
@@ -78,12 +77,11 @@ static struct {
 
 static void load_dxgi_library(void) {
     dxgi.dxgi_module = LoadLibraryW(L"dxgi.dll");
-    *(FARPROC *)&dxgi.CreateDXGIFactory1 = GetProcAddress(dxgi.dxgi_module, "CreateDXGIFactory1");
-    *(FARPROC *)&dxgi.CreateDXGIFactory2 = GetProcAddress(dxgi.dxgi_module, "CreateDXGIFactory2");
+    *(FARPROC *) &dxgi.CreateDXGIFactory1 = GetProcAddress(dxgi.dxgi_module, "CreateDXGIFactory1");
+    *(FARPROC *) &dxgi.CreateDXGIFactory2 = GetProcAddress(dxgi.dxgi_module, "CreateDXGIFactory2");
 }
 
-template <typename Fun>
-static void run_as_dpi_aware(Fun f) {
+template <typename Fun> static void run_as_dpi_aware(Fun f) {
     // Make sure Windows 8.1 or newer doesn't upscale/downscale the rendered images.
     // This is an issue on Windows 8.1 and newer where moving around the window
     // between different monitors having different scaling settings will
@@ -97,28 +95,32 @@ static void run_as_dpi_aware(Fun f) {
 
     // From windef.h, missing in MinGW.
     DECLARE_HANDLE(DPI_AWARENESS_CONTEXT);
-    #define DPI_AWARENESS_CONTEXT_UNAWARE               ((DPI_AWARENESS_CONTEXT)-1)
-    #define DPI_AWARENESS_CONTEXT_SYSTEM_AWARE          ((DPI_AWARENESS_CONTEXT)-2)
-    #define DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE     ((DPI_AWARENESS_CONTEXT)-3)
-    #define DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2  ((DPI_AWARENESS_CONTEXT)-4)
-    #define DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED     ((DPI_AWARENESS_CONTEXT)-5)
+#define DPI_AWARENESS_CONTEXT_UNAWARE ((DPI_AWARENESS_CONTEXT) -1)
+#define DPI_AWARENESS_CONTEXT_SYSTEM_AWARE ((DPI_AWARENESS_CONTEXT) -2)
+#define DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE ((DPI_AWARENESS_CONTEXT) -3)
+#define DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 ((DPI_AWARENESS_CONTEXT) -4)
+#define DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED ((DPI_AWARENESS_CONTEXT) -5)
 
-    DPI_AWARENESS_CONTEXT (WINAPI *SetThreadDpiAwarenessContext)(DPI_AWARENESS_CONTEXT dpiContext);
-    *(FARPROC *)&SetThreadDpiAwarenessContext = GetProcAddress(GetModuleHandleW(L"user32.dll"), "SetThreadDpiAwarenessContext");
+    DPI_AWARENESS_CONTEXT(WINAPI * SetThreadDpiAwarenessContext)(DPI_AWARENESS_CONTEXT dpiContext);
+    *(FARPROC *) &SetThreadDpiAwarenessContext =
+        GetProcAddress(GetModuleHandleW(L"user32.dll"), "SetThreadDpiAwarenessContext");
     DPI_AWARENESS_CONTEXT old_awareness_context;
     if (SetThreadDpiAwarenessContext != nullptr) {
-        old_awareness_context = SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+        old_awareness_context =
+            SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     } else {
         // Solution for Windows 8.1 and newer, but before Windows 10 1607.
         // SetProcessDpiAwareness must be called before any drawing related API is called.
         if (!dxgi.process_dpi_awareness_done) {
             HMODULE shcore_module = LoadLibraryW(L"SHCore.dll");
             if (shcore_module != nullptr) {
-                HRESULT (WINAPI *SetProcessDpiAwareness)(PROCESS_DPI_AWARENESS value);
-                *(FARPROC *)&SetProcessDpiAwareness = GetProcAddress(shcore_module, "SetProcessDpiAwareness");
+                HRESULT(WINAPI * SetProcessDpiAwareness)(PROCESS_DPI_AWARENESS value);
+                *(FARPROC *) &SetProcessDpiAwareness =
+                    GetProcAddress(shcore_module, "SetProcessDpiAwareness");
                 if (SetProcessDpiAwareness != nullptr) {
                     SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
-                    // Ignore result, will fail if already called or manifest already specifies dpi awareness.
+                    // Ignore result, will fail if already called or manifest already specifies dpi
+                    // awareness.
                 }
                 FreeLibrary(shcore_module);
             }
@@ -154,7 +156,8 @@ static void toggle_borderless_window_full_screen(bool enable) {
             SetWindowPos(dxgi.h_wnd, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
             ShowWindow(dxgi.h_wnd, SW_MAXIMIZE);
         } else {
-            SetWindowPos(dxgi.h_wnd, NULL, r.left, r.top, r.right - r.left, r.bottom - r.top, SWP_FRAMECHANGED);
+            SetWindowPos(dxgi.h_wnd, NULL, r.left, r.top, r.right - r.left, r.bottom - r.top,
+                         SWP_FRAMECHANGED);
             ShowWindow(dxgi.h_wnd, SW_RESTORE);
         }
 
@@ -186,7 +189,8 @@ static void toggle_borderless_window_full_screen(bool enable) {
 
         // Set borderless full screen to that monitor
         SetWindowLongPtr(dxgi.h_wnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
-        SetWindowPos(dxgi.h_wnd, HWND_TOP, r.left, r.top, r.right - r.left, r.bottom - r.top, SWP_FRAMECHANGED);
+        SetWindowPos(dxgi.h_wnd, HWND_TOP, r.left, r.top, r.right - r.left, r.bottom - r.top,
+                     SWP_FRAMECHANGED);
 
         ShowCursor(FALSE);
 
@@ -200,11 +204,14 @@ static void update_screen_settings(void) {
     if (!dxgi.is_full_screen) {
         const int screen_width = GetSystemMetrics(SM_CXSCREEN);
         const int screen_height = GetSystemMetrics(SM_CYSCREEN);
-        const int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? (screen_width - configWindow.w) * 0.5 : configWindow.x;
-        const int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? (screen_height - configWindow.h) * 0.5 : configWindow.y;
-        RECT wr = { xpos, ypos, xpos + (int)configWindow.w, ypos + (int)configWindow.h };
+        const int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? (screen_width - configWindow.w) * 0.5
+                                                                : configWindow.x;
+        const int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? (screen_height - configWindow.h) * 0.5
+                                                                : configWindow.y;
+        RECT wr = { xpos, ypos, xpos + (int) configWindow.w, ypos + (int) configWindow.h };
         AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
-        SetWindowPos(dxgi.h_wnd, NULL, wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top, SWP_NOACTIVATE | SWP_NOZORDER);
+        SetWindowPos(dxgi.h_wnd, NULL, wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top,
+                     SWP_NOACTIVATE | SWP_NOZORDER);
     }
 }
 
@@ -313,28 +320,28 @@ static void gfx_dxgi_init(const char *window_title) {
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = gfx_dxgi_wnd_proc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = nullptr;
-    wcex.hIcon          = nullptr;
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)GetStockObject(BLACK_BRUSH);
-    wcex.lpszMenuName   = nullptr;
-    wcex.lpszClassName  = WINCLASS_NAME;
-    wcex.hIconSm        = nullptr;
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = gfx_dxgi_wnd_proc;
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = nullptr;
+    wcex.hIcon = nullptr;
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH) GetStockObject(BLACK_BRUSH);
+    wcex.lpszMenuName = nullptr;
+    wcex.lpszClassName = WINCLASS_NAME;
+    wcex.hIconSm = nullptr;
 
     ATOM winclass = RegisterClassExW(&wcex);
 
-
-    run_as_dpi_aware([&] () {
+    run_as_dpi_aware([&]() {
         // We need to be dpi aware when calculating the size
-        RECT wr = {0, 0, DESIRED_SCREEN_WIDTH, DESIRED_SCREEN_HEIGHT};
+        RECT wr = { 0, 0, DESIRED_SCREEN_WIDTH, DESIRED_SCREEN_HEIGHT };
         AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
 
-        dxgi.h_wnd = CreateWindowW(WINCLASS_NAME, w_title, WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, 0, wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, nullptr, nullptr);
+        dxgi.h_wnd =
+            CreateWindowW(WINCLASS_NAME, w_title, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0,
+                          wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, nullptr, nullptr);
     });
 
     load_dxgi_library();
@@ -345,7 +352,9 @@ static void gfx_dxgi_init(const char *window_title) {
     update_screen_settings();
 }
 
-static void gfx_dxgi_set_keyboard_callbacks(bool (*on_key_down)(int scancode), bool (*on_key_up)(int scancode), void (*on_all_keys_up)(void)) {
+static void gfx_dxgi_set_keyboard_callbacks(bool (*on_key_down)(int scancode),
+                                            bool (*on_key_up)(int scancode),
+                                            void (*on_all_keys_up)(void)) {
     dxgi.on_key_down = on_key_down;
     dxgi.on_key_up = on_key_up;
     dxgi.on_all_keys_up = on_all_keys_up;
@@ -380,14 +389,19 @@ static uint64_t qpc_to_us(uint64_t qpc) {
 
 static bool gfx_dxgi_start_frame(void) {
     DXGI_FRAME_STATISTICS stats;
-    if (dxgi.swap_chain->GetFrameStatistics(&stats) == S_OK && (stats.SyncRefreshCount != 0 || stats.SyncQPCTime.QuadPart != 0ULL)) {
+    if (dxgi.swap_chain->GetFrameStatistics(&stats) == S_OK
+        && (stats.SyncRefreshCount != 0 || stats.SyncQPCTime.QuadPart != 0ULL)) {
         {
             LARGE_INTEGER t0;
             QueryPerformanceCounter(&t0);
-            //printf("Get frame stats: %llu\n", (unsigned long long)(t0.QuadPart - dxgi.qpc_init));
+            // printf("Get frame stats: %llu\n", (unsigned long long)(t0.QuadPart - dxgi.qpc_init));
         }
-        //printf("stats: %u %u %u %u %u %.6f\n", dxgi.pending_frame_stats.rbegin()->first, dxgi.pending_frame_stats.rbegin()->second, stats.PresentCount, stats.PresentRefreshCount, stats.SyncRefreshCount, (double)(stats.SyncQPCTime.QuadPart - dxgi.qpc_init) / dxgi.qpc_freq);
-        if (dxgi.frame_stats.empty() || dxgi.frame_stats.rbegin()->second.PresentCount != stats.PresentCount) {
+        // printf("stats: %u %u %u %u %u %.6f\n", dxgi.pending_frame_stats.rbegin()->first,
+        // dxgi.pending_frame_stats.rbegin()->second, stats.PresentCount, stats.PresentRefreshCount,
+        // stats.SyncRefreshCount, (double)(stats.SyncQPCTime.QuadPart - dxgi.qpc_init) /
+        // dxgi.qpc_freq);
+        if (dxgi.frame_stats.empty()
+            || dxgi.frame_stats.rbegin()->second.PresentCount != stats.PresentCount) {
             dxgi.frame_stats.insert(std::make_pair(stats.PresentCount, stats));
         }
         if (dxgi.frame_stats.size() > 3) {
@@ -395,7 +409,8 @@ static bool gfx_dxgi_start_frame(void) {
         }
     }
     if (!dxgi.frame_stats.empty()) {
-        while (!dxgi.pending_frame_stats.empty() && dxgi.pending_frame_stats.begin()->first < dxgi.frame_stats.rbegin()->first) {
+        while (!dxgi.pending_frame_stats.empty()
+               && dxgi.pending_frame_stats.begin()->first < dxgi.frame_stats.rbegin()->first) {
             dxgi.pending_frame_stats.erase(dxgi.pending_frame_stats.begin());
         }
     }
@@ -418,9 +433,9 @@ static bool gfx_dxgi_start_frame(void) {
             sync_vsync_diff = 1;
         }
 
-        double estimated_vsync_interval = (double)sync_qpc_diff / (double)sync_vsync_diff;
+        double estimated_vsync_interval = (double) sync_qpc_diff / (double) sync_vsync_diff;
         uint64_t estimated_vsync_interval_us = qpc_to_us(estimated_vsync_interval);
-        //printf("Estimated vsync_interval: %d\n", (int)estimated_vsync_interval_us);
+        // printf("Estimated vsync_interval: %d\n", (int)estimated_vsync_interval_us);
         if (estimated_vsync_interval_us < 2 || estimated_vsync_interval_us > 1000000) {
             // Unreasonable, maybe a monitor change
             estimated_vsync_interval_us = 16666;
@@ -429,7 +444,7 @@ static bool gfx_dxgi_start_frame(void) {
 
         UINT queued_vsyncs = 0;
         bool is_first = true;
-        for (const std::pair<UINT, UINT>& p : dxgi.pending_frame_stats) {
+        for (const std::pair<UINT, UINT> &p : dxgi.pending_frame_stats) {
             if (is_first && dxgi.sync_interval_means_frames_to_wait) {
                 is_first = false;
                 continue;
@@ -437,25 +452,33 @@ static bool gfx_dxgi_start_frame(void) {
             queued_vsyncs += p.second;
         }
 
-        uint64_t last_frame_present_end_qpc = (last->SyncQPCTime.QuadPart - dxgi.qpc_init) + estimated_vsync_interval * queued_vsyncs;
+        uint64_t last_frame_present_end_qpc =
+            (last->SyncQPCTime.QuadPart - dxgi.qpc_init) + estimated_vsync_interval * queued_vsyncs;
         uint64_t last_end_us = qpc_to_us(last_frame_present_end_qpc);
 
-        double vsyncs_to_wait = (double)(int64_t)(dxgi.frame_timestamp / FRAME_INTERVAL_US_DENOMINATOR - last_end_us) / estimated_vsync_interval_us;
-        //printf("ts: %llu, last_end_us: %llu, Init v: %f\n", dxgi.frame_timestamp / 3, last_end_us, vsyncs_to_wait);
+        double vsyncs_to_wait =
+            (double) (int64_t)(dxgi.frame_timestamp / FRAME_INTERVAL_US_DENOMINATOR - last_end_us)
+            / estimated_vsync_interval_us;
+        // printf("ts: %llu, last_end_us: %llu, Init v: %f\n", dxgi.frame_timestamp / 3, last_end_us,
+        // vsyncs_to_wait);
 
         if (vsyncs_to_wait <= 0) {
             // Too late
 
-            if ((int64_t)(dxgi.frame_timestamp / FRAME_INTERVAL_US_DENOMINATOR - last_end_us) < -66666) {
+            if ((int64_t)(dxgi.frame_timestamp / FRAME_INTERVAL_US_DENOMINATOR - last_end_us)
+                < -66666) {
                 // The application must have been paused or similar
-                vsyncs_to_wait = round(((double)FRAME_INTERVAL_US_NUMERATOR / FRAME_INTERVAL_US_DENOMINATOR) / estimated_vsync_interval_us);
+                vsyncs_to_wait =
+                    round(((double) FRAME_INTERVAL_US_NUMERATOR / FRAME_INTERVAL_US_DENOMINATOR)
+                          / estimated_vsync_interval_us);
                 if (vsyncs_to_wait < 1) {
                     vsyncs_to_wait = 1;
                 }
-                dxgi.frame_timestamp = FRAME_INTERVAL_US_DENOMINATOR * (last_end_us + vsyncs_to_wait * estimated_vsync_interval_us);
+                dxgi.frame_timestamp = FRAME_INTERVAL_US_DENOMINATOR
+                                       * (last_end_us + vsyncs_to_wait * estimated_vsync_interval_us);
             } else {
                 // Drop frame
-                //printf("Dropping frame\n");
+                // printf("Dropping frame\n");
                 dxgi.dropped_frame = true;
                 return false;
             }
@@ -463,7 +486,12 @@ static bool gfx_dxgi_start_frame(void) {
         if (floor(vsyncs_to_wait) != vsyncs_to_wait) {
             uint64_t left = last_end_us + floor(vsyncs_to_wait) * estimated_vsync_interval_us;
             uint64_t right = last_end_us + ceil(vsyncs_to_wait) * estimated_vsync_interval_us;
-            uint64_t adjusted_desired_time = dxgi.frame_timestamp / FRAME_INTERVAL_US_DENOMINATOR + (last_end_us + (FRAME_INTERVAL_US_NUMERATOR / FRAME_INTERVAL_US_DENOMINATOR) > dxgi.frame_timestamp / FRAME_INTERVAL_US_DENOMINATOR ? 2000 : -2000);
+            uint64_t adjusted_desired_time =
+                dxgi.frame_timestamp / FRAME_INTERVAL_US_DENOMINATOR
+                + (last_end_us + (FRAME_INTERVAL_US_NUMERATOR / FRAME_INTERVAL_US_DENOMINATOR)
+                           > dxgi.frame_timestamp / FRAME_INTERVAL_US_DENOMINATOR
+                       ? 2000
+                       : -2000);
             int64_t diff_left = adjusted_desired_time - left;
             int64_t diff_right = right - adjusted_desired_time;
             if (diff_left < 0) {
@@ -478,12 +506,12 @@ static bool gfx_dxgi_start_frame(void) {
                 vsyncs_to_wait = ceil(vsyncs_to_wait);
             }
             if (vsyncs_to_wait == 0) {
-                //printf("vsyncs_to_wait became 0 so dropping frame\n");
+                // printf("vsyncs_to_wait became 0 so dropping frame\n");
                 dxgi.dropped_frame = true;
                 return false;
             }
         }
-        //printf("v: %d\n", (int)vsyncs_to_wait);
+        // printf("v: %d\n", (int)vsyncs_to_wait);
         if (vsyncs_to_wait > 4) {
             // Invalid, so change to 4
             vsyncs_to_wait = 4;
@@ -497,7 +525,7 @@ static bool gfx_dxgi_start_frame(void) {
 }
 
 static void gfx_dxgi_swap_buffers_begin(void) {
-    //dxgi.length_in_vsync_frames = 1;
+    // dxgi.length_in_vsync_frames = 1;
     ThrowIfFailed(dxgi.swap_chain->Present(dxgi.length_in_vsync_frames, 0));
     UINT this_present_id;
     if (dxgi.swap_chain->GetLastPresentCount(&this_present_id) == S_OK) {
@@ -523,20 +551,28 @@ static void gfx_dxgi_swap_buffers_end(void) {
 
     QueryPerformanceCounter(&t2);
 
-    dxgi.sync_interval_means_frames_to_wait = dxgi.pending_frame_stats.rbegin()->first == stats.PresentCount;
+    dxgi.sync_interval_means_frames_to_wait =
+        dxgi.pending_frame_stats.rbegin()->first == stats.PresentCount;
 
-    //printf("done %llu gpu:%d wait:%d freed:%llu frame:%u %u monitor:%u t:%llu\n", (unsigned long long)(t0.QuadPart - dxgi.qpc_init), (int)(t1.QuadPart - t0.QuadPart), (int)(t2.QuadPart - t0.QuadPart), (unsigned long long)(t2.QuadPart - dxgi.qpc_init), dxgi.pending_frame_stats.rbegin()->first, stats.PresentCount, stats.SyncRefreshCount, (unsigned long long)(stats.SyncQPCTime.QuadPart - dxgi.qpc_init));
+    // printf("done %llu gpu:%d wait:%d freed:%llu frame:%u %u monitor:%u t:%llu\n", (unsigned long
+    // long)(t0.QuadPart - dxgi.qpc_init), (int)(t1.QuadPart - t0.QuadPart), (int)(t2.QuadPart -
+    // t0.QuadPart), (unsigned long long)(t2.QuadPart - dxgi.qpc_init),
+    // dxgi.pending_frame_stats.rbegin()->first, stats.PresentCount, stats.SyncRefreshCount, (unsigned
+    // long long)(stats.SyncQPCTime.QuadPart - dxgi.qpc_init));
 }
 
 static double gfx_dxgi_get_time(void) {
     LARGE_INTEGER t;
     QueryPerformanceCounter(&t);
-    return (double)(t.QuadPart - dxgi.qpc_init) / dxgi.qpc_freq;
+    return (double) (t.QuadPart - dxgi.qpc_init) / dxgi.qpc_freq;
 }
 
-void gfx_dxgi_create_factory_and_device(bool debug, int d3d_version, bool (*create_device_fn)(IDXGIAdapter1 *adapter, bool test_only)) {
+void gfx_dxgi_create_factory_and_device(bool debug, int d3d_version,
+                                        bool (*create_device_fn)(IDXGIAdapter1 *adapter,
+                                                                 bool test_only)) {
     if (dxgi.CreateDXGIFactory2 != nullptr) {
-        ThrowIfFailed(dxgi.CreateDXGIFactory2(debug ? DXGI_CREATE_FACTORY_DEBUG : 0, __uuidof(IDXGIFactory2), &dxgi.factory));
+        ThrowIfFailed(dxgi.CreateDXGIFactory2(debug ? DXGI_CREATE_FACTORY_DEBUG : 0,
+                                              __uuidof(IDXGIFactory2), &dxgi.factory));
     } else {
         ThrowIfFailed(dxgi.CreateDXGIFactory1(__uuidof(IDXGIFactory2), &dxgi.factory));
     }
@@ -545,7 +581,7 @@ void gfx_dxgi_create_factory_and_device(bool debug, int d3d_version, bool (*crea
     for (UINT i = 0; dxgi.factory->EnumAdapters1(i, &adapter) != DXGI_ERROR_NOT_FOUND; i++) {
         DXGI_ADAPTER_DESC1 desc;
         adapter->GetDesc1(&desc);
-        if (desc.Flags & 2/*DXGI_ADAPTER_FLAG_SOFTWARE*/) { // declaration missing in mingw headers
+        if (desc.Flags & 2 /*DXGI_ADAPTER_FLAG_SOFTWARE*/) { // declaration missing in mingw headers
             continue;
         }
         if (create_device_fn(adapter.Get(), true)) {
@@ -571,15 +607,18 @@ ComPtr<IDXGISwapChain1> gfx_dxgi_create_swap_chain(IUnknown *device) {
     swap_chain_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swap_chain_desc.Scaling = win8 ? DXGI_SCALING_NONE : DXGI_SCALING_STRETCH;
-    swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // Apparently this was backported to Win 7 Platform Update
+    swap_chain_desc.SwapEffect =
+        DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // Apparently this was backported to Win 7 Platform Update
     swap_chain_desc.Flags = dxgi_13 ? DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT : 0;
     swap_chain_desc.SampleDesc.Count = 1;
 
-    run_as_dpi_aware([&] () {
-        // When setting size for the buffers, the values that DXGI puts into the desc (that can later be retrieved by GetDesc1)
-        // have been divided by the current scaling factor. By making this call dpi aware, no division will be performed.
-        // The same goes for IDXGISwapChain::ResizeBuffers(), however that function is currently only called from the message handler.
-        ThrowIfFailed(dxgi.factory->CreateSwapChainForHwnd(device, dxgi.h_wnd, &swap_chain_desc, nullptr, nullptr, &dxgi.swap_chain));
+    run_as_dpi_aware([&]() {
+        // When setting size for the buffers, the values that DXGI puts into the desc (that can later be
+        // retrieved by GetDesc1) have been divided by the current scaling factor. By making this call
+        // dpi aware, no division will be performed. The same goes for IDXGISwapChain::ResizeBuffers(),
+        // however that function is currently only called from the message handler.
+        ThrowIfFailed(dxgi.factory->CreateSwapChainForHwnd(device, dxgi.h_wnd, &swap_chain_desc,
+                                                           nullptr, nullptr, &dxgi.swap_chain));
     });
     ThrowIfFailed(dxgi.factory->MakeWindowAssociation(dxgi.h_wnd, DXGI_MWA_NO_ALT_ENTER));
 

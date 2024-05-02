@@ -1,8 +1,8 @@
 #include <PR/ultratypes.h>
 
-#include "debug_utils.h"
-#include "gd_memory.h"
-#include "renderer.h"
+#include <!sm64/src/goddard/debug_utils.h>
+#include <!sm64/src/goddard/gd_memory.h>
+#include <!sm64/src/goddard/renderer.h>
 
 /**
  * @file gd_memory.c

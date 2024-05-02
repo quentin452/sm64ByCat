@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 /**
  * Behavior for bhvPokey and bhvPokeyBodyPart.
  * bhvPokey is responsible for the behavior of the pokey itself, as well as

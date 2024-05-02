@@ -1,10 +1,10 @@
 #include <ultra64.h>
-#include "internal.h"
-#include "load.h"
-#include "data.h"
-#include "seqplayer.h"
-#include "synthesis.h"
-#include "pc/thread.h"
+#include <!sm64/src/audio/internal.h>
+#include <!sm64/src/audio/load.h>
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/seqplayer.h>
+#include <!sm64/src/audio/synthesis.h>
+#include <!sm64/src/pc/thread.h>
 
 #ifdef VERSION_EU
 

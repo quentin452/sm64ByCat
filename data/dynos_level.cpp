@@ -1,7 +1,7 @@
 #include "dynos.cpp.h"
 extern "C" {
-#include "game/segment2.h"
-#include "game/save_file.h"
+#include <!sm64/src/game/segment2.h>
+#include <!sm64/src/game/save_file.h>
 #include "levels/scripts.h"
 }
 
@@ -13,14 +13,14 @@ extern "C" {
 extern const BehaviorScript *sWarpBhvSpawnTable[];
 }
 
-#define DYNOS_LEVEL_TEXT_EMPTY              ""
-#define DYNOS_LEVEL_TEXT_CASTLE             "CASTLE"
-#define DYNOS_LEVEL_TEXT_BOWSER_1           "BOWSER 1"
-#define DYNOS_LEVEL_TEXT_BOWSER_2           "BOWSER 2"
-#define DYNOS_LEVEL_TEXT_BOWSER_3           "BOWSER 3"
-#define DYNOS_LEVEL_TEXT_100_COINS_STAR     "100 COINS STAR"
-#define DYNOS_LEVEL_TEXT_RED_COINS_STAR     "RED COINS STAR"
-#define DYNOS_LEVEL_TEXT_ONE_SECRET_STAR    "ONE OF THE CASTLE'S SECRET STARS!"
+#define DYNOS_LEVEL_TEXT_EMPTY ""
+#define DYNOS_LEVEL_TEXT_CASTLE "CASTLE"
+#define DYNOS_LEVEL_TEXT_BOWSER_1 "BOWSER 1"
+#define DYNOS_LEVEL_TEXT_BOWSER_2 "BOWSER 2"
+#define DYNOS_LEVEL_TEXT_BOWSER_3 "BOWSER 3"
+#define DYNOS_LEVEL_TEXT_100_COINS_STAR "100 COINS STAR"
+#define DYNOS_LEVEL_TEXT_RED_COINS_STAR "RED COINS STAR"
+#define DYNOS_LEVEL_TEXT_ONE_SECRET_STAR "ONE OF THE CASTLE'S SECRET STARS!"
 
 static void SetConvertedTextToBuffer(u8 *aBuffer, const char *aText) {
     u8 *_ConvertedText = DynOS_String_Convert(aText, false);
@@ -32,16 +32,16 @@ static void SetConvertedTextToBuffer(u8 *aBuffer, const char *aText) {
 //
 
 struct DynosWarp {
-/* 0 */ s16 mArea = 0;
-/* 1 */ s16 mId = 0;
-/* 2 */ s16 mType = -1;
-/* 3 */ s16 mPosX = 0;
-/* 4 */ s16 mPosY = 0;
-/* 5 */ s16 mPosZ = 0;
-/* 6 */ s16 mAngle = 0;
-/* 7 */ s16 mDestLevel = 0;
-/* 8 */ s16 mDestArea = 0;
-/* 9 */ s16 mDestId = 0;
+    /* 0 */ s16 mArea = 0;
+    /* 1 */ s16 mId = 0;
+    /* 2 */ s16 mType = -1;
+    /* 3 */ s16 mPosX = 0;
+    /* 4 */ s16 mPosY = 0;
+    /* 5 */ s16 mPosZ = 0;
+    /* 6 */ s16 mAngle = 0;
+    /* 7 */ s16 mDestLevel = 0;
+    /* 8 */ s16 mDestArea = 0;
+    /* 9 */ s16 mDestId = 0;
 };
 
 static void *sDynosLevelScripts[LEVEL_COUNT] = { NULL };
@@ -49,12 +49,12 @@ static Array<DynosWarp> sDynosLevelWarps[LEVEL_COUNT] = { Array<DynosWarp>() };
 static Array<s32> sDynosLevelList = Array<s32>(); // Ordered by Course Id, COURSE_NONE excluded
 
 static u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset) {
-    u64 _Offset = (((aOffset) & 3llu) | (((aOffset) & ~3llu) << (sizeof(void *) >> 3llu)));
+    u64 _Offset = (((aOffset) &3llu) | (((aOffset) & ~3llu) << (sizeof(void *) >> 3llu)));
     return *((u64 *) (u64(aCmd) + _Offset));
 }
 
 static void *DynOS_Level_CmdNext(void *aCmd, u64 aCmdSize) {
-    u64 _Offset = (((aCmdSize) & 3llu) | (((aCmdSize) & ~3llu) << (sizeof(void *) >> 3llu)));
+    u64 _Offset = (((aCmdSize) &3llu) | (((aCmdSize) & ~3llu) << (sizeof(void *) >> 3llu)));
     return (void *) (u64(aCmd) + _Offset);
 }
 
@@ -67,7 +67,7 @@ static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFuncti
 static s32 DynOS_Level_PreprocessMasterScript(u8 aType, void *aCmd) {
     static bool sDynosScriptExecLevelTable = false;
     static s32 sDynosLevelNum = -1;
-    
+
     if (!sDynosScriptExecLevelTable) {
 
         // JUMP_LINK
@@ -87,7 +87,8 @@ static s32 DynOS_Level_PreprocessMasterScript(u8 aType, void *aCmd) {
         // EXECUTE
         if (aType == 0x00) {
             void *_Script = (void *) DynOS_Level_CmdGet(aCmd, 0x0C);
-            if (sDynosLevelNum >= 0 && sDynosLevelNum < LEVEL_COUNT && !sDynosLevelScripts[sDynosLevelNum]) {
+            if (sDynosLevelNum >= 0 && sDynosLevelNum < LEVEL_COUNT
+                && !sDynosLevelScripts[sDynosLevelNum]) {
                 sDynosLevelScripts[sDynosLevelNum] = _Script;
             }
             sDynosLevelNum = -1;
@@ -112,8 +113,8 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
     static u8 sDynosAreaIndex = 0;
     static auto _GetWarpStruct = [](u8 aArea, u8 aId) -> DynosWarp * {
         for (s32 i = 0; i != sDynosLevelWarps[sDynosCurrentLevelNum].Count(); ++i) {
-            if (sDynosLevelWarps[sDynosCurrentLevelNum][i].mArea == aArea &&
-                sDynosLevelWarps[sDynosCurrentLevelNum][i].mId == aId) {
+            if (sDynosLevelWarps[sDynosCurrentLevelNum][i].mArea == aArea
+                && sDynosLevelWarps[sDynosCurrentLevelNum][i].mId == aId) {
                 return &sDynosLevelWarps[sDynosCurrentLevelNum][i];
             }
         }
@@ -121,7 +122,8 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
         _Warp.mArea = aArea;
         _Warp.mId = aId;
         sDynosLevelWarps[sDynosCurrentLevelNum].Add(_Warp);
-        return &sDynosLevelWarps[sDynosCurrentLevelNum][sDynosLevelWarps[sDynosCurrentLevelNum].Count() - 1];
+        return &sDynosLevelWarps[sDynosCurrentLevelNum]
+                                [sDynosLevelWarps[sDynosCurrentLevelNum].Count() - 1];
     };
 
     // AREA
@@ -134,7 +136,8 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
         const BehaviorScript *bhv = (const BehaviorScript *) DynOS_Level_CmdGet(aCmd, 20);
         for (s32 i = 0; i < 20; ++i) {
             if (sWarpBhvSpawnTable[i] == bhv) {
-                DynosWarp *_Warp = _GetWarpStruct(sDynosAreaIndex, ((((u32) DynOS_Level_CmdGet(aCmd, 16)) >> 16) & 0xFF));
+                DynosWarp *_Warp = _GetWarpStruct(
+                    sDynosAreaIndex, ((((u32) DynOS_Level_CmdGet(aCmd, 16)) >> 16) & 0xFF));
                 if (_Warp->mType == -1) {
                     _Warp->mType = i;
                     _Warp->mPosX = (s16) DynOS_Level_CmdGet(aCmd, 4);
@@ -187,13 +190,15 @@ static void DynOS_Level_Init() {
         // Level warps
         for (sDynosCurrentLevelNum = 0; sDynosCurrentLevelNum != LEVEL_COUNT; ++sDynosCurrentLevelNum) {
             if (sDynosLevelScripts[sDynosCurrentLevelNum]) {
-                DynOS_Level_ParseScript(sDynosLevelScripts[sDynosCurrentLevelNum], DynOS_Level_PreprocessScript);
+                DynOS_Level_ParseScript(sDynosLevelScripts[sDynosCurrentLevelNum],
+                                        DynOS_Level_PreprocessScript);
             }
         }
 
         // Level list ordered by course id
         for (s32 i = COURSE_MIN; i <= COURSE_MAX; ++i) {
-            if (i == COURSE_CAKE_END) continue;
+            if (i == COURSE_CAKE_END)
+                continue;
             for (s32 j = 1; j != LEVEL_COUNT; ++j) {
                 if (gLevelToCourseNumTable[j - 1] == i) {
                     sDynosLevelList.Add(j);
@@ -297,7 +302,8 @@ const u8 *DynOS_Level_GetActName(s32 aLevel, s32 aAct, bool aDecaps, bool aAddSt
     } else if (aAct >= 7) {
         SetConvertedTextToBuffer(sBuffer, DYNOS_LEVEL_TEXT_100_COINS_STAR);
     } else {
-        const u8 *_ActName = ((const u8 **) seg2_act_name_table)[(_Course - COURSE_BOB) * 6 + (aAct - 1)];
+        const u8 *_ActName =
+            ((const u8 **) seg2_act_name_table)[(_Course - COURSE_BOB) * 6 + (aAct - 1)];
         memcpy(sBuffer, _ActName, DynOS_String_Length(_ActName));
     }
 
@@ -323,73 +329,135 @@ const u8 *DynOS_Level_GetAreaName(s32 aLevel, s32 aArea, bool aDecaps) {
     DynOS_Level_Init();
     static const char *sAreaNamesPerLevel[][4] = {
         { "", "", "", "" },
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* BoB */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* WF */
-        { "MAIN AREA", "SUNKEN SHIP", "NOT AVAILABLE", "NOT AVAILABLE" }, /* JRB */
-        { "MAIN AREA", "COTTAGE SLIDE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* CCM */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* BBH */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* HMC */
-        { "MAIN AREA", "VOLCANO", "NOT AVAILABLE", "NOT AVAILABLE" }, /* LLL */
-        { "MAIN AREA", "PYRAMID", "EYEROCK'S ROOM", "NOT AVAILABLE" }, /* SSL */
-        { "MAIN AREA", "DOCKS", "NOT AVAILABLE", "NOT AVAILABLE" }, /* DDD */
-        { "MAIN AREA", "IGLOO", "NOT AVAILABLE", "NOT AVAILABLE" }, /* SL */
-        { "MAIN AREA", "DOWNTOWN", "NOT AVAILABLE", "NOT AVAILABLE" }, /* WDW */
-        { "MAIN AREA", "SECRET SLIDE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* TTM */
-        { "HUGE ISLAND", "TINY ISLAND", "WIGGLER'S ROOM", "NOT AVAILABLE" }, /* THI */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* TTC */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* RR */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* BITDW */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* BoB */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* WF */
+        { "MAIN AREA", "SUNKEN SHIP", "NOT AVAILABLE", "NOT AVAILABLE" },       /* JRB */
+        { "MAIN AREA", "COTTAGE SLIDE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* CCM */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* BBH */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* HMC */
+        { "MAIN AREA", "VOLCANO", "NOT AVAILABLE", "NOT AVAILABLE" },           /* LLL */
+        { "MAIN AREA", "PYRAMID", "EYEROCK'S ROOM", "NOT AVAILABLE" },          /* SSL */
+        { "MAIN AREA", "DOCKS", "NOT AVAILABLE", "NOT AVAILABLE" },             /* DDD */
+        { "MAIN AREA", "IGLOO", "NOT AVAILABLE", "NOT AVAILABLE" },             /* SL */
+        { "MAIN AREA", "DOWNTOWN", "NOT AVAILABLE", "NOT AVAILABLE" },          /* WDW */
+        { "MAIN AREA", "SECRET SLIDE", "NOT AVAILABLE", "NOT AVAILABLE" },      /* TTM */
+        { "HUGE ISLAND", "TINY ISLAND", "WIGGLER'S ROOM", "NOT AVAILABLE" },    /* THI */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* TTC */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* RR */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* BITDW */
         { "BOWSER BATTLE", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* Bowser 1 */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* BITFS */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* BITFS */
         { "BOWSER BATTLE", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* Bowser 2 */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* BITS */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* BITS */
         { "BOWSER BATTLE", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* Bowser 3 */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* PSS */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* TOTWC */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* COTMC */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* VCUTM */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* WMOTR */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* SA */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* Castle grounds */
-        { "FIRST FLOOR", "SECOND FLOOR", "BASEMENT", "NOT AVAILABLE" }, /* Castle inside */
-        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" }, /* Castle courtyard */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* PSS */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* TOTWC */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* COTMC */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* VCUTM */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* WMOTR */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* SA */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* Castle grounds */
+        { "FIRST FLOOR", "SECOND FLOOR", "BASEMENT", "NOT AVAILABLE" },         /* Castle inside */
+        { "MAIN AREA", "NOT AVAILABLE", "NOT AVAILABLE", "NOT AVAILABLE" },     /* Castle courtyard */
     };
     static u8 sBuffer[256];
     memset(sBuffer, 0xFF, 256);
 
     // Area name
     switch (aLevel) {
-        case LEVEL_BOB: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[1][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_WF: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[2][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_JRB: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[3][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_CCM: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[4][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_BBH: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[5][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_HMC: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[6][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_LLL: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[7][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_SSL: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[8][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_DDD: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[9][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_SL: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[10][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_WDW: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[11][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_TTM: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[12][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_THI: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[13][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_TTC: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[14][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_RR: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[15][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_BITDW: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[16][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_BOWSER_1: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[17][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_BITFS: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[18][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_BOWSER_2: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[19][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_BITS: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[20][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_BOWSER_3: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[21][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_PSS: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[22][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_TOTWC: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[23][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_COTMC: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[24][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_VCUTM: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[25][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_WMOTR: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[26][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_SA: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[27][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_CASTLE_GROUNDS: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[28][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_CASTLE: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[29][MIN(MAX(aArea - 1, 0), 3)]); break;
-        case LEVEL_CASTLE_COURTYARD: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[30][MIN(MAX(aArea - 1, 0), 3)]); break;
-        default: SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[0][MIN(MAX(aArea - 1, 0), 3)]); break;
+        case LEVEL_BOB:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[1][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_WF:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[2][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_JRB:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[3][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_CCM:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[4][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_BBH:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[5][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_HMC:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[6][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_LLL:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[7][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_SSL:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[8][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_DDD:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[9][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_SL:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[10][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_WDW:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[11][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_TTM:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[12][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_THI:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[13][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_TTC:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[14][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_RR:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[15][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_BITDW:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[16][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_BOWSER_1:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[17][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_BITFS:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[18][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_BOWSER_2:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[19][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_BITS:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[20][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_BOWSER_3:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[21][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_PSS:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[22][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_TOTWC:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[23][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_COTMC:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[24][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_VCUTM:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[25][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_WMOTR:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[26][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_SA:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[27][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_CASTLE_GROUNDS:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[28][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_CASTLE:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[29][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        case LEVEL_CASTLE_COURTYARD:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[30][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
+        default:
+            SetConvertedTextToBuffer(sBuffer, sAreaNamesPerLevel[0][MIN(MAX(aArea - 1, 0), 3)]);
+            break;
     }
 
     // Decaps
@@ -418,16 +486,14 @@ struct Stack {
     s32 mTopIndex;
 };
 
-template <typename T>
-static void StackPush(Stack& aStack, const T &aValue) {
+template <typename T> static void StackPush(Stack &aStack, const T &aValue) {
     if (aStack.mTopIndex >= 0) {
         aStack.mData[aStack.mTopIndex] = u64(aValue);
         aStack.mTopIndex++;
     }
 }
 
-template <typename T>
-static T StackPop(Stack& aStack) {
+template <typename T> static T StackPop(Stack &aStack) {
     if (aStack.mTopIndex <= 0) {
         return (T) 0;
     }
@@ -702,7 +768,8 @@ static LvlCmd *DynOS_Level_CmdClearDemoPointer(Stack &aStack, LvlCmd *aCmd) {
     return (LvlCmd *) DynOS_Level_CmdNext(aCmd, aCmd->mSize);
 }
 
-static LvlCmd *DynOS_Level_CmdJumpArea(Stack &aStack, LvlCmd *aCmd, s32 (*aPreprocessFunction)(u8, void *)) {
+static LvlCmd *DynOS_Level_CmdJumpArea(Stack &aStack, LvlCmd *aCmd,
+                                       s32 (*aPreprocessFunction)(u8, void *)) {
     DynOS_Level_ParseScript((const void *) DynOS_Level_CmdGet(aCmd, 8), aPreprocessFunction);
     return (LvlCmd *) DynOS_Level_CmdNext(aCmd, aCmd->mSize);
 }
@@ -717,71 +784,200 @@ static void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFuncti
         switch (_Action) {
             case 0:
                 switch (_CmdType) {
-                    case 0x00: _Cmd = DynOS_Level_CmdExecute(_Stack, _Cmd); break;
-                    case 0x01: _Cmd = DynOS_Level_CmdExitAndExecute(_Stack, _Cmd); break;
-                    case 0x02: _Cmd = DynOS_Level_CmdExit(_Stack, _Cmd); break;
-                    case 0x03: _Cmd = DynOS_Level_CmdSleep(_Stack, _Cmd); break;
-                    case 0x04: _Cmd = DynOS_Level_CmdSleepBeforeExit(_Stack, _Cmd); break;
-                    case 0x05: _Cmd = DynOS_Level_CmdJump(_Stack, _Cmd); break;
-                    case 0x06: _Cmd = DynOS_Level_CmdJumpLink(_Stack, _Cmd); break;
-                    case 0x07: _Cmd = DynOS_Level_CmdReturn(_Stack, _Cmd); break;
-                    case 0x08: _Cmd = DynOS_Level_CmdJumpLinkPushArg(_Stack, _Cmd); break;
-                    case 0x09: _Cmd = DynOS_Level_CmdJumpRepeat(_Stack, _Cmd); break;
-                    case 0x0A: _Cmd = DynOS_Level_CmdLoopBegin(_Stack, _Cmd); break;
-                    case 0x0B: _Cmd = DynOS_Level_CmdLoopUntil(_Stack, _Cmd); break;
-                    case 0x0C: _Cmd = DynOS_Level_CmdJumpIf(_Stack, _Cmd); break;
-                    case 0x0D: _Cmd = DynOS_Level_CmdJumpLinkIf(_Stack, _Cmd); break;
-                    case 0x0E: _Cmd = DynOS_Level_CmdSkipIf(_Stack, _Cmd); break;
-                    case 0x0F: _Cmd = DynOS_Level_CmdSkip(_Stack, _Cmd); break;
-                    case 0x10: _Cmd = DynOS_Level_CmdSkipNop(_Stack, _Cmd); break;
-                    case 0x11: _Cmd = DynOS_Level_CmdCall(_Stack, _Cmd); break;
-                    case 0x12: _Cmd = DynOS_Level_CmdCallLoop(_Stack, _Cmd); break;
-                    case 0x13: _Cmd = DynOS_Level_CmdSetRegister(_Stack, _Cmd); break;
-                    case 0x14: _Cmd = DynOS_Level_CmdPushPool(_Stack, _Cmd); break;
-                    case 0x15: _Cmd = DynOS_Level_CmdPopPool(_Stack, _Cmd); break;
-                    case 0x16: _Cmd = DynOS_Level_CmdLoadFixed(_Stack, _Cmd); break;
-                    case 0x17: _Cmd = DynOS_Level_CmdLoadRaw(_Stack, _Cmd); break;
-                    case 0x18: _Cmd = DynOS_Level_CmdLoadMIO0(_Stack, _Cmd); break;
-                    case 0x19: _Cmd = DynOS_Level_CmdLoadMarioHead(_Stack, _Cmd); break;
-                    case 0x1A: _Cmd = DynOS_Level_CmdLoadMIO0Texture(_Stack, _Cmd); break;
-                    case 0x1B: _Cmd = DynOS_Level_CmdInitLevel(_Stack, _Cmd); break;
-                    case 0x1C: _Cmd = DynOS_Level_CmdClearLevel(_Stack, _Cmd); break;
-                    case 0x1D: _Cmd = DynOS_Level_CmdAllocLevelPool(_Stack, _Cmd); break;
-                    case 0x1E: _Cmd = DynOS_Level_CmdFreeLevelPool(_Stack, _Cmd); break;
-                    case 0x1F: _Cmd = DynOS_Level_CmdBeginArea(_Stack, _Cmd); break;
-                    case 0x20: _Cmd = DynOS_Level_CmdEndArea(_Stack, _Cmd); break;
-                    case 0x21: _Cmd = DynOS_Level_CmdLoadModelFromDL(_Stack, _Cmd); break;
-                    case 0x22: _Cmd = DynOS_Level_CmdLoadModelFromGeo(_Stack, _Cmd); break;
-                    case 0x23: _Cmd = DynOS_Level_Cmd23(_Stack, _Cmd); break;
-                    case 0x24: _Cmd = DynOS_Level_CmdObject(_Stack, _Cmd); break;
-                    case 0x25: _Cmd = DynOS_Level_CmdMario(_Stack, _Cmd); break;
-                    case 0x26: _Cmd = DynOS_Level_CmdWarpNode(_Stack, _Cmd); break;
-                    case 0x27: _Cmd = DynOS_Level_CmdPaintingWarpNode(_Stack, _Cmd); break;
-                    case 0x28: _Cmd = DynOS_Level_CmdInstantWarp(_Stack, _Cmd); break;
-                    case 0x29: _Cmd = DynOS_Level_CmdLoadArea(_Stack, _Cmd); break;
-                    case 0x2A: _Cmd = DynOS_Level_CmdUnloadArea(_Stack, _Cmd); break;
-                    case 0x2B: _Cmd = DynOS_Level_CmdSetMarioStartPos(_Stack, _Cmd); break;
-                    case 0x2C: _Cmd = DynOS_Level_Cmd2C(_Stack, _Cmd); break;
-                    case 0x2D: _Cmd = DynOS_Level_Cmd2D(_Stack, _Cmd); break;
-                    case 0x2E: _Cmd = DynOS_Level_CmdSetTerrain(_Stack, _Cmd); break;
-                    case 0x2F: _Cmd = DynOS_Level_CmdSetRooms(_Stack, _Cmd); break;
-                    case 0x30: _Cmd = DynOS_Level_CmdShowDialog(_Stack, _Cmd); break;
-                    case 0x31: _Cmd = DynOS_Level_CmdSetTerrainType(_Stack, _Cmd); break;
-                    case 0x32: _Cmd = DynOS_Level_CmdNop(_Stack, _Cmd); break;
-                    case 0x33: _Cmd = DynOS_Level_CmdSetTransition(_Stack, _Cmd); break;
-                    case 0x34: _Cmd = DynOS_Level_CmdSetBlackout(_Stack, _Cmd); break;
-                    case 0x35: _Cmd = DynOS_Level_CmdSetGamma(_Stack, _Cmd); break;
-                    case 0x36: _Cmd = DynOS_Level_CmdSetBackgroundMusic(_Stack, _Cmd); break;
-                    case 0x37: _Cmd = DynOS_Level_CmdSetMenuMusic(_Stack, _Cmd); break;
-                    case 0x38: _Cmd = DynOS_Level_CmdStopMusic(_Stack, _Cmd); break;
-                    case 0x39: _Cmd = DynOS_Level_CmdMacroObjects(_Stack, _Cmd); break;
-                    case 0x3A: _Cmd = DynOS_Level_Cmd3A(_Stack, _Cmd); break;
-                    case 0x3B: _Cmd = DynOS_Level_CmdSetWhirlpool(_Stack, _Cmd); break;
-                    case 0x3C: _Cmd = DynOS_Level_CmdGetOrSet(_Stack, _Cmd); break;
-                    case 0x3D: _Cmd = DynOS_Level_CmdAdvanceDemo(_Stack, _Cmd); break;
-                    case 0x3E: _Cmd = DynOS_Level_CmdClearDemoPointer(_Stack, _Cmd); break;
-                    case 0x3F: _Cmd = DynOS_Level_CmdJumpArea(_Stack, _Cmd, aPreprocessFunction); break;
-                } break;
+                    case 0x00:
+                        _Cmd = DynOS_Level_CmdExecute(_Stack, _Cmd);
+                        break;
+                    case 0x01:
+                        _Cmd = DynOS_Level_CmdExitAndExecute(_Stack, _Cmd);
+                        break;
+                    case 0x02:
+                        _Cmd = DynOS_Level_CmdExit(_Stack, _Cmd);
+                        break;
+                    case 0x03:
+                        _Cmd = DynOS_Level_CmdSleep(_Stack, _Cmd);
+                        break;
+                    case 0x04:
+                        _Cmd = DynOS_Level_CmdSleepBeforeExit(_Stack, _Cmd);
+                        break;
+                    case 0x05:
+                        _Cmd = DynOS_Level_CmdJump(_Stack, _Cmd);
+                        break;
+                    case 0x06:
+                        _Cmd = DynOS_Level_CmdJumpLink(_Stack, _Cmd);
+                        break;
+                    case 0x07:
+                        _Cmd = DynOS_Level_CmdReturn(_Stack, _Cmd);
+                        break;
+                    case 0x08:
+                        _Cmd = DynOS_Level_CmdJumpLinkPushArg(_Stack, _Cmd);
+                        break;
+                    case 0x09:
+                        _Cmd = DynOS_Level_CmdJumpRepeat(_Stack, _Cmd);
+                        break;
+                    case 0x0A:
+                        _Cmd = DynOS_Level_CmdLoopBegin(_Stack, _Cmd);
+                        break;
+                    case 0x0B:
+                        _Cmd = DynOS_Level_CmdLoopUntil(_Stack, _Cmd);
+                        break;
+                    case 0x0C:
+                        _Cmd = DynOS_Level_CmdJumpIf(_Stack, _Cmd);
+                        break;
+                    case 0x0D:
+                        _Cmd = DynOS_Level_CmdJumpLinkIf(_Stack, _Cmd);
+                        break;
+                    case 0x0E:
+                        _Cmd = DynOS_Level_CmdSkipIf(_Stack, _Cmd);
+                        break;
+                    case 0x0F:
+                        _Cmd = DynOS_Level_CmdSkip(_Stack, _Cmd);
+                        break;
+                    case 0x10:
+                        _Cmd = DynOS_Level_CmdSkipNop(_Stack, _Cmd);
+                        break;
+                    case 0x11:
+                        _Cmd = DynOS_Level_CmdCall(_Stack, _Cmd);
+                        break;
+                    case 0x12:
+                        _Cmd = DynOS_Level_CmdCallLoop(_Stack, _Cmd);
+                        break;
+                    case 0x13:
+                        _Cmd = DynOS_Level_CmdSetRegister(_Stack, _Cmd);
+                        break;
+                    case 0x14:
+                        _Cmd = DynOS_Level_CmdPushPool(_Stack, _Cmd);
+                        break;
+                    case 0x15:
+                        _Cmd = DynOS_Level_CmdPopPool(_Stack, _Cmd);
+                        break;
+                    case 0x16:
+                        _Cmd = DynOS_Level_CmdLoadFixed(_Stack, _Cmd);
+                        break;
+                    case 0x17:
+                        _Cmd = DynOS_Level_CmdLoadRaw(_Stack, _Cmd);
+                        break;
+                    case 0x18:
+                        _Cmd = DynOS_Level_CmdLoadMIO0(_Stack, _Cmd);
+                        break;
+                    case 0x19:
+                        _Cmd = DynOS_Level_CmdLoadMarioHead(_Stack, _Cmd);
+                        break;
+                    case 0x1A:
+                        _Cmd = DynOS_Level_CmdLoadMIO0Texture(_Stack, _Cmd);
+                        break;
+                    case 0x1B:
+                        _Cmd = DynOS_Level_CmdInitLevel(_Stack, _Cmd);
+                        break;
+                    case 0x1C:
+                        _Cmd = DynOS_Level_CmdClearLevel(_Stack, _Cmd);
+                        break;
+                    case 0x1D:
+                        _Cmd = DynOS_Level_CmdAllocLevelPool(_Stack, _Cmd);
+                        break;
+                    case 0x1E:
+                        _Cmd = DynOS_Level_CmdFreeLevelPool(_Stack, _Cmd);
+                        break;
+                    case 0x1F:
+                        _Cmd = DynOS_Level_CmdBeginArea(_Stack, _Cmd);
+                        break;
+                    case 0x20:
+                        _Cmd = DynOS_Level_CmdEndArea(_Stack, _Cmd);
+                        break;
+                    case 0x21:
+                        _Cmd = DynOS_Level_CmdLoadModelFromDL(_Stack, _Cmd);
+                        break;
+                    case 0x22:
+                        _Cmd = DynOS_Level_CmdLoadModelFromGeo(_Stack, _Cmd);
+                        break;
+                    case 0x23:
+                        _Cmd = DynOS_Level_Cmd23(_Stack, _Cmd);
+                        break;
+                    case 0x24:
+                        _Cmd = DynOS_Level_CmdObject(_Stack, _Cmd);
+                        break;
+                    case 0x25:
+                        _Cmd = DynOS_Level_CmdMario(_Stack, _Cmd);
+                        break;
+                    case 0x26:
+                        _Cmd = DynOS_Level_CmdWarpNode(_Stack, _Cmd);
+                        break;
+                    case 0x27:
+                        _Cmd = DynOS_Level_CmdPaintingWarpNode(_Stack, _Cmd);
+                        break;
+                    case 0x28:
+                        _Cmd = DynOS_Level_CmdInstantWarp(_Stack, _Cmd);
+                        break;
+                    case 0x29:
+                        _Cmd = DynOS_Level_CmdLoadArea(_Stack, _Cmd);
+                        break;
+                    case 0x2A:
+                        _Cmd = DynOS_Level_CmdUnloadArea(_Stack, _Cmd);
+                        break;
+                    case 0x2B:
+                        _Cmd = DynOS_Level_CmdSetMarioStartPos(_Stack, _Cmd);
+                        break;
+                    case 0x2C:
+                        _Cmd = DynOS_Level_Cmd2C(_Stack, _Cmd);
+                        break;
+                    case 0x2D:
+                        _Cmd = DynOS_Level_Cmd2D(_Stack, _Cmd);
+                        break;
+                    case 0x2E:
+                        _Cmd = DynOS_Level_CmdSetTerrain(_Stack, _Cmd);
+                        break;
+                    case 0x2F:
+                        _Cmd = DynOS_Level_CmdSetRooms(_Stack, _Cmd);
+                        break;
+                    case 0x30:
+                        _Cmd = DynOS_Level_CmdShowDialog(_Stack, _Cmd);
+                        break;
+                    case 0x31:
+                        _Cmd = DynOS_Level_CmdSetTerrainType(_Stack, _Cmd);
+                        break;
+                    case 0x32:
+                        _Cmd = DynOS_Level_CmdNop(_Stack, _Cmd);
+                        break;
+                    case 0x33:
+                        _Cmd = DynOS_Level_CmdSetTransition(_Stack, _Cmd);
+                        break;
+                    case 0x34:
+                        _Cmd = DynOS_Level_CmdSetBlackout(_Stack, _Cmd);
+                        break;
+                    case 0x35:
+                        _Cmd = DynOS_Level_CmdSetGamma(_Stack, _Cmd);
+                        break;
+                    case 0x36:
+                        _Cmd = DynOS_Level_CmdSetBackgroundMusic(_Stack, _Cmd);
+                        break;
+                    case 0x37:
+                        _Cmd = DynOS_Level_CmdSetMenuMusic(_Stack, _Cmd);
+                        break;
+                    case 0x38:
+                        _Cmd = DynOS_Level_CmdStopMusic(_Stack, _Cmd);
+                        break;
+                    case 0x39:
+                        _Cmd = DynOS_Level_CmdMacroObjects(_Stack, _Cmd);
+                        break;
+                    case 0x3A:
+                        _Cmd = DynOS_Level_Cmd3A(_Stack, _Cmd);
+                        break;
+                    case 0x3B:
+                        _Cmd = DynOS_Level_CmdSetWhirlpool(_Stack, _Cmd);
+                        break;
+                    case 0x3C:
+                        _Cmd = DynOS_Level_CmdGetOrSet(_Stack, _Cmd);
+                        break;
+                    case 0x3D:
+                        _Cmd = DynOS_Level_CmdAdvanceDemo(_Stack, _Cmd);
+                        break;
+                    case 0x3E:
+                        _Cmd = DynOS_Level_CmdClearDemoPointer(_Stack, _Cmd);
+                        break;
+                    case 0x3F:
+                        _Cmd = DynOS_Level_CmdJumpArea(_Stack, _Cmd, aPreprocessFunction);
+                        break;
+                }
+                break;
 
             case 1:
                 _Cmd = (LvlCmd *) DynOS_Level_CmdNext(_Cmd, _Cmd->mSize);
@@ -813,14 +1009,15 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, u8 aWarpId) {
 
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea) {
     DynOS_Level_Init();
-    if (aLevel == LEVEL_TTM && aArea > 2) return NULL;
+    if (aLevel == LEVEL_TTM && aArea > 2)
+        return NULL;
     return DynOS_Level_GetWarp(aLevel, aArea, 0x0A);
 }
 
 s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea) {
     DynOS_Level_Init();
     s16 *_Warp = DynOS_Level_GetWarp(aLevel, aArea, 0xF1);
-    if (!_Warp) _Warp = DynOS_Level_GetWarp(aLevel, aArea, 0xF3);
+    if (!_Warp)
+        _Warp = DynOS_Level_GetWarp(aLevel, aArea, 0xF3);
     return _Warp;
 }
-

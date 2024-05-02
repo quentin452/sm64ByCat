@@ -1,9 +1,9 @@
 #include <ultra64.h>
 
-#include "effects.h"
-#include "load.h"
-#include "data.h"
-#include "seqplayer.h"
+#include <!sm64/src/audio/effects.h>
+#include <!sm64/src/audio/load.h>
+#include <!sm64/src/audio/data.h>
+#include <!sm64/src/audio/seqplayer.h>
 
 #ifdef VERSION_JP
 #define US_FLOAT2(x) x##.0

@@ -1,17 +1,17 @@
 #include <ultra64.h>
 #include "sm64.h"
-#include "game_init.h"
-#include "main.h"
-#include "engine/math_util.h"
-#include "area.h"
-#include "level_update.h"
-#include "save_file.h"
-#include "sound_init.h"
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/main.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/sound_init.h>
 #include "level_table.h"
 #include "course_table.h"
-#include "thread6.h"
+#include <!sm64/src/game/thread6.h>
 #include "macros.h"
-#include "pc/ini.h"
+#include <!sm64/src/pc/ini.h>
 
 #define MENU_DATA_MAGIC 0x4849
 #define SAVE_FILE_MAGIC 0x4441
@@ -47,7 +47,7 @@ STATIC_ASSERT(ARRAY_COUNT(gLevelToCourseNumTable) == LEVEL_COUNT - 1,
 
 #ifdef TEXTSAVES
 
-#include "text_save.inc.h"
+#include <!sm64/src/game/text_save.inc.h>
 
 #endif
 

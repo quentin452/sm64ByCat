@@ -1,22 +1,22 @@
 #include <PR/ultratypes.h>
 
-#include "audio/external.h"
+#include <!sm64/src/audio/external.h>
 #include "behavior_data.h"
-#include "engine/behavior_script.h"
-#include "engine/graph_node.h"
+#include <!sm64/src/engine/behavior_script.h>
+#include <!sm64/src/engine/graph_node.h>
 #include "eu_translation.h"
-#include "game/area.h"
-#include "game/game_init.h"
-#include "game/ingame_menu.h"
-#include "game/level_update.h"
-#include "game/memory.h"
-#include "game/object_helpers.h"
-#include "game/object_list_processor.h"
-#include "game/save_file.h"
-#include "game/segment2.h"
-#include "game/segment7.h"
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/ingame_menu.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/segment2.h>
+#include <!sm64/src/game/segment7.h>"
 #include "sm64.h"
-#include "star_select.h"
+#include <!sm64/src/menu/star_select.h>
 #include "text_strings.h"
 #include "prevent_bss_reordering.h"
 

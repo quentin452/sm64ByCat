@@ -3,15 +3,15 @@
 #include "sm64.h"
 
 #include "object_constants.h"
-#include "game/object_list_processor.h"
-#include "game/interaction.h"
-#include "game/behavior_actions.h"
-#include "game/mario_actions_cutscene.h"
-#include "game/mario_misc.h"
-#include "game/object_helpers.h"
-#include "game/debug.h"
-#include "menu/file_select.h"
-#include "engine/surface_load.h"
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/interaction.h>
+#include <!sm64/src/game/behavior_actions.h>
+#include <!sm64/src/game/mario_actions_cutscene.h>
+#include <!sm64/src/game/mario_misc.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/debug.h>
+#include <!sm64/src/menu/file_select.h>
+#include <!sm64/src/engine/surface_load.h>
 
 #include "actors/common0.h"
 #include "actors/common1.h"

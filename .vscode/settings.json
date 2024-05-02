@@ -101,7 +101,20 @@
     "ingame_menu.h": "c",
     "stdlib.h": "c",
     "cheats.h": "c",
-    "external.h": "c"
+    "external.h": "c",
+    "data.h": "c",
+    "seqplayer.h": "c",
+    "load.h": "c",
+    "effects.h": "c",
+    "behavior_data.h": "c",
+    "camera.h": "c",
+    "area.h": "c",
+    "level_table.h": "c",
+    "interaction.h": "c",
+    "mario_actions_cutscene.h": "c",
+    "save_file.h": "c",
+    "mario_actions_moving.h": "c",
+    "controller_mouse.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {

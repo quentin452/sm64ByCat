@@ -3,26 +3,26 @@
 #include "sm64.h"
 #include "data/dynos.c.h"
 #include "gfx_dimensions.h"
-#include "audio/external.h"
-#include "buffers/buffers.h"
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/buffers/buffers.h>
 #include "gfx_dimensions.h"
-#include "buffers/gfx_output_buffer.h"
-#include "buffers/framebuffers.h"
-#include "buffers/zbuffer.h"
-#include "engine/level_script.h"
-#include "game_init.h"
-#include "main.h"
+#include <!sm64/src/buffers/gfx_output_buffer.h>
+#include <!sm64/src/buffers/framebuffers.h>
+#include <!sm64/src/buffers/zbuffer.h>
+#include <!sm64/src/engine/level_script.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/main.h>
 #include "memory.h"
-#include "profiler.h"
-#include "save_file.h"
+#include <!sm64/src/game/profiler.h>
+#include <!sm64/src/game/save_file.h>
 #include "seq_ids.h"
-#include "sound_init.h"
-#include "print.h"
-#include "segment2.h"
+#include <!sm64/src/game/sound_init.h>
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/segment2.h>
 #include "segment_symbols.h"
-#include "thread6.h"
+#include <!sm64/src/game/thread6.h>
 #include <prevent_bss_reordering.h>
-#include "bettercamera.h"
+#include <!sm64/src/game/bettercamera.h>
 
 // FIXME: I'm not sure all of these variables belong in this file, but I don't
 // know of a good way to split them

@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 // bub.c.inc
 
 // NOTE: These first set of functions spawn a school of bub depending on objF4's

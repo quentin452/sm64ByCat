@@ -5,21 +5,21 @@
 #ifndef VERSION_EU
 #include "prevent_bss_reordering.h"
 #endif
-#include "debug_utils.h"
-#include "draw_objects.h"
-#include "dynlist_proc.h"
-#include "dynlists/dynlists.h"
-#include "gd_macros.h"
-#include "gd_main.h"
-#include "gd_math.h"
-#include "gd_memory.h"
-#include "gd_types.h"
+#include <!sm64/src/goddard/debug_utils.h>
+#include <!sm64/src/goddard/draw_objects.h>
+#include <!sm64/src/goddard/dynlist_proc.h>
+#include <!sm64/src/goddard/dynlists/dynlists.h>
+#include <!sm64/src/goddard/gd_macros.h>
+#include <!sm64/src/goddard/gd_main.h>
+#include <!sm64/src/goddard/gd_math.h>
+#include <!sm64/src/goddard/gd_memory.h>
+#include <!sm64/src/goddard/gd_types.h>
 #include "macros.h"
-#include "objects.h"
-#include "renderer.h"
-#include "sfx.h"
-#include "shape_helper.h"
-#include "skin.h"
+#include <!sm64/src/goddard/objects.h>
+#include <!sm64/src/goddard/renderer.h>
+#include <!sm64/src/goddard/sfx.h>
+#include <!sm64/src/goddard/shape_helper.h>
+#include <!sm64/src/goddard/skin.h>
 
 #include "config.h"
 #include "gfx_dimensions.h"

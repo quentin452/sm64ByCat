@@ -1,4 +1,4 @@
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 // sl_walking_penguin.c.inc
 
 struct SLWalkingPenguinStep {

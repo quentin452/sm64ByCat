@@ -1,13 +1,13 @@
 #include <ultra64.h>
 #include "sm64.h"
 
-#include "game/level_update.h"
-#include "math_util.h"
-#include "game/memory.h"
-#include "graph_node.h"
-#include "game/rendering_graph_node.h"
-#include "game/area.h"
-#include "geo_layout.h"
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/engine/graph_node.h>
+#include <!sm64/src/game/rendering_graph_node.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/engine/geo_layout.h>
 
 // unused Mtx(s)
 s16 identityMtx[4][4] = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };

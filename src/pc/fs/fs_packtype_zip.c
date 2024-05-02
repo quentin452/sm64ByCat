@@ -8,9 +8,9 @@
 #include <tinfl.h>
 
 #include "macros.h"
-#include "../platform.h"
-#include "fs.h"
-#include "dirtree.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/fs/fs.h>
+#include <!sm64/src/pc/fs/dirtree.h>
 
 #define ZIP_BUFSIZE 16384
 #define ZIP_EOCD_BUFSIZE 65578

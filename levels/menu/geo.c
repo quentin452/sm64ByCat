@@ -2,14 +2,14 @@
 #include "sm64.h"
 #include "geo_commands.h"
 
-#include "game/level_geo.h"
-#include "game/geo_misc.h"
-#include "game/camera.h"
-#include "game/moving_texture.h"
-#include "game/screen_transition.h"
-#include "game/paintings.h"
-#include "menu/file_select.h"
-#include "menu/star_select.h"
+#include <!sm64/src/game/level_geo.h>
+#include <!sm64/src/game/geo_misc.h>
+#include <!sm64/src/game/camera.h>
+#include <!sm64/src/game/moving_texture.h>
+#include <!sm64/src/game/screen_transition.h>
+#include <!sm64/src/game/paintings.h>
+#include <!sm64/src/menu/file_select.h>
+#include <!sm64/src/menu/star_select.h>
 
 #include "make_const_nonconst.h"
 

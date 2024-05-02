@@ -12,13 +12,13 @@
 
 #include <ultra64.h>
 
-#include "controller_api.h"
-#include "controller_sdl.h"
-#include "../configfile.h"
-#include "../platform.h"
-#include "../fs/fs.h"
+#include <!sm64/src/pc/controller/controller_api.h>
+#include <!sm64/src/pc/controller/controller_sdl.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/fs/fs.h>
 
-#include "game/level_update.h"
+#include <!sm64/src/game/level_update.h>
 
 // mouse buttons are also in the controller namespace (why), just offset 0x100
 #define VK_OFS_SDL_MOUSE 0x0100

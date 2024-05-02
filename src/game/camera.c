@@ -4,31 +4,31 @@
 
 #include "prevent_bss_reordering.h"
 #include "sm64.h"
-#include "camera.h"
+#include <!sm64/src/game/camera.h>
 #include "seq_ids.h"
 #include "dialog_ids.h"
-#include "audio/external.h"
-#include "mario_misc.h"
-#include "game_init.h"
-#include "hud.h"
-#include "engine/math_util.h"
-#include "area.h"
-#include "engine/surface_collision.h"
-#include "engine/behavior_script.h"
-#include "level_update.h"
-#include "ingame_menu.h"
-#include "mario_actions_cutscene.h"
-#include "save_file.h"
-#include "object_helpers.h"
-#include "print.h"
-#include "spawn_sound.h"
-#include "behavior_actions.h"
+#include <!sm64/src/audio/external.h>
+#include <!sm64/src/game/mario_misc.h>
+#include <!sm64/src/game/game_init.h>
+#include <!sm64/src/game/hud.h>
+#include <!sm64/src/engine/math_util.h>
+#include <!sm64/src/game/area.h>
+#include <!sm64/src/engine/surface_collision.h>
+#include <!sm64/src/engine/behavior_script.h>
+#include <!sm64/src/game/level_update.h>
+#include <!sm64/src/game/ingame_menu.h>
+#include <!sm64/src/game/mario_actions_cutscene.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/game/object_helpers.h>
+#include <!sm64/src/game/print.h>
+#include <!sm64/src/game/spawn_sound.h>
+#include <!sm64/src/game/behavior_actions.h>
 #include "behavior_data.h"
-#include "object_list_processor.h"
-#include "paintings.h"
-#include "engine/graph_node.h"
+#include <!sm64/src/game/object_list_processor.h>
+#include <!sm64/src/game/paintings.h>
+#include <!sm64/src/engine/graph_node.h>
 #include "level_table.h"
-#include "pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
@@ -706,7 +706,7 @@ f32 calc_y_to_curr_floor(f32 *posOff, f32 posMul, f32 posBound, f32 *focOff, f32
     }
 }
 // Compiler gets mad if I put this any further above. thanks refresh 7
-#include "bettercamera.inc.h"
+#include <!sm64/src/game/bettercamera.inc.h>
 
 void focus_on_mario(Vec3f focus, Vec3f pos, f32 posYOff, f32 focYOff, f32 dist, s16 pitch, s16 yaw) {
     Vec3f marioPos;

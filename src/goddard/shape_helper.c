@@ -1,20 +1,20 @@
 #include <PR/ultratypes.h>
 
-#include "debug_utils.h"
-#include "draw_objects.h"
-#include "dynlist_proc.h"
-#include "dynlists/dynlist_macros.h"
-#include "dynlists/dynlists.h"
-#include "gd_main.h"
-#include "gd_math.h"
-#include "gd_types.h"
-#include "joints.h"
+#include <!sm64/src/goddard/debug_utils.h>
+#include <!sm64/src/goddard/draw_objects.h>
+#include <!sm64/src/goddard/dynlist_proc.h>
+#include <!sm64/src/goddard/dynlists/dynlist_macros.h>
+#include <!sm64/src/goddard/dynlists/dynlists.h>
+#include <!sm64/src/goddard/gd_main.h>
+#include <!sm64/src/goddard/gd_math.h>
+#include <!sm64/src/goddard/gd_types.h>
+#include <!sm64/src/goddard/joints.h>
 #include "macros.h"
-#include "objects.h"
-#include "particles.h"
-#include "renderer.h"
-#include "shape_helper.h"
-#include "skin.h"
+#include <!sm64/src/goddard/objects.h>
+#include <!sm64/src/goddard/particles.h>
+#include <!sm64/src/goddard/renderer.h>
+#include <!sm64/src/goddard/shape_helper.h>
+#include <!sm64/src/goddard/skin.h>
 
 #ifndef VERSION_EU
 #include <prevent_bss_reordering.h>

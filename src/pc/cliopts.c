@@ -1,8 +1,8 @@
-#include "cliopts.h"
-#include "configfile.h"
-#include "cheats.h"
-#include "pc_main.h"
-#include "platform.h"
+#include <!sm64/src/pc/cliopts.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/cheats.h>
+#include <!sm64/src/pc/pc_main.h>
+#include <!sm64/src/pc/platform.h>
 #include "macros.h"
 
 #include <strings.h>

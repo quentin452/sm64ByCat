@@ -1,5 +1,5 @@
 
-#include "../../pc/configfile.h"
+#include <!sm64/src/pc/configfile.h>
 /**
  * Behavior for bhvChainChomp, bhvChainChompChainPart, bhvWoodenPost, and bhvChainChompGate.
  * bhvChainChomp spawns its bhvWoodenPost in its behavior script. It spawns 5 chain

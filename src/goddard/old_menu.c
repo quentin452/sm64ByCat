@@ -1,13 +1,13 @@
 #include <PR/ultratypes.h>
 #include <stdio.h>
 
-#include "debug_utils.h"
-#include "dynlist_proc.h"
-#include "gd_types.h"
+#include <!sm64/src/goddard/debug_utils.h>
+#include <!sm64/src/goddard/dynlist_proc.h>
+#include <!sm64/src/goddard/gd_types.h>
 #include "macros.h"
-#include "objects.h"
-#include "old_menu.h"
-#include "renderer.h"
+#include <!sm64/src/goddard/objects.h>
+#include <!sm64/src/goddard/old_menu.h>
+#include <!sm64/src/goddard/renderer.h>
 
 /**
  * @file old_menu.c

@@ -5,10 +5,10 @@
 
 #include "macros.h"
 #include "PR/ultratypes.h"
-#include "game/memory.h"
-#include "game/save_file.h"
-#include "pc/configfile.h"
-#include "discordrpc.h"
+#include <!sm64/src/game/memory.h>
+#include <!sm64/src/game/save_file.h>
+#include <!sm64/src/pc/configfile.h>
+#include <!sm64/src/pc/discord/discordrpc.h>
 
 #define DISCORDLIBFILE "libdiscord-rpc"
 

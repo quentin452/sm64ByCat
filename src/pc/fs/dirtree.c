@@ -3,9 +3,9 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "../platform.h"
-#include "fs.h"
-#include "dirtree.h"
+#include <!sm64/src/pc/platform.h>
+#include <!sm64/src/pc/fs/fs.h>
+#include <!sm64/src/pc/fs/dirtree.h>
 
 static inline uint32_t dirtree_hash(const char *s, size_t len) {
     // djb hash
