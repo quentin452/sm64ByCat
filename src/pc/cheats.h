@@ -14,6 +14,7 @@ struct CheatList {
     bool HugeMario;
     bool TinyMario;
     bool ForeverShell;
+    bool ForeverCap;
     bool WingCap;
     bool MetalCap;
     bool VanishCap;
