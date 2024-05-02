@@ -96,7 +96,8 @@
     "gfx_sdl.h": "c",
     "gfx_window_manager_api.h": "c",
     "stdbool.h": "c",
-    "graph_node.h": "c"
+    "graph_node.h": "c",
+    "windows.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {
