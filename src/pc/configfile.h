@@ -55,6 +55,7 @@ extern bool configCameraMouse;
 extern bool configCameraAnalog;
 extern bool configBowserCam;
 extern bool configHUD;
+extern unsigned int configAutosave;
 extern unsigned int configDrawDistance;
 extern bool configSkipIntro;
 #ifdef DISCORDRPC

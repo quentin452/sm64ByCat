@@ -90,6 +90,7 @@ bool configCameraMouse = false;
 bool configBowserCam = true;
 bool configSkipIntro = 0;
 bool configHUD = true;
+unsigned int configAutosave = 0; // 0=off, 1=mid-level only, 2=end of level only, 3=on
 unsigned int configDrawDistance = 100;
 #ifdef DISCORDRPC
 bool configDiscordRPC = true;
@@ -143,6 +144,7 @@ static const struct ConfigOption options[] = {
     { .name = "bettercam_degrade", .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade },
     { .name = "bettercam_bowser_cam", .type = CONFIG_TYPE_BOOL, .boolValue = &configBowserCam },
     { .name = "skip_intro", .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro },
+    { .name = "autosave", .type = CONFIG_TYPE_UINT, .uintValue = &configAutosave },
 #ifdef DISCORDRPC
     { .name = "discordrpc_enable", .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC },
 #endif

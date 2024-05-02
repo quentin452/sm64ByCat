@@ -98,7 +98,8 @@
     "stdbool.h": "c",
     "graph_node.h": "c",
     "windows.h": "c",
-    "ingame_menu.h": "c"
+    "ingame_menu.h": "c",
+    "stdlib.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {

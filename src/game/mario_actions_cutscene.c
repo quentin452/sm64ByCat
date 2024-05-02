@@ -31,6 +31,9 @@
 #include "../../include/libc/stdlib.h"
 #include "pc/pc_main.h"
 #include "pc/cheats.h"
+
+extern u16 configAutosave;
+
 // TODO: put this elsewhere
 enum SaveOption {
     SAVE_OPT_SAVE_AND_CONTINUE = 1,
@@ -259,6 +262,9 @@ s32 get_star_collection_dialog(struct MarioState *m) {
 void handle_save_menu(struct MarioState *m) {
     s32 dialogID;
     // wait for the menu to show up
+    if (configAutosave == 2 || configAutosave == 3) {
+        gSaveOptSelectIndex = SAVE_OPT_SAVE_AND_CONTINUE;
+    }
     if (is_anim_past_end(m) && gSaveOptSelectIndex != 0) {
         // save and continue / save and quit
         if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE
@@ -635,9 +641,13 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
                 if ((m->actionArg & 1) == 0) {
                     level_trigger_warp(m, WARP_OP_STAR_EXIT);
                 } else {
-                    enable_time_stop();
-                    create_dialog_box_with_response(gLastCompletedStarNum == 7 ? DIALOG_013
-                                                                               : DIALOG_014);
+                    if (configAutosave == 1 || configAutosave == 3) {
+                        gDialogResponse = 1;
+                    } else {
+                        enable_time_stop();
+                        create_dialog_box_with_response(gLastCompletedStarNum == 7 ? DIALOG_013
+                                                                                   : DIALOG_014);
+                    }
                     m->actionState = 1;
                 }
                 break;
@@ -1115,6 +1125,11 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
             set_mario_animation(m, m->actionArg == 0 ? MARIO_ANIM_GENERAL_LAND
                                                      : MARIO_ANIM_LAND_FROM_SINGLE_JUMP);
             if (is_anim_past_end(m)) {
+                if (configAutosave == 2 || configAutosave == 3) {
+                    handle_save_menu(m);
+                    cutscene_exit_painting_end(m->area->camera);
+                    break;
+                }
                 if (gLastCompletedCourseNum != COURSE_BITDW
                     && gLastCompletedCourseNum != COURSE_BITFS) {
                     enable_time_stop();

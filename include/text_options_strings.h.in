@@ -10,10 +10,16 @@
 #define TEXT_OPT_CONTROLS _("CONTROLS")
 #define TEXT_OPT_VIDEO _("DISPLAY")
 #define TEXT_OPT_AUDIO _("SOUND")
+#define TEXT_OPT_OTHER _("OTHER")
 #define TEXT_OPT_CHEATS _("CHEATS")
 
 // Markers
 
+#define TEXT_OPT_AUTOSAVE _("AUTOSAVE")
+#define TEXT_OPT_AUTOSAVE1 _("OFF")
+#define TEXT_OPT_AUTOSAVE2 _("MID-LEVEL ONLY")
+#define TEXT_OPT_AUTOSAVE3 _("END OF LEVEL ONLY")
+#define TEXT_OPT_AUTOSAVE4 _("ON")
 #define TEXT_OPT_L_HIGHLIGHT _(">")
 #define TEXT_OPT_R_HIGHLIGHT _("<")
 #define TEXT_OPT_UNBOUND _("NONE")
@@ -104,6 +110,11 @@
 
 // Markers
 
+#define TEXT_OPT_AUTOSAVE _("Autosave")
+#define TEXT_OPT_AUTOSAVE1 _("Off")
+#define TEXT_OPT_AUTOSAVE2 _("Mid-Level Only")
+#define TEXT_OPT_AUTOSAVE3 _("End of Level Only")
+#define TEXT_OPT_AUTOSAVE4 _("On")
 #define TEXT_OPT_PRESSKEY _("...")
 
 // Option strings
