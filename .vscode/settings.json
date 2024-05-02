@@ -94,7 +94,8 @@
     "gfx_opengl.h": "c",
     "errno.h": "c",
     "gfx_sdl.h": "c",
-    "gfx_window_manager_api.h": "c"
+    "gfx_window_manager_api.h": "c",
+    "stdbool.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {
