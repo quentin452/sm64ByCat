@@ -1237,7 +1237,9 @@ s32 act_riding_shell_ground(struct MarioState *m) {
     }
 
     if (m->input & INPUT_Z_PRESSED) {
-        mario_stop_riding_object(m);
+        if (!Cheats.EnableCheats || !Cheats.ForeverShell) {
+            mario_stop_riding_object(m);
+        }
         if (m->forwardVel < 24.0f) {
             mario_set_forward_vel(m, 24.0f);
         }
@@ -1253,7 +1255,9 @@ s32 act_riding_shell_ground(struct MarioState *m) {
             break;
 
         case GROUND_STEP_HIT_WALL:
-            mario_stop_riding_object(m);
+            if (!Cheats.EnableCheats || !Cheats.ForeverShell) {
+                mario_stop_riding_object(m);
+            }
             play_sound(m->flags & MARIO_METAL_CAP ? SOUND_ACTION_METAL_BONK : SOUND_ACTION_BONK,
                        m->marioObj->header.gfx.cameraToObject);
             m->particleFlags |= PARTICLE_VERTICAL_STAR;
