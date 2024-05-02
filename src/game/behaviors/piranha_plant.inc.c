@@ -331,7 +331,7 @@ void bhv_piranha_plant_loop(void) {
     cur_obj_call_action_function(TablePiranhaPlantActions);
     // In WF, hide all Piranha Plants once high enough up.
     if (!configWindow.no_drawing_distance && gCurrLevelNum == LEVEL_WF) {
-        if (gMarioObject->oPosY > 3400.0f)
+        if (gMarioObject->oPosY > 34 * configDrawDistance)
             cur_obj_hide();
         else
             cur_obj_unhide();

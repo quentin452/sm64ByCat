@@ -55,7 +55,7 @@ void update_whirlpool(void) {
 
 void bhv_whirlpool_loop(void) {
     if (!configWindow.no_drawing_distance) {
-        if (o->oDistanceToMario < 5000.0f) {
+        if (o->oDistanceToMario < 50 * configDrawDistance) {
             update_whirlpool();
         } else {
             o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;

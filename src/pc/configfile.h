@@ -54,6 +54,7 @@ extern bool configEnableCamera;
 extern bool configCameraMouse;
 extern bool configCameraAnalog;
 extern bool configHUD;
+extern unsigned int configDrawDistance;
 extern bool configSkipIntro;
 #ifdef DISCORDRPC
 extern bool configDiscordRPC;

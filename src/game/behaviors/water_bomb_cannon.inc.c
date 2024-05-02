@@ -40,7 +40,7 @@ void bhv_bubble_cannon_barrel_loop(void) {
 
 void water_bomb_cannon_act_0(void) {
     if (!configWindow.no_drawing_distance) {
-        if (o->oDistanceToMario < 2000.0f) {
+        if (o->oDistanceToMario < 20 * configDrawDistance) {
             spawn_object(o, MODEL_CANNON_BARREL, bhvCannonBarrelBubbles);
             cur_obj_unhide();
 
@@ -57,7 +57,7 @@ void water_bomb_cannon_act_0(void) {
 
 void water_bomb_cannon_act_1(void) {
     if (!configWindow.no_drawing_distance) {
-        if (o->oDistanceToMario > 2500.0f) {
+        if (o->oDistanceToMario > 25 * configDrawDistance) {
             o->oAction = 2;
         }
     } else if (o->oBehParams2ndByte == 0) {

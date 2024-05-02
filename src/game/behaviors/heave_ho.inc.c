@@ -76,7 +76,8 @@ void heave_ho_act_3(void) {
 
 void heave_ho_act_0(void) {
     if (!configWindow.no_drawing_distance) {
-        if (find_water_level(o->oPosX, o->oPosZ) < o->oPosY && o->oDistanceToMario < 4000.0f) {
+        if (find_water_level(o->oPosX, o->oPosZ) < o->oPosY
+            && o->oDistanceToMario < 40 * configDrawDistance) {
             if (find_water_level(o->oPosX, o->oPosZ) < (o->oPosY - 50.0f)) {
                 cur_obj_set_pos_to_home();
                 cur_obj_become_tangible();

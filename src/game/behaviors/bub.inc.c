@@ -10,7 +10,7 @@ void bub_spawner_act_0(void) {
     s32 i;
     s32 sp18 = o->oBirdChirpChirpUnkF4;
     if (!configWindow.no_drawing_distance) {
-        if (o->oDistanceToMario < 1500.0f) {
+        if (o->oDistanceToMario < 15 * configDrawDistance) {
             for (i = 0; i < sp18; i++)
                 spawn_object(o, MODEL_BUB, bhvBub);
             o->oAction = 1;

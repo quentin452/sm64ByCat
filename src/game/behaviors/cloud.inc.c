@@ -49,7 +49,7 @@ static void cloud_act_spawn_parts(void) {
  */
 static void cloud_act_fwoosh_hidden(void) {
     if (!configWindow.no_drawing_distance) {
-        if (o->oDistanceToMario < 2000.0f) {
+        if (o->oDistanceToMario < 20 * configDrawDistance) {
             cur_obj_unhide();
             o->oAction = CLOUD_ACT_SPAWN_PARTS;
         }
@@ -64,7 +64,7 @@ static void cloud_act_fwoosh_hidden(void) {
  * long enough, blow wind at him.
  */
 static void cloud_fwoosh_update(void) {
-    if (!configWindow.no_drawing_distance && o->oDistanceToMario > 2500.0f) {
+    if (!configWindow.no_drawing_distance && o->oDistanceToMario > 25 * configDrawDistance) {
         o->oAction = CLOUD_ACT_UNLOAD;
     } else {
         if (o->oCloudBlowing) {

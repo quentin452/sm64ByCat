@@ -95,7 +95,8 @@
     "errno.h": "c",
     "gfx_sdl.h": "c",
     "gfx_window_manager_api.h": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "graph_node.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {

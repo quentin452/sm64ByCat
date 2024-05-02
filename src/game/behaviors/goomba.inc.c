@@ -92,9 +92,9 @@ void spawn_goombas_based_on_distance(void) {
 void bhv_goomba_triplet_spawner_update(void) {
     if (o->oAction == GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED) {
         if (!configWindow.no_drawing_distance) {
-            if (o->oDistanceToMario < 3000.0f) {
+            if (o->oDistanceToMario < 30 * configDrawDistance) {
                 spawn_goombas_based_on_distance();
-            } else if (o->oDistanceToMario > 4000.0f) {
+            } else if (o->oDistanceToMario > 40 * configDrawDistance) {
                 o->oAction = GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED;
             }
         } else {

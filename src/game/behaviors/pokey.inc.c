@@ -185,7 +185,7 @@ static void pokey_act_wander(void) {
 
     if (o->oPokeyNumAliveBodyParts == 0) {
         obj_mark_for_deletion(o);
-    } else if (!configWindow.no_drawing_distance && o->oDistanceToMario > 2500.0f) {
+    } else if (!configWindow.no_drawing_distance && o->oDistanceToMario > 25 * configDrawDistance) {
         o->oAction = POKEY_ACT_UNLOAD_PARTS;
         o->oForwardVel = 0.0f;
     } else {

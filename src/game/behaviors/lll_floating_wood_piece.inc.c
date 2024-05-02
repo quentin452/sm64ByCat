@@ -16,7 +16,7 @@ void bhv_lll_floating_wood_bridge_loop(void) {
     switch (o->oAction) {
         case 0:
             if (!configWindow.no_drawing_distance) {
-                if (o->oDistanceToMario < 2500.0f) {
+                if (o->oDistanceToMario < 25 * configDrawDistance) {
                     for (i = 1; i < 4; i++) {
                         sp3C = spawn_object_relative(0, (i - 2) * 300, 0, 0, o, MODEL_LLL_WOOD_BRIDGE,
                                                      bhvLllWoodPiece);
@@ -34,7 +34,7 @@ void bhv_lll_floating_wood_bridge_loop(void) {
             }
             break;
         case 1:
-            if (!configWindow.no_drawing_distance && o->oDistanceToMario > 2600.0f)
+            if (!configWindow.no_drawing_distance && o->oDistanceToMario > 26 * configDrawDistance)
                 o->oAction = 2;
             break;
         case 2:

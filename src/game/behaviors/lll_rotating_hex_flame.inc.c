@@ -32,7 +32,7 @@ void fire_bar_spawn_flames(s16 a0) {
 
 void fire_bar_act_0(void) {
     if (!configWindow.no_drawing_distance) {
-        if (o->oDistanceToMario < 3000.0f)
+        if (o->oDistanceToMario < 30 * configDrawDistance)
             o->oAction = 1;
     } else {
         o->oAction = 1;
@@ -50,7 +50,7 @@ void fire_bar_act_1(void) {
 void fire_bar_act_2(void) {
     o->oAngleVelYaw = -0x100;
     o->oMoveAngleYaw += o->oAngleVelYaw;
-    if (!configWindow.no_drawing_distance && o->oDistanceToMario > 3200.0f)
+    if (!configWindow.no_drawing_distance && o->oDistanceToMario > 32 * configDrawDistance)
         o->oAction = 3;
 }
 

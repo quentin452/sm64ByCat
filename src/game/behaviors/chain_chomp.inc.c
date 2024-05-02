@@ -76,7 +76,7 @@ static void allocate_and_initialize_segments(void) {
 
 static void chain_chomp_act_uninitialized(void) {
     if (!configWindow.no_drawing_distance) {
-        if (o->oDistanceToMario < 3000.0f) {
+        if (o->oDistanceToMario < 30 * configDrawDistance) {
             allocate_and_initialize_segments();
         }
     } else {
@@ -360,7 +360,7 @@ static void chain_chomp_act_move(void) {
 
     // Unload chain if mario is far enough
     if (!configWindow.no_drawing_distance && o->oChainChompReleaseStatus == CHAIN_CHOMP_NOT_RELEASED
-        && o->oDistanceToMario > 4000.0f) {
+        && o->oDistanceToMario > 40 * configDrawDistance) {
         o->oAction = CHAIN_CHOMP_ACT_UNLOAD_CHAIN;
         o->oForwardVel = o->oVelY = 0.0f;
     } else {
