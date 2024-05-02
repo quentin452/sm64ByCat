@@ -14,6 +14,7 @@ struct CheatList {
     bool HugeMario;
     bool TinyMario;
     unsigned int StayInLevel;
+    unsigned int BLJAnywhere;
     bool UnlockDoors;
     bool ForeverShell;
     bool ForeverCap;

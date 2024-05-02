@@ -99,7 +99,9 @@
     "graph_node.h": "c",
     "windows.h": "c",
     "ingame_menu.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "cheats.h": "c",
+    "external.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {

@@ -85,11 +85,11 @@ static const u8 optsAutosaveStr[][32] = {
 };
 
 static const u8 optsCheatsStr[][64] = {
-    { TEXT_OPT_CHEAT1 },      { TEXT_OPT_CHEAT2 },   { TEXT_OPT_CHEAT3 },    { TEXT_OPT_CHEAT4 },
-    { TEXT_OPT_CHEAT5 },      { TEXT_OPT_CHEAT6 },   { TEXT_OPT_CHEAT7 },    { TEXT_OPT_CHEAT8 },
-    { TEXT_OPT_CHEAT9 },      { TEXT_OPT_CHEAT10 },  { TEXT_OPT_CHEAT11 },   { TEXT_OPT_FOREVER_SHELL },
-    { TEXT_OPT_FOREVER_CAP }, { TEXT_OPT_WING_CAP }, { TEXT_OPT_METAL_CAP }, { TEXT_OPT_VANISH_CAP },
-    { TEXT_OPT_NORMAL_CAP },
+    { TEXT_OPT_CHEAT1 },        { TEXT_OPT_CHEAT2 },      { TEXT_OPT_CHEAT3 },   { TEXT_OPT_CHEAT4 },
+    { TEXT_OPT_CHEAT5 },        { TEXT_OPT_CHEAT6 },      { TEXT_OPT_CHEAT7 },   { TEXT_OPT_CHEAT8 },
+    { TEXT_OPT_CHEAT9 },        { TEXT_OPT_CHEAT10 },     { TEXT_OPT_CHEAT11 },  { TEXT_OPT_CHEAT12 },
+    { TEXT_OPT_FOREVER_SHELL }, { TEXT_OPT_FOREVER_CAP }, { TEXT_OPT_WING_CAP }, { TEXT_OPT_METAL_CAP },
+    { TEXT_OPT_VANISH_CAP },    { TEXT_OPT_NORMAL_CAP },
 };
 
 static const u8 optsStayInLevelStr[][32] = {
@@ -104,6 +104,13 @@ static const u8 bindStr[][32] = {
     { TEXT_BIND_C_UP },    { TEXT_BIND_C_DOWN },  { TEXT_BIND_C_LEFT }, { TEXT_BIND_C_RIGHT },
     { TEXT_BIND_UP },      { TEXT_BIND_DOWN },    { TEXT_BIND_LEFT },   { TEXT_BIND_RIGHT },
     { TEXT_OPT_DEADZONE }, { TEXT_OPT_RUMBLE },
+};
+
+static const u8 optsBLJCheatStr[][32] = {
+    { TEXT_OPT_BLJCHT1 },  { TEXT_OPT_BLJCHT2 },  { TEXT_OPT_BLJCHT3 },  { TEXT_OPT_BLJCHT4 },
+    { TEXT_OPT_BLJCHT5 },  { TEXT_OPT_BLJCHT6 },  { TEXT_OPT_BLJCHT7 },  { TEXT_OPT_BLJCHT8 },
+    { TEXT_OPT_BLJCHT9 },  { TEXT_OPT_BLJCHT10 }, { TEXT_OPT_BLJCHT11 }, { TEXT_OPT_BLJCHT12 },
+    { TEXT_OPT_BLJCHT13 },
 };
 
 static const u8 *filterChoices[] = {
@@ -129,6 +136,13 @@ static const u8 *stayInLevelChoices[] = {
     optsStayInLevelStr[0],
     optsStayInLevelStr[1],
     optsStayInLevelStr[2],
+};
+
+static const u8 *bljCheatChoices[] = {
+    optsBLJCheatStr[0],  optsBLJCheatStr[1], optsBLJCheatStr[2],  optsBLJCheatStr[3],
+    optsBLJCheatStr[4],  optsBLJCheatStr[5], optsBLJCheatStr[6],  optsBLJCheatStr[7],
+    optsBLJCheatStr[8],  optsBLJCheatStr[9], optsBLJCheatStr[10], optsBLJCheatStr[11],
+    optsBLJCheatStr[12],
 };
 
 enum OptType {
@@ -281,7 +295,6 @@ static struct Option optsAudio[] = {
 static struct Option optsOther[] = {
     DEF_OPT_CHOICE(optsAutosaveStr[0], &configAutosave, autosaveChoices),
 };
-
 static struct Option optsCheats[] = {
     DEF_OPT_TOGGLE(optsCheatsStr[0], &Cheats.EnableCheats),
     DEF_OPT_TOGGLE(optsCheatsStr[1], &Cheats.MoonJump),
@@ -294,12 +307,13 @@ static struct Option optsCheats[] = {
     DEF_OPT_TOGGLE(optsCheatsStr[8], &Cheats.TinyMario),
     DEF_OPT_CHOICE(optsCheatsStr[9], &Cheats.StayInLevel, stayInLevelChoices),
     DEF_OPT_TOGGLE(optsCheatsStr[10], &Cheats.UnlockDoors),
-    DEF_OPT_TOGGLE(optsCheatsStr[11], &Cheats.ForeverShell),
-    DEF_OPT_TOGGLE(optsCheatsStr[12], &Cheats.ForeverCap),
-    DEF_OPT_BUTTON(optsCheatsStr[13], setCap_Wing),
-    DEF_OPT_BUTTON(optsCheatsStr[14], setCap_Metal),
-    DEF_OPT_BUTTON(optsCheatsStr[15], setCap_Vanish),
-    DEF_OPT_BUTTON(optsCheatsStr[16], setCap_Normal),
+    DEF_OPT_CHOICE(optsCheatsStr[11], &Cheats.BLJAnywhere, bljCheatChoices),
+    DEF_OPT_TOGGLE(optsCheatsStr[12], &Cheats.ForeverShell),
+    DEF_OPT_TOGGLE(optsCheatsStr[13], &Cheats.ForeverCap),
+    DEF_OPT_BUTTON(optsCheatsStr[14], setCap_Wing),
+    DEF_OPT_BUTTON(optsCheatsStr[15], setCap_Metal),
+    DEF_OPT_BUTTON(optsCheatsStr[16], setCap_Vanish),
+    DEF_OPT_BUTTON(optsCheatsStr[17], setCap_Normal),
 };
 
 /* submenu definitions */
