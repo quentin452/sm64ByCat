@@ -48,8 +48,6 @@ struct GraphNode gObjParentGraphNode;
 struct AllocOnlyPool *gGraphNodePool;
 struct GraphNode *gCurRootGraphNode;
 
-UNUSED s32 D_8038BCA8;
-
 /* The gGeoViews array is a mysterious one. Some background:
  *
  * If there are e.g. multiple Goombas, the multiple Goomba objects share one
@@ -96,11 +94,8 @@ uintptr_t gGeoLayoutStack[16];
 struct GraphNode *gCurGraphNodeList[32];
 s16 gCurGraphNodeIndex;
 s16 gGeoLayoutStackIndex; // similar to SP register in MIPS
-UNUSED s16 D_8038BD7C;
 s16 gGeoLayoutReturnIndex; // similar to RA register in MIPS
 u8 *gGeoLayoutCommand;
-
-u32 unused_8038B894[3] = { 0 };
 
 /*
   0x00: Branch and store return address
@@ -267,7 +262,7 @@ void geo_layout_cmd_node_perspective(void) {
         gGeoLayoutCommand += 4 << CMD_SIZE_SHIFT;
     }
 
-    graphNode = init_graph_node_perspective(gGraphNodePool, (f32) fov, near, far, frustumFunc, 0);
+    graphNode = init_graph_node_perspective(gGraphNodePool, (f32) fov, near, far, frustumFunc);
 
     register_scene_graph_node(&graphNode->fnNode.node);
 
@@ -340,8 +335,7 @@ void geo_layout_cmd_node_switch_case(void) {
         init_graph_node_switch_case(gGraphNodePool,
                                     cur_geo_cmd_s16(0x02), // case which is initially selected
                                     0,
-                                    (GraphNodeFunc) cur_geo_cmd_ptr(0x04), // case update function
-                                    0);
+                                    (GraphNodeFunc) cur_geo_cmd_ptr(0x04)); // case update function
 
     register_scene_graph_node(&graphNode->fnNode.node);
 
@@ -693,8 +687,7 @@ void geo_layout_cmd_node_background(void) {
     graphNode = init_graph_node_background(
         gGraphNodePool,
         cur_geo_cmd_s16(0x02), // background ID, or RGBA5551 color if asm function is null
-        (GraphNodeFunc) cur_geo_cmd_ptr(0x04), // asm function
-        0);
+        (GraphNodeFunc) cur_geo_cmd_ptr(0x04)); // asm function
 
     register_scene_graph_node(&graphNode->fnNode.node);
 

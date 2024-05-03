@@ -103,7 +103,6 @@ struct GraphNodeOrthoProjection {
  */
 struct GraphNodePerspective {
     /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ s32 unused;
     /*0x1C*/ f32 fov;  // horizontal field of view in degrees
     /*0x20*/ s16 near; // near clipping plane
     /*0x22*/ s16 far;  // far clipping plane
@@ -159,7 +158,6 @@ struct GraphNodeLevelOfDetail {
  */
 struct GraphNodeSwitchCase {
     /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ s32 unused;
     /*0x1C*/ s16 numCases;
     /*0x1E*/ s16 selectedCase;
 };
@@ -362,7 +360,7 @@ struct GraphNodeRoot *init_graph_node_root(struct AllocOnlyPool *pool, s16 areaI
 struct GraphNodeOrthoProjection *init_graph_node_ortho_projection(struct AllocOnlyPool *pool,
                                                                   f32 scale);
 struct GraphNodePerspective *init_graph_node_perspective(struct AllocOnlyPool *pool, f32 fov, s16 near,
-                                                         s16 far, GraphNodeFunc nodeFunc, s32 unused);
+                                                         s16 far, GraphNodeFunc nodeFunc);
 struct GraphNodeStart *init_graph_node_start(struct AllocOnlyPool *pool,
                                              struct GraphNodeStart *graphNode);
 struct GraphNodeMasterList *init_graph_node_master_list(struct AllocOnlyPool *pool, s16 on);
@@ -370,8 +368,7 @@ struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct AllocOnlyPool
                                                             struct GraphNodeLevelOfDetail *graphNode,
                                                             s16 minDistance, s16 maxDistance);
 struct GraphNodeSwitchCase *init_graph_node_switch_case(struct AllocOnlyPool *pool, s16 numCases,
-                                                        s16 selectedCase, GraphNodeFunc nodeFunc,
-                                                        s32 unused);
+                                                        s16 selectedCase, GraphNodeFunc nodeFunc);
 struct GraphNodeCamera *init_graph_node_camera(struct AllocOnlyPool *pool, f32 *pos, f32 *focus,
                                                GraphNodeFunc func, s32 mode);
 struct GraphNodeTranslationRotation *
@@ -405,7 +402,7 @@ struct GraphNodeObjectParent *init_graph_node_object_parent(struct AllocOnlyPool
 struct GraphNodeGenerated *init_graph_node_generated(struct AllocOnlyPool *pool, GraphNodeFunc gfxFunc,
                                                      s32 parameter);
 struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *pool, u16 background,
-                                                       GraphNodeFunc backgroundFunc, s32 zero);
+                                                       GraphNodeFunc backgroundFunc);
 struct GraphNodeHeldObject *init_graph_node_held_object(struct AllocOnlyPool *pool,
                                                         struct Object *objNode, Vec3s translation,
                                                         GraphNodeFunc nodeFunc, s32 playerIndex);
