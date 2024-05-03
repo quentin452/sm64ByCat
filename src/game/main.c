@@ -25,7 +25,6 @@
 #define MESG_START_GFX_SPTASK 103
 #define MESG_NMI_REQUEST 104
 
-OSThread D_80339210; // unused?
 OSThread gIdleThread;
 OSThread gMainThread;
 OSThread gGameLoopThread;
@@ -195,8 +194,6 @@ void receive_new_tasks(void) {
 }
 
 void start_sptask(s32 taskType) {
-    UNUSED s32 pad; // needed to pad the stack
-
     if (taskType == M_AUDTASK) {
         gActiveSPTask = sCurrentAudioSPTask;
     } else {

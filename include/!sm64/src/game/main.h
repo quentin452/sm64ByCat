@@ -19,7 +19,6 @@ struct StructSH8031D9B0 {
     s16 unk0E;
 };
 
-extern OSThread D_80339210;
 extern OSThread gIdleThread;
 extern OSThread gMainThread;
 extern OSThread gGameLoopThread;
