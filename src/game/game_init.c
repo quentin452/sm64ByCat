@@ -520,8 +520,6 @@ void init_controllers(void) {
 }
 
 void setup_game_memory(void) {
-    UNUSED u8 pad[8];
-
     set_segment_base_addr(0, (void *) 0x80000000);
     osCreateMesgQueue(&D_80339CB8, &D_80339CD4, 1);
     osCreateMesgQueue(&gGameVblankQueue, &D_80339CD0, 1);

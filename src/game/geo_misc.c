@@ -11,12 +11,11 @@
 #include "levels/rr/header.h"
 #include <!sm64/src/game/mario.h>
 #include <!sm64/src/game/mario_actions_cutscene.h>
-#include "memory.h"
 #include <!sm64/src/game/object_list_processor.h>
 #include <!sm64/src/game/rendering_graph_node.h>
 #include <!sm64/src/game/save_file.h>
 #include <!sm64/src/game/segment2.h>
-
+#include <math.h>
 /**
  * @file geo_misc.c
  * This file contains miscellaneous geo_asm scripts.
@@ -44,31 +43,24 @@ s8 gFlyingCarpetState;
  * by 5.
  */
 void make_vertex(Vtx *vtx, s32 n, f32 x, f32 y, f32 z, s16 tx, s16 ty, u8 r, u8 g, u8 b, u8 a) {
-    vtx[n].v.ob[0] = x;
-    vtx[n].v.ob[1] = y;
-    vtx[n].v.ob[2] = z;
-
-    vtx[n].v.flag = 0;
-
-    vtx[n].v.tc[0] = tx;
-    vtx[n].v.tc[1] = ty;
-
-    vtx[n].v.cn[0] = r;
-    vtx[n].v.cn[1] = g;
-    vtx[n].v.cn[2] = b;
-    vtx[n].v.cn[3] = a;
+    Vtx *vertex = &vtx[n];
+    vertex->v.ob[0] = x;
+    vertex->v.ob[1] = y;
+    vertex->v.ob[2] = z;
+    vertex->v.flag = 0;
+    vertex->v.tc[0] = tx;
+    vertex->v.tc[1] = ty;
+    vertex->v.cn[0] = r;
+    vertex->v.cn[1] = g;
+    vertex->v.cn[2] = b;
+    vertex->v.cn[3] = a;
 }
 
 /**
  * Round `num` to the nearest `s16`.
  */
 s16 round_float(f32 num) {
-    // Note that double literals are used here, rather than float literals.
-    if (num >= 0.0) {
-        return num + 0.5;
-    } else {
-        return num - 0.5;
-    }
+    return (s16) round(num);
 }
 
 /**
@@ -196,16 +188,12 @@ Gfx *geo_exec_cake_end_screen(s32 callContext, struct GraphNode *node, UNUSED f3
     Gfx *displayListHead = NULL;
 
     if (callContext == GEO_CONTEXT_RENDER) {
-        displayList = alloc_display_list(3 * sizeof(*displayList));
+        displayList = alloc_display_list(2 * sizeof(*displayList));
         displayListHead = displayList;
 
         generatedNode->fnNode.node.flags = (generatedNode->fnNode.node.flags & 0xFF) | 0x100;
 #ifdef VERSION_EU
-        gSPDisplayList(displayListHead++, dl_cake_end_screen);
-#else
         gSPDisplayList(displayListHead++, dl_proj_mtx_fullscreen);
-#endif
-#ifdef VERSION_EU
         switch (eu_get_language()) {
             case LANGUAGE_ENGLISH:
                 gSPDisplayList(displayListHead++, dl_cake_end_screen_eu_070296F8);
@@ -218,6 +206,7 @@ Gfx *geo_exec_cake_end_screen(s32 callContext, struct GraphNode *node, UNUSED f3
                 break;
         }
 #else
+        gSPDisplayList(displayListHead++, dl_proj_mtx_fullscreen);
         gSPDisplayList(displayListHead++, dl_cake_end_screen);
 #endif
         gSPEndDisplayList(displayListHead);
