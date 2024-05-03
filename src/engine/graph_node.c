@@ -410,24 +410,15 @@ struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *chil
  * gets thrown out when changing areas.
  */
 struct GraphNode *geo_remove_child(struct GraphNode *graphNode) {
-    struct GraphNode *parent;
-    struct GraphNode **firstChild;
-
-    parent = graphNode->parent;
-    firstChild = &parent->children;
+    struct GraphNode *parent = graphNode->parent;
 
     // Remove link with siblings
     graphNode->prev->next = graphNode->next;
     graphNode->next->prev = graphNode->prev;
 
-    // If this node was the first child, a new first child must be chosen
-    if (*firstChild == graphNode) {
-        // The list is circular, so this checks whether it was the only child
-        if (graphNode->next == graphNode) {
-            *firstChild = NULL; // Parent has no children anymore
-        } else {
-            *firstChild = graphNode->next; // Choose a new first child
-        }
+    // If this node was the first child, update the parent's first child pointer
+    if (parent->children == graphNode) {
+        parent->children = (graphNode->next == graphNode) ? NULL : graphNode->next;
     }
 
     return parent;
@@ -469,21 +460,18 @@ struct GraphNode *geo_make_first_child(struct GraphNode *newFirstChild) {
  */
 void geo_call_global_function_nodes_helper(struct GraphNode *graphNode, s32 callContext) {
     struct GraphNode **globalPtr;
-    struct GraphNode *curNode;
-    struct FnGraphNode *asFnNode;
+    struct GraphNode *curNode = graphNode;
 
-    curNode = graphNode;
-
-    do {
-        asFnNode = (struct FnGraphNode *) curNode;
+    while (curNode) {
+        struct FnGraphNode *asFnNode = (struct FnGraphNode *) curNode;
 
         if (curNode->type & GRAPH_NODE_TYPE_FUNCTIONAL) {
-            if (asFnNode->func != NULL) {
+            if (asFnNode->func) {
                 asFnNode->func(callContext, curNode, NULL);
             }
         }
 
-        if (curNode->children != NULL) {
+        if (curNode->children) {
             switch (curNode->type) {
                 case GRAPH_NODE_TYPE_MASTER_LIST:
                     globalPtr = (struct GraphNode **) &gCurGraphNodeMasterList;
@@ -502,17 +490,22 @@ void geo_call_global_function_nodes_helper(struct GraphNode *graphNode, s32 call
                     break;
             }
 
-            if (globalPtr != NULL) {
+            if (globalPtr) {
                 *globalPtr = curNode;
             }
 
             geo_call_global_function_nodes_helper(curNode->children, callContext);
 
-            if (globalPtr != NULL) {
+            if (globalPtr) {
                 *globalPtr = NULL;
             }
         }
-    } while ((curNode = curNode->next) != graphNode);
+
+        curNode = curNode->next;
+        if (curNode == graphNode) {
+            break;
+        }
+    }
 }
 
 /**
@@ -629,12 +622,14 @@ void geo_obj_init_animation_accel(struct GraphNodeObject *graphNode, struct Anim
  * with actual animation values.
  */
 s32 retrieve_animation_index(s32 frame, u16 **attributes) {
+    s32 maxFrame = (*attributes)[0];
+    s32 startIndex = (*attributes)[1];
     s32 result;
 
-    if (frame < (*attributes)[0]) {
-        result = (*attributes)[1] + frame;
+    if (frame < maxFrame) {
+        result = startIndex + frame;
     } else {
-        result = (*attributes)[1] + (*attributes)[0] - 1;
+        result = startIndex + maxFrame - 1;
     }
 
     *attributes += 2;
@@ -717,17 +712,18 @@ void geo_retreive_animation_translation(struct GraphNodeObject *obj, Vec3f posit
         values = segmented_to_virtual((void *) animation->values);
 
         frame = obj->unk38.animFrame;
-
         if (frame < 0) {
             frame = 0;
         }
 
-        if (1) // ? necessary to match
-        {
-            position[0] = (f32) values[retrieve_animation_index(frame, &attribute)];
-            position[1] = (f32) values[retrieve_animation_index(frame, &attribute)];
-            position[2] = (f32) values[retrieve_animation_index(frame, &attribute)];
-        }
+        s32 index = retrieve_animation_index(frame, &attribute);
+        f32 x_translation = (f32) values[index];
+        f32 y_translation = (f32) values[index];
+        f32 z_translation = (f32) values[index];
+
+        position[0] = x_translation;
+        position[1] = y_translation;
+        position[2] = z_translation;
     } else {
         vec3f_set(position, 0, 0, 0);
     }
@@ -738,15 +734,8 @@ void geo_retreive_animation_translation(struct GraphNodeObject *obj, Vec3f posit
  * GraphNodeRoot. If it is not for some reason, null is returned.
  */
 struct GraphNodeRoot *geo_find_root(struct GraphNode *graphNode) {
-    struct GraphNodeRoot *resGraphNode = NULL;
-
-    while (graphNode->parent != NULL) {
+    while (graphNode->parent) {
         graphNode = graphNode->parent;
     }
-
-    if (graphNode->type == GRAPH_NODE_TYPE_ROOT) {
-        resGraphNode = (struct GraphNodeRoot *) graphNode;
-    }
-
-    return resGraphNode;
+    return (graphNode->type == GRAPH_NODE_TYPE_ROOT) ? (struct GraphNodeRoot *) graphNode : NULL;
 }
