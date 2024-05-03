@@ -8,16 +8,10 @@
 #include <!sm64/src/game/rendering_graph_node.h>
 #include <!sm64/src/game/area.h>
 #include <!sm64/src/engine/geo_layout.h>
-
-// unused Mtx(s)
-s16 identityMtx[4][4] = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
-s16 zeroMtx[4][4] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
-
+#include <stdio.h>
 Vec3f gVec3fZero = { 0.0f, 0.0f, 0.0f };
 Vec3s gVec3sZero = { 0, 0, 0 };
 Vec3f gVec3fOne = { 1.0f, 1.0f, 1.0f };
-UNUSED Vec3s gVec3sOne = { 1, 1, 1 };
-
 /**
  * Initialize a geo node with a given type. Sets all links such that there
  * are no siblings, parent or children for this node.
@@ -30,75 +24,71 @@ void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type) {
     graphNode->parent = NULL;
     graphNode->children = NULL;
 }
+struct GraphNode *init_graph_node(struct AllocOnlyPool *pool, struct GraphNode *graphNode, size_t size,
+                                  s32 type, const char *caller) {
+    if (!pool) {
+        printf("Attention: Le pool de mémoire est NULL lors de l'initialisation du nœud de type %d "
+               "dans %s.\n",
+               type, caller);
+        return NULL;
+    }
+
+    graphNode = alloc_only_pool_alloc(pool, size);
+    if (!graphNode) {
+        printf("Erreur: Impossible d'allouer %zu octets pour le nœud de type %d dans %s.\n", size, type,
+               caller);
+        return NULL;
+    }
+
+    init_scene_graph_node_links(graphNode, type);
+    return graphNode;
+}
 
 /**
  * Allocated and returns a newly created root node
  */
-struct GraphNodeRoot *init_graph_node_root(struct AllocOnlyPool *pool, struct GraphNodeRoot *graphNode,
-                                           s16 areaIndex, s16 x, s16 y, s16 width, s16 height) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeRoot));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_ROOT);
-
-        graphNode->areaIndex = areaIndex;
-        graphNode->unk15 = 0;
-        graphNode->x = x;
-        graphNode->y = y;
-        graphNode->width = width;
-        graphNode->height = height;
-        graphNode->views = NULL;
-        graphNode->numViews = 0;
-    }
-
+struct GraphNodeRoot *init_graph_node_root(struct AllocOnlyPool *pool, s16 areaIndex, s16 x, s16 y,
+                                           s16 width, s16 height) {
+    struct GraphNodeRoot *graphNode = (struct GraphNodeRoot *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeRoot), GRAPH_NODE_TYPE_ROOT, __func__);
+    graphNode->areaIndex = areaIndex;
+    graphNode->unk15 = 0;
+    graphNode->x = x;
+    graphNode->y = y;
+    graphNode->width = width;
+    graphNode->height = height;
+    graphNode->views = NULL;
+    graphNode->numViews = 0;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created otrhographic projection node
  */
-struct GraphNodeOrthoProjection *
-init_graph_node_ortho_projection(struct AllocOnlyPool *pool, struct GraphNodeOrthoProjection *graphNode,
-                                 f32 scale) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeOrthoProjection));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_ORTHO_PROJECTION);
-        graphNode->scale = scale;
-    }
-
+struct GraphNodeOrthoProjection *init_graph_node_ortho_projection(struct AllocOnlyPool *pool,
+                                                                  f32 scale) {
+    struct GraphNodeOrthoProjection *graphNode = (struct GraphNodeOrthoProjection *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeOrthoProjection), GRAPH_NODE_TYPE_ORTHO_PROJECTION,
+        __func__);
+    graphNode->scale = scale;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created perspective node
  */
-struct GraphNodePerspective *init_graph_node_perspective(struct AllocOnlyPool *pool,
-                                                         struct GraphNodePerspective *graphNode,
-                                                         f32 fov, s16 near, s16 far,
-                                                         GraphNodeFunc nodeFunc, s32 unused) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodePerspective));
+struct GraphNodePerspective *init_graph_node_perspective(struct AllocOnlyPool *pool, f32 fov, s16 near,
+                                                         s16 far, GraphNodeFunc nodeFunc, s32 unused) {
+    struct GraphNodePerspective *graphNode = (struct GraphNodePerspective *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodePerspective), GRAPH_NODE_TYPE_PERSPECTIVE, __func__);
+    graphNode->fov = fov;
+    graphNode->near = near;
+    graphNode->far = far;
+    graphNode->fnNode.func = nodeFunc;
+    graphNode->unused = unused;
+    if (nodeFunc != NULL) {
+        nodeFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
     }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_PERSPECTIVE);
-
-        graphNode->fov = fov;
-        graphNode->near = near;
-        graphNode->far = far;
-        graphNode->fnNode.func = nodeFunc;
-        graphNode->unused = unused;
-
-        if (nodeFunc != NULL) {
-            nodeFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
-        }
-    }
-
     return graphNode;
 }
 
@@ -110,31 +100,21 @@ struct GraphNodeStart *init_graph_node_start(struct AllocOnlyPool *pool,
     if (pool != NULL) {
         graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeStart));
     }
-
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_START);
     }
-
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created master list node
  */
-struct GraphNodeMasterList *init_graph_node_master_list(struct AllocOnlyPool *pool,
-                                                        struct GraphNodeMasterList *graphNode, s16 on) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeMasterList));
+struct GraphNodeMasterList *init_graph_node_master_list(struct AllocOnlyPool *pool, s16 on) {
+    struct GraphNodeMasterList *graphNode = (struct GraphNodeMasterList *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeMasterList), GRAPH_NODE_TYPE_MASTER_LIST, __func__);
+    if (on) {
+        graphNode->node.flags |= GRAPH_RENDER_Z_BUFFER;
     }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_MASTER_LIST);
-
-        if (on) {
-            graphNode->node.flags |= GRAPH_RENDER_Z_BUFFER;
-        }
-    }
-
     return graphNode;
 }
 
@@ -144,69 +124,47 @@ struct GraphNodeMasterList *init_graph_node_master_list(struct AllocOnlyPool *po
 struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct AllocOnlyPool *pool,
                                                             struct GraphNodeLevelOfDetail *graphNode,
                                                             s16 minDistance, s16 maxDistance) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeLevelOfDetail));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_LEVEL_OF_DETAIL);
-        graphNode->minDistance = minDistance;
-        graphNode->maxDistance = maxDistance;
-    }
-
+    graphNode = (struct GraphNodeLevelOfDetail *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeLevelOfDetail), GRAPH_NODE_TYPE_LEVEL_OF_DETAIL, __func__);
+    graphNode->minDistance = minDistance;
+    graphNode->maxDistance = maxDistance;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created switch case node
  */
-struct GraphNodeSwitchCase *init_graph_node_switch_case(struct AllocOnlyPool *pool,
-                                                        struct GraphNodeSwitchCase *graphNode,
-                                                        s16 numCases, s16 selectedCase,
-                                                        GraphNodeFunc nodeFunc, s32 unused) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeSwitchCase));
+struct GraphNodeSwitchCase *init_graph_node_switch_case(struct AllocOnlyPool *pool, s16 numCases,
+                                                        s16 selectedCase, GraphNodeFunc nodeFunc,
+                                                        s32 unused) {
+    struct GraphNodeSwitchCase *graphNode = (struct GraphNodeSwitchCase *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeSwitchCase), GRAPH_NODE_TYPE_SWITCH_CASE, __func__);
+    graphNode->numCases = numCases;
+    graphNode->selectedCase = selectedCase;
+    graphNode->fnNode.func = nodeFunc;
+    graphNode->unused = unused;
+    if (nodeFunc != NULL) {
+        nodeFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
     }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_SWITCH_CASE);
-        graphNode->numCases = numCases;
-        graphNode->selectedCase = selectedCase;
-        graphNode->fnNode.func = nodeFunc;
-        graphNode->unused = unused;
-
-        if (nodeFunc != NULL) {
-            nodeFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
-        }
-    }
-
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created camera node
  */
-struct GraphNodeCamera *init_graph_node_camera(struct AllocOnlyPool *pool,
-                                               struct GraphNodeCamera *graphNode, f32 *pos, f32 *focus,
+struct GraphNodeCamera *init_graph_node_camera(struct AllocOnlyPool *pool, f32 *pos, f32 *focus,
                                                GraphNodeFunc func, s32 mode) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeCamera));
+    struct GraphNodeCamera *graphNode = (struct GraphNodeCamera *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeCamera), GRAPH_NODE_TYPE_CAMERA, __func__);
+    vec3f_copy(graphNode->pos, pos);
+    vec3f_copy(graphNode->focus, focus);
+    graphNode->fnNode.func = func;
+    graphNode->config.mode = mode;
+    graphNode->roll = 0;
+    graphNode->rollScreen = 0;
+    if (func != NULL) {
+        func(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
     }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_CAMERA);
-        vec3f_copy(graphNode->pos, pos);
-        vec3f_copy(graphNode->focus, focus);
-        graphNode->fnNode.func = func;
-        graphNode->config.mode = mode;
-        graphNode->roll = 0;
-        graphNode->rollScreen = 0;
-
-        if (func != NULL) {
-            func(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
-        }
-    }
-
     return graphNode;
 }
 
@@ -217,19 +175,13 @@ struct GraphNodeTranslationRotation *
 init_graph_node_translation_rotation(struct AllocOnlyPool *pool,
                                      struct GraphNodeTranslationRotation *graphNode, s32 drawingLayer,
                                      void *displayList, Vec3s translation, Vec3s rotation) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeTranslationRotation));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_TRANSLATION_ROTATION);
-
-        vec3s_copy(graphNode->translation, translation);
-        vec3s_copy(graphNode->rotation, rotation);
-        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
-    }
-
+    graphNode = (struct GraphNodeTranslationRotation *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeTranslationRotation), GRAPH_NODE_TYPE_TRANSLATION_ROTATION,
+        __func__);
+    vec3s_copy(graphNode->translation, translation);
+    vec3s_copy(graphNode->rotation, rotation);
+    graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+    graphNode->displayList = displayList;
     return graphNode;
 }
 
@@ -240,59 +192,37 @@ struct GraphNodeTranslation *init_graph_node_translation(struct AllocOnlyPool *p
                                                          struct GraphNodeTranslation *graphNode,
                                                          s32 drawingLayer, void *displayList,
                                                          Vec3s translation) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeTranslation));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_TRANSLATION);
-
-        vec3s_copy(graphNode->translation, translation);
-        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
-    }
-
+    graphNode = (struct GraphNodeTranslation *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeTranslation), GRAPH_NODE_TYPE_TRANSLATION, __func__);
+    vec3s_copy(graphNode->translation, translation);
+    graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+    graphNode->displayList = displayList;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created rotation node
  */
-struct GraphNodeRotation *init_graph_node_rotation(struct AllocOnlyPool *pool,
-                                                   struct GraphNodeRotation *graphNode,
-                                                   s32 drawingLayer, void *displayList,
-                                                   Vec3s rotation) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeRotation));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_ROTATION);
-        vec3s_copy(graphNode->rotation, rotation);
-        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
-    }
-
+struct GraphNodeRotation *init_graph_node_rotation(struct AllocOnlyPool *pool, s32 drawingLayer,
+                                                   void *displayList, Vec3s rotation) {
+    struct GraphNodeRotation *graphNode = (struct GraphNodeRotation *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeRotation), GRAPH_NODE_TYPE_ROTATION, __func__);
+    vec3s_copy(graphNode->rotation, rotation);
+    graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+    graphNode->displayList = displayList;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created scaling node
  */
-struct GraphNodeScale *init_graph_node_scale(struct AllocOnlyPool *pool,
-                                             struct GraphNodeScale *graphNode, s32 drawingLayer,
+struct GraphNodeScale *init_graph_node_scale(struct AllocOnlyPool *pool, s32 drawingLayer,
                                              void *displayList, f32 scale) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeScale));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_SCALE);
-        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->scale = scale;
-        graphNode->displayList = displayList;
-    }
-
+    struct GraphNodeScale *graphNode = (struct GraphNodeScale *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeScale), GRAPH_NODE_TYPE_SCALE, __func__);
+    graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+    graphNode->scale = scale;
+    graphNode->displayList = displayList;
     return graphNode;
 }
 
@@ -306,7 +236,6 @@ struct GraphNodeObject *init_graph_node_object(struct AllocOnlyPool *pool,
     if (pool != NULL) {
         graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeObject));
     }
-
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_OBJECT);
         vec3f_copy(graphNode->pos, pos);
@@ -322,106 +251,66 @@ struct GraphNodeObject *init_graph_node_object(struct AllocOnlyPool *pool,
         graphNode->unk38.animTimer = 0;
         graphNode->node.flags |= GRAPH_RENDER_HAS_ANIMATION;
     }
-
     return graphNode;
 }
-
 /**
  * Allocates and returns a newly created frustum culling radius node
  */
-struct GraphNodeCullingRadius *init_graph_node_culling_radius(struct AllocOnlyPool *pool,
-                                                              struct GraphNodeCullingRadius *graphNode,
-                                                              s16 radius) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeCullingRadius));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_CULLING_RADIUS);
-        graphNode->cullingRadius = radius;
-    }
-
+struct GraphNodeCullingRadius *init_graph_node_culling_radius(struct AllocOnlyPool *pool, s16 radius) {
+    struct GraphNodeCullingRadius *graphNode = (struct GraphNodeCullingRadius *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeCullingRadius), GRAPH_NODE_TYPE_CULLING_RADIUS, __func__);
+    graphNode->cullingRadius = radius;
     return graphNode;
 }
-
 /**
  * Allocates and returns a newly created animated part node
  */
 struct GraphNodeAnimatedPart *init_graph_node_animated_part(struct AllocOnlyPool *pool,
-                                                            struct GraphNodeAnimatedPart *graphNode,
                                                             s32 drawingLayer, void *displayList,
                                                             Vec3s translation) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeAnimatedPart));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_ANIMATED_PART);
-        vec3s_copy(graphNode->translation, translation);
-        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
-    }
-
+    struct GraphNodeAnimatedPart *graphNode = (struct GraphNodeAnimatedPart *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeAnimatedPart), GRAPH_NODE_TYPE_ANIMATED_PART, __func__);
+    vec3s_copy(graphNode->translation, translation);
+    graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+    graphNode->displayList = displayList;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created billboard node
  */
-struct GraphNodeBillboard *init_graph_node_billboard(struct AllocOnlyPool *pool,
-                                                     struct GraphNodeBillboard *graphNode,
-                                                     s32 drawingLayer, void *displayList,
-                                                     Vec3s translation) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeBillboard));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_BILLBOARD);
-        vec3s_copy(graphNode->translation, translation);
-        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
-    }
-
+struct GraphNodeBillboard *init_graph_node_billboard(struct AllocOnlyPool *pool, s32 drawingLayer,
+                                                     void *displayList, Vec3s translation) {
+    struct GraphNodeBillboard *graphNode = (struct GraphNodeBillboard *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeBillboard), GRAPH_NODE_TYPE_BILLBOARD, __func__);
+    vec3s_copy(graphNode->translation, translation);
+    graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+    graphNode->displayList = displayList;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created displaylist node
  */
-struct GraphNodeDisplayList *init_graph_node_display_list(struct AllocOnlyPool *pool,
-                                                          struct GraphNodeDisplayList *graphNode,
-                                                          s32 drawingLayer, void *displayList) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeDisplayList));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_DISPLAY_LIST);
-        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
-        graphNode->displayList = displayList;
-    }
-
+struct GraphNodeDisplayList *init_graph_node_display_list(struct AllocOnlyPool *pool, s32 drawingLayer,
+                                                          void *displayList) {
+    struct GraphNodeDisplayList *graphNode = (struct GraphNodeDisplayList *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeDisplayList), GRAPH_NODE_TYPE_DISPLAY_LIST, __func__);
+    graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+    graphNode->displayList = displayList;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created shadow node
  */
-struct GraphNodeShadow *init_graph_node_shadow(struct AllocOnlyPool *pool,
-                                               struct GraphNodeShadow *graphNode, s16 shadowScale,
+struct GraphNodeShadow *init_graph_node_shadow(struct AllocOnlyPool *pool, s16 shadowScale,
                                                u8 shadowSolidity, u8 shadowType) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeShadow));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_SHADOW);
-        graphNode->shadowScale = shadowScale;
-        graphNode->shadowSolidity = shadowSolidity;
-        graphNode->shadowType = shadowType;
-    }
-
+    struct GraphNodeShadow *graphNode = (struct GraphNodeShadow *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeShadow), GRAPH_NODE_TYPE_SHADOW, __func__);
+    graphNode->shadowScale = shadowScale;
+    graphNode->shadowSolidity = shadowSolidity;
+    graphNode->shadowType = shadowType;
     return graphNode;
 }
 
@@ -429,66 +318,42 @@ struct GraphNodeShadow *init_graph_node_shadow(struct AllocOnlyPool *pool,
  * Allocates and returns a newly created object parent node
  */
 struct GraphNodeObjectParent *init_graph_node_object_parent(struct AllocOnlyPool *pool,
-                                                            struct GraphNodeObjectParent *graphNode,
                                                             struct GraphNode *sharedChild) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeObjectParent));
-    }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_OBJECT_PARENT);
-        graphNode->sharedChild = sharedChild;
-    }
-
+    struct GraphNodeObjectParent *graphNode = (struct GraphNodeObjectParent *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeObjectParent), GRAPH_NODE_TYPE_OBJECT_PARENT, __func__);
+    graphNode->sharedChild = sharedChild;
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created generated node
  */
-struct GraphNodeGenerated *init_graph_node_generated(struct AllocOnlyPool *pool,
-                                                     struct GraphNodeGenerated *graphNode,
-                                                     GraphNodeFunc gfxFunc, s32 parameter) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeGenerated));
+struct GraphNodeGenerated *init_graph_node_generated(struct AllocOnlyPool *pool, GraphNodeFunc gfxFunc,
+                                                     s32 parameter) {
+    struct GraphNodeGenerated *graphNode = (struct GraphNodeGenerated *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeGenerated), GRAPH_NODE_TYPE_GENERATED_LIST, __func__);
+    graphNode->fnNode.func = gfxFunc;
+    graphNode->parameter = parameter;
+
+    if (gfxFunc != NULL) {
+        gfxFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
     }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_GENERATED_LIST);
-        graphNode->fnNode.func = gfxFunc;
-        graphNode->parameter = parameter;
-
-        if (gfxFunc != NULL) {
-            gfxFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
-        }
-    }
-
     return graphNode;
 }
 
 /**
  * Allocates and returns a newly created background node
  */
-struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *pool,
-                                                       struct GraphNodeBackground *graphNode,
-                                                       u16 background, GraphNodeFunc backgroundFunc,
-                                                       s32 zero) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeBackground));
+struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *pool, u16 background,
+                                                       GraphNodeFunc backgroundFunc, s32 zero) {
+    struct GraphNodeBackground *graphNode = (struct GraphNodeBackground *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeBackground), GRAPH_NODE_TYPE_BACKGROUND, __func__);
+    graphNode->background = (background << 16) | background;
+    graphNode->fnNode.func = backgroundFunc;
+    graphNode->unused = zero; // always 0, unused
+    if (backgroundFunc != NULL) {
+        backgroundFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
     }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_BACKGROUND);
-
-        graphNode->background = (background << 16) | background;
-        graphNode->fnNode.func = backgroundFunc;
-        graphNode->unused = zero; // always 0, unused
-
-        if (backgroundFunc != NULL) {
-            backgroundFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
-        }
-    }
-
     return graphNode;
 }
 
@@ -496,25 +361,18 @@ struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *poo
  * Allocates and returns a newly created held object node
  */
 struct GraphNodeHeldObject *init_graph_node_held_object(struct AllocOnlyPool *pool,
-                                                        struct GraphNodeHeldObject *graphNode,
                                                         struct Object *objNode, Vec3s translation,
                                                         GraphNodeFunc nodeFunc, s32 playerIndex) {
-    if (pool != NULL) {
-        graphNode = alloc_only_pool_alloc(pool, sizeof(struct GraphNodeHeldObject));
+    struct GraphNodeHeldObject *graphNode = (struct GraphNodeHeldObject *) init_graph_node(
+        pool, NULL, sizeof(struct GraphNodeHeldObject), GRAPH_NODE_TYPE_HELD_OBJ, __func__);
+    vec3s_copy(graphNode->translation, translation);
+    graphNode->objNode = objNode;
+    graphNode->fnNode.func = nodeFunc;
+    graphNode->playerIndex = playerIndex;
+
+    if (nodeFunc != NULL) {
+        nodeFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
     }
-
-    if (graphNode != NULL) {
-        init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_HELD_OBJ);
-        vec3s_copy(graphNode->translation, translation);
-        graphNode->objNode = objNode;
-        graphNode->fnNode.func = nodeFunc;
-        graphNode->playerIndex = playerIndex;
-
-        if (nodeFunc != NULL) {
-            nodeFunc(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
-        }
-    }
-
     return graphNode;
 }
 

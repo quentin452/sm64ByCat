@@ -380,7 +380,7 @@ static void level_cmd_load_model_from_dl(void) {
 
     if (val1 < 256) {
         gLoadedGraphNodes[val1] =
-            (struct GraphNode *) init_graph_node_display_list(sLevelPool, 0, val2, val3);
+            (struct GraphNode *) init_graph_node_display_list(sLevelPool, val2, val3);
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -417,9 +417,8 @@ static void level_cmd_23(void) {
         // GraphNodeScale has a GraphNode at the top. This
         // is being stored to the array, so cast the pointer.
         gLoadedGraphNodes[model] =
-            (struct GraphNode *) init_graph_node_scale(sLevelPool, 0, arg0H, arg1, arg2.f);
+            (struct GraphNode *) init_graph_node_scale(sLevelPool, arg0H, arg1, arg2.f);
     }
-
     sCurrentCmd = CMD_NEXT;
 }
 

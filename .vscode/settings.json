@@ -114,7 +114,8 @@
     "mario_actions_cutscene.h": "c",
     "save_file.h": "c",
     "mario_actions_moving.h": "c",
-    "controller_mouse.h": "c"
+    "controller_mouse.h": "c",
+    "geo_layout.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {
