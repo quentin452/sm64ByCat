@@ -100,30 +100,6 @@ void handle_debug_key_sequences(void) {
     }
 }
 
-void unknown_main_func(void) {
-    // uninitialized
-    OSTime time;
-    u32 b;
-
-    osSetTime(time);
-    osMapTLB(0, b, NULL, 0, 0, 0);
-    osUnmapTLBAll();
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnonnull"
-    sprintf(NULL, NULL);
-#pragma GCC diagnostic pop
-}
-
-void stub_main_1(void) {
-}
-
-void stub_main_2(void) {
-}
-
-void stub_main_3(void) {
-}
-
 void setup_mesg_queues(void) {
     osCreateMesgQueue(&gDmaMesgQueue, gDmaMesgBuf, ARRAY_COUNT(gDmaMesgBuf));
     osCreateMesgQueue(&gSIEventMesgQueue, gSIEventMesgBuf, ARRAY_COUNT(gSIEventMesgBuf));
@@ -182,12 +158,12 @@ void receive_new_tasks(void) {
         }
     }
 
-    if (sCurrentAudioSPTask == NULL && sNextAudioSPTask ) {
+    if (sCurrentAudioSPTask == NULL && sNextAudioSPTask) {
         sCurrentAudioSPTask = sNextAudioSPTask;
         sNextAudioSPTask = NULL;
     }
 
-    if (sCurrentDisplaySPTask == NULL && sNextDisplaySPTask ) {
+    if (sCurrentDisplaySPTask == NULL && sNextDisplaySPTask) {
         sCurrentDisplaySPTask = sNextDisplaySPTask;
         sNextDisplaySPTask = NULL;
     }
@@ -213,7 +189,7 @@ void interrupt_gfx_sptask(void) {
 }
 
 void start_gfx_sptask(void) {
-    if (gActiveSPTask == NULL && sCurrentDisplaySPTask 
+    if (gActiveSPTask == NULL && sCurrentDisplaySPTask
         && sCurrentDisplaySPTask->state == SPTASK_STATE_NOT_STARTED) {
         profiler_log_gfx_time(TASKS_QUEUED);
         start_sptask(M_GFXTASK);
@@ -227,7 +203,6 @@ void pretend_audio_sptask_done(void) {
 }
 
 void handle_vblank(void) {
-    stub_main_3();
     sNumVblanks++;
 #ifdef VERSION_SH
     if (gResetTimer > 0 && gResetTimer < 100) {
@@ -246,8 +221,8 @@ void handle_vblank(void) {
     // will pick up on what we're doing and start the audio task for us.
     // If there is already an audio task running, there is nothing to do.
     // If there is no audio task available, try a gfx task instead.
-    if (sCurrentAudioSPTask ) {
-        if (gActiveSPTask ) {
+    if (sCurrentAudioSPTask) {
+        if (gActiveSPTask) {
             interrupt_gfx_sptask();
         } else {
             profiler_log_vblank_time();
@@ -258,7 +233,7 @@ void handle_vblank(void) {
             }
         }
     } else {
-        if (gActiveSPTask == NULL && sCurrentDisplaySPTask 
+        if (gActiveSPTask == NULL && sCurrentDisplaySPTask
             && sCurrentDisplaySPTask->state != SPTASK_STATE_FINISHED) {
             profiler_log_gfx_time(TASKS_QUEUED);
             start_sptask(M_GFXTASK);
@@ -268,10 +243,10 @@ void handle_vblank(void) {
     rumble_thread_update_vi();
 
     // Notify the game loop about the vblank.
-    if (gVblankHandler1 ) {
+    if (gVblankHandler1) {
         osSendMesg(gVblankHandler1->queue, gVblankHandler1->msg, OS_MESG_NOBLOCK);
     }
-    if (gVblankHandler2 ) {
+    if (gVblankHandler2) {
         osSendMesg(gVblankHandler2->queue, gVblankHandler2->msg, OS_MESG_NOBLOCK);
     }
 }
@@ -304,15 +279,14 @@ void handle_sp_complete(void) {
         if (curSPTask->task.t.type == M_AUDTASK) {
             // After audio tasks come gfx tasks.
             profiler_log_vblank_time();
-            if (sCurrentDisplaySPTask 
-                && sCurrentDisplaySPTask->state != SPTASK_STATE_FINISHED) {
+            if (sCurrentDisplaySPTask && sCurrentDisplaySPTask->state != SPTASK_STATE_FINISHED) {
                 if (sCurrentDisplaySPTask->state != SPTASK_STATE_INTERRUPTED) {
                     profiler_log_gfx_time(TASKS_QUEUED);
                 }
                 start_sptask(M_GFXTASK);
             }
             sCurrentAudioSPTask = NULL;
-            if (curSPTask->msgqueue ) {
+            if (curSPTask->msgqueue) {
                 osSendMesg(curSPTask->msgqueue, curSPTask->msg, OS_MESG_NOBLOCK);
             }
         } else {
@@ -326,7 +300,7 @@ void handle_sp_complete(void) {
 
 void handle_dp_complete(void) {
     // Gfx SP task is completely done.
-    if (sCurrentDisplaySPTask->msgqueue ) {
+    if (sCurrentDisplaySPTask->msgqueue) {
         osSendMesg(sCurrentDisplaySPTask->msgqueue, sCurrentDisplaySPTask->msg, OS_MESG_NOBLOCK);
     }
     profiler_log_gfx_time(RDP_COMPLETE);
@@ -366,7 +340,6 @@ void thread3_main() {
                 handle_nmi_request();
                 break;
         }
-        stub_main_2();
     }
 }
 
@@ -390,14 +363,14 @@ void send_sp_task_message(OSMesg *msg) {
 }
 
 void dispatch_audio_sptask(struct SPTask *spTask) {
-    if (sAudioEnabled != 0 && spTask ) {
+    if (sAudioEnabled != 0 && spTask) {
         osWritebackDCacheAll();
         osSendMesg(&gSPTaskMesgQueue, spTask, OS_MESG_NOBLOCK);
     }
 }
 
 void send_display_list(struct SPTask *spTask) {
-    if (spTask ) {
+    if (spTask) {
         osWritebackDCacheAll();
         spTask->state = SPTASK_STATE_NOT_STARTED;
         if (sCurrentDisplaySPTask == NULL) {
@@ -416,7 +389,7 @@ void turn_on_audio(void) {
 
 void turn_off_audio(void) {
     sAudioEnabled = 0;
-    while (sCurrentAudioSPTask ) {
+    while (sCurrentAudioSPTask) {
         ;
     }
 }
@@ -459,7 +432,6 @@ void thread1_idle() {
 
 void main_func(void) {
     osInitialize();
-    stub_main_1();
     create_thread(&gIdleThread, 1, thread1_idle, NULL, gIdleThreadStack + 0x800, 100);
     osStartThread(&gIdleThread);
 }
