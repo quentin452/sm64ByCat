@@ -1283,28 +1283,29 @@ static void geo_process_object_default(struct GraphNode *node) {
     geo_try_process_children(node);
 }
 
+static const GeoProcessMapping processMappings[] = {
+    { GRAPH_NODE_TYPE_ORTHO_PROJECTION, (GeoProcessFunction) geo_process_ortho_projection },
+    { GRAPH_NODE_TYPE_PERSPECTIVE, (GeoProcessFunction) geo_process_perspective },
+    { GRAPH_NODE_TYPE_MASTER_LIST, (GeoProcessFunction) geo_process_master_list },
+    { GRAPH_NODE_TYPE_LEVEL_OF_DETAIL, (GeoProcessFunction) geo_process_level_of_detail },
+    { GRAPH_NODE_TYPE_SWITCH_CASE, (GeoProcessFunction) geo_process_switch },
+    { GRAPH_NODE_TYPE_CAMERA, (GeoProcessFunction) geo_process_camera },
+    { GRAPH_NODE_TYPE_TRANSLATION_ROTATION, (GeoProcessFunction) geo_process_translation_rotation },
+    { GRAPH_NODE_TYPE_TRANSLATION, (GeoProcessFunction) geo_process_translation },
+    { GRAPH_NODE_TYPE_ROTATION, (GeoProcessFunction) geo_process_rotation },
+    { GRAPH_NODE_TYPE_OBJECT, (GeoProcessFunction) geo_process_object },
+    { GRAPH_NODE_TYPE_ANIMATED_PART, (GeoProcessFunction) geo_process_animated_part },
+    { GRAPH_NODE_TYPE_BILLBOARD, (GeoProcessFunction) geo_process_billboard },
+    { GRAPH_NODE_TYPE_DISPLAY_LIST, (GeoProcessFunction) geo_process_display_list },
+    { GRAPH_NODE_TYPE_SCALE, (GeoProcessFunction) geo_process_scale },
+    { GRAPH_NODE_TYPE_SHADOW, (GeoProcessFunction) geo_process_shadow },
+    { GRAPH_NODE_TYPE_OBJECT_PARENT, (GeoProcessFunction) geo_process_object_parent },
+    { GRAPH_NODE_TYPE_GENERATED_LIST, (GeoProcessFunction) geo_process_generated_list },
+    { GRAPH_NODE_TYPE_BACKGROUND, (GeoProcessFunction) geo_process_background },
+    { GRAPH_NODE_TYPE_HELD_OBJ, (GeoProcessFunction) geo_process_held_object },
+};
+
 static void geo_process_node(struct GraphNode *node) {
-    static const GeoProcessMapping processMappings[] = {
-        { GRAPH_NODE_TYPE_ORTHO_PROJECTION, (GeoProcessFunction) geo_process_ortho_projection },
-        { GRAPH_NODE_TYPE_PERSPECTIVE, (GeoProcessFunction) geo_process_perspective },
-        { GRAPH_NODE_TYPE_MASTER_LIST, (GeoProcessFunction) geo_process_master_list },
-        { GRAPH_NODE_TYPE_LEVEL_OF_DETAIL, (GeoProcessFunction) geo_process_level_of_detail },
-        { GRAPH_NODE_TYPE_SWITCH_CASE, (GeoProcessFunction) geo_process_switch },
-        { GRAPH_NODE_TYPE_CAMERA, (GeoProcessFunction) geo_process_camera },
-        { GRAPH_NODE_TYPE_TRANSLATION_ROTATION, (GeoProcessFunction) geo_process_translation_rotation },
-        { GRAPH_NODE_TYPE_TRANSLATION, (GeoProcessFunction) geo_process_translation },
-        { GRAPH_NODE_TYPE_ROTATION, (GeoProcessFunction) geo_process_rotation },
-        { GRAPH_NODE_TYPE_OBJECT, (GeoProcessFunction) geo_process_object },
-        { GRAPH_NODE_TYPE_ANIMATED_PART, (GeoProcessFunction) geo_process_animated_part },
-        { GRAPH_NODE_TYPE_BILLBOARD, (GeoProcessFunction) geo_process_billboard },
-        { GRAPH_NODE_TYPE_DISPLAY_LIST, (GeoProcessFunction) geo_process_display_list },
-        { GRAPH_NODE_TYPE_SCALE, (GeoProcessFunction) geo_process_scale },
-        { GRAPH_NODE_TYPE_SHADOW, (GeoProcessFunction) geo_process_shadow },
-        { GRAPH_NODE_TYPE_OBJECT_PARENT, (GeoProcessFunction) geo_process_object_parent },
-        { GRAPH_NODE_TYPE_GENERATED_LIST, (GeoProcessFunction) geo_process_generated_list },
-        { GRAPH_NODE_TYPE_BACKGROUND, (GeoProcessFunction) geo_process_background },
-        { GRAPH_NODE_TYPE_HELD_OBJ, (GeoProcessFunction) geo_process_held_object },
-    };
     GeoProcessFunction processFunction = NULL;
     for (int i = 0; i < sizeof(processMappings) / sizeof(processMappings[0]); i++) {
         if (processMappings[i].nodeType == node->type) {
@@ -1336,14 +1337,16 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
                 geo_try_process_children(curGraphNode);
+                curGraphNode = curGraphNode->next;
             } else {
                 geo_process_node(curGraphNode);
+                curGraphNode = curGraphNode->next;
             }
+        } else {
+            curGraphNode = curGraphNode->next;
         }
-        curGraphNode = curGraphNode->next;
     } while (iterateChildren && curGraphNode != firstNode);
 }
-
 /**
  * Process a root node. This is the entry point for processing the scene graph.
  * The root node itself sets up the viewport, then all its children are processed
