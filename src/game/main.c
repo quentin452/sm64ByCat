@@ -334,7 +334,7 @@ void handle_dp_complete(void) {
     sCurrentDisplaySPTask = NULL;
 }
 
-void thread3_main) {
+void thread3_main() {
     setup_mesg_queues();
     alloc_pool();
     load_engine_code_segment();
