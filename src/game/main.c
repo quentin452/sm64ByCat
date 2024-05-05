@@ -460,8 +460,6 @@ void thread1_idle(UNUSED void *arg) {
 }
 
 void main_func(void) {
-    UNUSED u8 pad[64]; // needed to pad the stack
-
     osInitialize();
     stub_main_1();
     create_thread(&gIdleThread, 1, thread1_idle, NULL, gIdleThreadStack + 0x800, 100);
