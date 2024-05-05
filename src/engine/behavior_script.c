@@ -926,56 +926,38 @@ static BhvCommandProc BehaviorCmdTable[] = {
 // Execute the behavior script of the current object, process the object flags, and other miscellaneous
 // code for updating objects.
 void cur_obj_update(void) {
-    UNUSED u32 unused;
-
     s16 objFlags = gCurrentObject->oFlags;
-    f32 distanceFromMario;
-    BhvCommandProc bhvCmdProc;
     s32 bhvProcResult;
+    
+    // Calculate distance and angle from Mario
+    f32 distanceFromMario =
+        (objFlags & OBJ_FLAG_COMPUTE_DIST_TO_MARIO)
+            ? (gCurrentObject->oDistanceToMario = dist_between_objects(gCurrentObject, gMarioObject))
+            : 0.0f;
 
-    // Calculate the distance from the object to Mario.
-    if (objFlags & OBJ_FLAG_COMPUTE_DIST_TO_MARIO) {
-        gCurrentObject->oDistanceToMario = dist_between_objects(gCurrentObject, gMarioObject);
-        distanceFromMario = gCurrentObject->oDistanceToMario;
-    } else {
-        distanceFromMario = 0.0f;
-    }
-
-    // Calculate the angle from the object to Mario.
     if (objFlags & OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO) {
         gCurrentObject->oAngleToMario = obj_angle_to_object(gCurrentObject, gMarioObject);
     }
 
-    // If the object's action has changed, reset the action timer.
+    // Reset action timer if action has changed
     if (gCurrentObject->oAction != gCurrentObject->oPrevAction) {
-        (void) (gCurrentObject->oTimer = 0, gCurrentObject->oSubAction = 0,
-                gCurrentObject->oPrevAction = gCurrentObject->oAction);
+        gCurrentObject->oTimer = gCurrentObject->oSubAction = 0;
+        gCurrentObject->oPrevAction = gCurrentObject->oAction;
     }
 
-    // Execute the behavior script.
+    // Execute behavior script
     gCurBhvCommand = gCurrentObject->curBhvCommand;
-
     do {
-        bhvCmdProc = BehaviorCmdTable[*gCurBhvCommand >> 24];
-        bhvProcResult = bhvCmdProc();
+        bhvProcResult = BehaviorCmdTable[*gCurBhvCommand >> 24]();
     } while (bhvProcResult == BHV_PROC_CONTINUE);
-
     gCurrentObject->curBhvCommand = gCurBhvCommand;
 
-    // Increment the object's timer.
+    // Increment timer
     if (gCurrentObject->oTimer < 0x3FFFFFFF) {
         gCurrentObject->oTimer++;
     }
 
-    // If the object's action has changed, reset the action timer.
-    if (gCurrentObject->oAction != gCurrentObject->oPrevAction) {
-        (void) (gCurrentObject->oTimer = 0, gCurrentObject->oSubAction = 0,
-                gCurrentObject->oPrevAction = gCurrentObject->oAction);
-    }
-
-    // Execute various code based on object flags.
-    objFlags = (s16) gCurrentObject->oFlags;
-
+    // Handle various object flags
     if (objFlags & OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE) {
         obj_set_face_angle_to_move_angle(gCurrentObject);
     }
@@ -1004,31 +986,23 @@ void cur_obj_update(void) {
         obj_update_gfx_pos_and_angle(gCurrentObject);
     }
 
-    // Handle visibility of object
+    // Handle object visibility
     if (gCurrentObject->oRoom != -1) {
-        // If the object is in a room, only show it when Mario is in the room.
         cur_obj_enable_rendering_if_mario_in_room();
     } else if ((objFlags & OBJ_FLAG_COMPUTE_DIST_TO_MARIO) && gCurrentObject->collisionData == NULL) {
         if (!(objFlags & OBJ_FLAG_ACTIVE_FROM_AFAR)) {
-            // If the object has a render distance, check if it should be shown.
-            if (!configWindow.no_drawing_distance) {
-                if (distanceFromMario
-                    > gCurrentObject->oDrawingDistance * configDrawDistance / 100.0f) {
-                    // Out of render distance, hide the object.
-                    gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
-                    gCurrentObject->activeFlags |= ACTIVE_FLAG_FAR_AWAY;
-                } else if (gCurrentObject->oHeldState == HELD_FREE) {
-                    // In render distance (and not being held), show the object.
-                    gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
-                    gCurrentObject->activeFlags &= ~ACTIVE_FLAG_FAR_AWAY;
-                }
-            } else {
-                if (distanceFromMario <= gCurrentObject->oDrawingDistance
-                    && gCurrentObject->oHeldState == HELD_FREE) {
-                    // In render distance (and not being held), show the object.
-                    gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
-                    gCurrentObject->activeFlags &= ~ACTIVE_FLAG_FAR_AWAY;
-                }
+            f32 renderDistance = (!configWindow.no_drawing_distance)
+                                     ? (gCurrentObject->oDrawingDistance * configDrawDistance / 100.0f)
+                                     : gCurrentObject->oDrawingDistance;
+
+            if ((distanceFromMario > renderDistance)
+                || (configWindow.no_drawing_distance
+                    && distanceFromMario > gCurrentObject->oDrawingDistance)) {
+                gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+                gCurrentObject->activeFlags |= ACTIVE_FLAG_FAR_AWAY;
+            } else if (gCurrentObject->oHeldState == HELD_FREE) {
+                gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
+                gCurrentObject->activeFlags &= ~ACTIVE_FLAG_FAR_AWAY;
             }
         }
     }
