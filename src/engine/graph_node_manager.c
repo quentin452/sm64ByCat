@@ -54,27 +54,24 @@ s16 *read_vec3s_angle(Vec3s dst, s16 *src) {
     dst[2] = (next_s16_in_geo_script(&src) << 15) / 180;
     return src;
 }
-
 /**
  * Add the given graph node as a child to the current top of the gfx stack:
  * 'gCurGraphNodeList'. This is called from geo_layout commands to add nodes
  * to the scene graph.
  */
 void register_scene_graph_node(struct GraphNode *graphNode) {
-    if (graphNode != NULL) {
+    if (graphNode) {
         gCurGraphNodeList[gCurGraphNodeIndex] = graphNode;
 
-        if (gCurGraphNodeIndex == 0) {
-            if (gCurRootGraphNode == NULL) {
-                gCurRootGraphNode = graphNode;
-            }
+        if (gCurGraphNodeIndex == 0 && gCurRootGraphNode == NULL) {
+            gCurRootGraphNode = graphNode;
+        } else if (gCurGraphNodeIndex > 0
+                   && gCurGraphNodeList[gCurGraphNodeIndex - 1]->type
+                          == GRAPH_NODE_TYPE_OBJECT_PARENT) {
+            ((struct GraphNodeObjectParent *) gCurGraphNodeList[gCurGraphNodeIndex - 1])->sharedChild =
+                graphNode;
         } else {
-            if (gCurGraphNodeList[gCurGraphNodeIndex - 1]->type == GRAPH_NODE_TYPE_OBJECT_PARENT) {
-                ((struct GraphNodeObjectParent *) gCurGraphNodeList[gCurGraphNodeIndex - 1])
-                    ->sharedChild = graphNode;
-            } else {
-                geo_add_child(gCurGraphNodeList[gCurGraphNodeIndex - 1], graphNode);
-            }
+            geo_add_child(gCurGraphNodeList[gCurGraphNodeIndex - 1], graphNode);
         }
     }
 }

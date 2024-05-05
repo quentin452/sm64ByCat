@@ -74,41 +74,175 @@ struct FnGraphNode {
     /*0x00*/ struct GraphNode node;
     /*0x14*/ GraphNodeFunc func;
 };
-
-/** The very root of the geo tree. Specifies the viewport.
- */
+/* Specifies position and dimensions of the viewport. */
 struct GraphNodeRoot {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ u8 areaIndex;
-    /*0x15*/ s8 unk15; // ?
-    /*0x16*/ s16 x;
-    /*0x18*/ s16 y;
-    /*0x1A*/ s16 width;    // half width, 160
-    /*0x1C*/ s16 height;   // half height
-    /*0x1E*/ s16 numViews; // number of entries in mystery array
-    /*0x20*/ struct GraphNode **views;
+    struct GraphNode node;    // GraphNode containing viewport info
+    u8 areaIndex;             // Index of the area
+    s8 unk15;                 // Unknown
+    s16 x;                    // X position
+    s16 y;                    // Y position
+    s16 width;                // Width
+    s16 height;               // Height
+    s16 numViews;             // Number of views
+    struct GraphNode **views; // Array of view nodes
 };
 
-/** A node that sets up an orthographic projection based on the global
- *  root node. Used to draw the skybox image.
- */
+/* Sets up an orthographic projection. */
 struct GraphNodeOrthoProjection {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ f32 scale;
+    struct GraphNode node; // GraphNode containing orthographic projection info
+    f32 scale;             // Scaling factor
 };
 
-/** A node that sets up a perspective projection. Used for drawing the
- *  game world. It does not set up the camera position, that is done by
- *  the child of this node, which has type GraphNodeCamera.
- */
+/* Sets up a perspective projection. */
 struct GraphNodePerspective {
-    /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ s32 unused;
-    /*0x1C*/ f32 fov;  // horizontal field of view in degrees
-    /*0x20*/ s16 near; // near clipping plane
-    /*0x22*/ s16 far;  // far clipping plane
-    f32 prevFov;
-    f32 prevTimestamp;
+    struct FnGraphNode fnNode; // GraphNode containing perspective projection info
+    f32 fov;                   // Horizontal field of view in degrees
+    s16 near;                  // Near clipping plane
+    s16 far;                   // Far clipping plane
+    f32 prevFov;               // Previous field of view
+    f32 prevTimestamp;         // Previous timestamp
+};
+
+/* Manages top-level display lists and render modes. */
+struct GraphNodeMasterList {
+    struct GraphNode node;                                   // GraphNode containing master list info
+    struct DisplayListNode *listHeads[GFX_NUM_MASTER_LISTS]; // Array of list heads
+    struct DisplayListNode *listTails[GFX_NUM_MASTER_LISTS]; // Array of list tails
+};
+
+/* Simply used as a parent to group multiple children. */
+struct GraphNodeStart {
+    struct GraphNode node; // GraphNode used for grouping children
+};
+
+/* Renders children based on z-translation in camera space. */
+struct GraphNodeLevelOfDetail {
+    struct GraphNode node; // GraphNode containing level of detail info
+    s16 minDistance;       // Minimum distance for rendering
+    s16 maxDistance;       // Maximum distance for rendering
+};
+
+/* Renders one of its children based on selectedCase. */
+struct GraphNodeSwitchCase {
+    struct FnGraphNode fnNode; // GraphNode containing switch case info
+    s16 numCases;              // Number of cases
+    s16 selectedCase;          // Selected case
+};
+
+/* Specifies camera location and aim. */
+struct GraphNodeCamera {
+    struct FnGraphNode fnNode; // GraphNode containing camera info
+    union {
+        s32 mode;              // Camera mode
+        struct Camera *camera; // Pointer to camera
+    } config;
+    Vec3f pos;                   // Position
+    Vec3f focus;                 // Focus
+    Vec3f prevPos;               // Previous position
+    Vec3f prevFocus;             // Previous focus
+    u32 prevTimestamp;           // Previous timestamp
+    Mat4 *matrixPtr;             // Pointer to look-at matrix
+    Mat4 *matrixPtrInterpolated; // Interpolated matrix pointer
+    s16 roll;                    // Roll
+    s16 rollScreen;              // Screen roll
+};
+
+/* Translates and rotates children. */
+struct GraphNodeTranslationRotation {
+    struct GraphNode node; // GraphNode containing translation and rotation info
+    void *displayList;     // Display list
+    Vec3s translation;     // Translation
+    Vec3s rotation;        // Rotation
+};
+
+/* Translates itself and its children. */
+struct GraphNodeTranslation {
+    struct GraphNode node; // GraphNode containing translation info
+    void *displayList;     // Display list
+    Vec3s translation;     // Translation
+};
+
+/* Rotates itself and its children. */
+struct GraphNodeRotation {
+    struct GraphNode node; // GraphNode containing rotation info
+    void *displayList;     // Display list
+    Vec3s rotation;        // Rotation
+    Vec3s prevRotation;    // Previous rotation
+    u32 prevTimestamp;     // Previous timestamp
+};
+
+/* Part that transforms itself and its children based on animation data. */
+struct GraphNodeAnimatedPart {
+    struct GraphNode node; // GraphNode containing animated part info
+    void *displayList;     // Display list
+    Vec3s translation;     // Translation
+};
+
+/* Draws a display list always facing the camera. */
+struct GraphNodeBillboard {
+    struct GraphNode node; // GraphNode containing billboard info
+    void *displayList;     // Display list
+    Vec3s translation;     // Translation
+};
+
+/* Draws a display list without transformation. */
+struct GraphNodeDisplayList {
+    struct GraphNode node; // GraphNode containing display list info
+    void *displayList;     // Display list
+};
+
+/* Scales itself and its children. */
+struct GraphNodeScale {
+    struct GraphNode node; // GraphNode containing scale info
+    void *displayList;     // Display list
+    f32 scale;             // Scale factor
+};
+
+/* Draws a shadow under an object. */
+struct GraphNodeShadow {
+    struct GraphNode node; // GraphNode containing shadow info
+    s16 shadowScale;       // Shadow scale
+    u8 shadowSolidity;     // Shadow solidity
+    u8 shadowType;         // Shadow type
+};
+
+/* Contains a group node containing all object nodes. */
+struct GraphNodeObjectParent {
+    struct GraphNode node;         // GraphNode containing object parent info
+    struct GraphNode *sharedChild; // Shared child node
+};
+
+/* Draws display lists generated by a function. */
+struct GraphNodeGenerated {
+    struct FnGraphNode fnNode; // GraphNode containing generated info
+    u32 parameter;             // Parameter for function
+};
+
+/* Draws a background image or a colored rectangle. */
+struct GraphNodeBackground {
+    struct FnGraphNode fnNode; // GraphNode containing background info
+    s32 unused;                // Unused field
+    s32 background;            // Background ID or color
+    Vec3f prevCameraPos;       // Previous camera position
+    Vec3f prevCameraFocus;     // Previous camera focus
+    u32 prevCameraTimestamp;   // Previous camera timestamp
+};
+
+/* Renders the object that Mario is holding. */
+struct GraphNodeHeldObject {
+    struct FnGraphNode fnNode;  // GraphNode containing held object info
+    s32 playerIndex;            // Player index
+    struct Object *objNode;     // Object node
+    Vec3s translation;          // Translation
+    Vec3f prevShadowPos;        // Previous shadow position
+    u32 prevShadowPosTimestamp; // Previous shadow position timestamp
+};
+
+/* Allows an object to specify a different culling radius. */
+struct GraphNodeCullingRadius {
+    struct GraphNode node; // GraphNode containing culling radius info
+    s16 cullingRadius;     // Culling radius
+    u8 pad1E[2];           // Padding
 };
 
 /** An entry in the master list. It is a linked list of display lists
@@ -120,223 +254,6 @@ struct DisplayListNode {
     void *displayList;
     void *displayListInterpolated;
     struct DisplayListNode *next;
-};
-
-/** GraphNode that manages the 8 top-level display lists that will be drawn
- *  Each list has its own render mode, so for example water is drawn in a
- *  different master list than opaque objects.
- *  It also sets the z-buffer on before rendering and off after.
- */
-struct GraphNodeMasterList {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ struct DisplayListNode *listHeads[GFX_NUM_MASTER_LISTS];
-    /*0x34*/ struct DisplayListNode *listTails[GFX_NUM_MASTER_LISTS];
-};
-
-/** Simply used as a parent to group multiple children.
- *  Does not have any additional functionality.
- */
-struct GraphNodeStart {
-    /*0x00*/ struct GraphNode node;
-};
-
-/** GraphNode that only renders its children if the current transformation matrix
- *  has a z-translation (in camera space) greater than minDistance and less than
- *  maxDistance.
- *  Usage examples: Mario has three level's of detail: Normal, low-poly arms only, and fully low-poly
- *  The tower in Whomp's fortress has two levels of detail.
- */
-struct GraphNodeLevelOfDetail {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ s16 minDistance;
-    /*0x16*/ s16 maxDistance;
-};
-
-/** GraphNode that renders exactly one of its children.
- *  Which one is rendered is determined by the field 'selectedCase'
- *  which is set in the node's function.
- *  Usage examples: room visibility, coin animation, blinking, Mario's power-up / hand pose / cap
- */
-struct GraphNodeSwitchCase {
-    /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ s32 unused;
-    /*0x1C*/ s16 numCases;
-    /*0x1E*/ s16 selectedCase;
-};
-
-/**
- * GraphNode that specifies the location and aim of the camera.
- * When the roll is 0, the up vector is (0, 1, 0).
- */
-struct GraphNodeCamera {
-    /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ union {
-        // When the node is created, a mode is assigned to the node.
-        // Later in geo_camera_main a Camera is allocated,
-        // the mode is passed to the struct, and the field is overridden
-        // by a pointer to the struct. Gotta save those 4 bytes.
-        s32 mode;
-        struct Camera *camera;
-    } config;
-    /*0x1C*/ Vec3f pos;
-    /*0x28*/ Vec3f focus;
-    Vec3f prevPos;
-    Vec3f prevFocus;
-    u32 prevTimestamp;
-    /*0x34*/ Mat4 *matrixPtr; // pointer to look-at matrix of this camera as a Mat4
-    Mat4 *matrixPtrInterpolated;
-    /*0x38*/ s16 roll; // roll in look at matrix. Doesn't account for light direction unlike rollScreen.
-    /*0x3A*/ s16 rollScreen; // rolls screen while keeping the light direction consistent
-};
-
-/** GraphNode that translates and rotates its children.
- *  Usage example: wing cap wings.
- *  There is a dprint function that sets the translation and rotation values
- *  based on the ENEMYINFO array.
- *  The display list can be null, in which case it won't draw anything itself.
- */
-struct GraphNodeTranslationRotation {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ void *displayList;
-    /*0x18*/ Vec3s translation;
-    /*0x1E*/ Vec3s rotation;
-};
-
-/** GraphNode that translates itself and its children.
- *  Usage example: SUPER MARIO logo letters in debug level select.
- *  The display list can be null, in which case it won't draw anything itself.
- */
-struct GraphNodeTranslation {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ void *displayList;
-    /*0x18*/ Vec3s translation;
-    u8 pad1E[2];
-};
-
-/** GraphNode that rotates itself and its children.
- *  Usage example: Mario torso / head rotation. Its parameters are dynamically
- *  set by a parent script node in that case.
- *  The display list can be null, in which case it won't draw anything itself.
- */
-struct GraphNodeRotation {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ void *displayList;
-    /*0x18*/ Vec3s rotation;
-    Vec3s prevRotation;
-    u32 prevTimestamp;
-};
-
-/** GraphNode part that transforms itself and its children based on animation
- *  data. This animation data is not stored in the node itself but in global
- *  variables that are set when object nodes are processed if the object has
- *  animation.
- *  Used for Mario, enemies and anything else with animation data.
- *  The display list can be null, in which case it won't draw anything itself.
- */
-struct GraphNodeAnimatedPart {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ void *displayList;
-    /*0x18*/ Vec3s translation;
-};
-
-/** A GraphNode that draws a display list rotated in a way to always face the
- *  camera. Note that if the entire object is a billboard (like a coin or 1-up)
- *  then it simply sets the billboard flag for the entire object, this node is
- *  used for billboard parts (like a chuckya or goomba body).
- */
-struct GraphNodeBillboard {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ void *displayList;
-    /*0x18*/ Vec3s translation;
-};
-
-/** A GraphNode that simply draws a display list without doing any
- *  transformation beforehand. It does inherit the parent's transformation.
- */
-struct GraphNodeDisplayList {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ void *displayList;
-};
-
-/** GraphNode part that scales itself and its children.
- *  Usage example: Mario's fist or shoe, which grows when attacking. This can't
- *  be done with an animated part sine animation data doesn't support scaling.
- *  Note that many scaling animations (like a goomba getting stomped) happen on
- *  the entire object. This node is only used when a single part needs to be scaled.
- *  There is also a level command that scales the entire level, used for THI.
- *  The display list can be null, in which case it won't draw anything itself.
- */
-struct GraphNodeScale {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ void *displayList;
-    /*0x18*/ f32 scale;
-};
-
-/** GraphNode that draws a shadow under an object.
- *  Every object starts with a shadow node.
- *  The shadow type determines the shape (round or rectangular), vertices (4 or 9)
- *  and other features.
- */
-struct GraphNodeShadow {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ s16 shadowScale;   // diameter (when a circle) or side (when a square) of shadow
-    /*0x16*/ u8 shadowSolidity; // opacity of shadow, 255 = opaque
-    /*0x17*/ u8 shadowType;     // see ShadowType enum in shadow.h
-};
-
-/** GraphNode that contains as its sharedChild a group node containing all
- *  object nodes.
- */
-struct GraphNodeObjectParent {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ struct GraphNode *sharedChild;
-};
-
-/** GraphNode that draws display lists not directly in memory but generated by
- *  a function.
- *  Used for wobbling paintings, water, environment effects.
- *  It might not draw anything, it could also just update something.
- *  For example: there is a node that stops water flow when the game is paused.
- *  The parameter field gives extra context info. For shifting sand or paintings,
- *  it can determine which texture to use.
- */
-struct GraphNodeGenerated {
-    /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ u32 parameter; // extra context for the function
-};
-
-/** GraphNode that draws a background image or a rectangle of a color.
- *  Drawn in an orthographic projection, used for skyboxes.
- */
-struct GraphNodeBackground {
-    /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ s32 unused;
-    /*0x1C*/ s32 background; // background ID, or rgba5551 color if fnNode.func is null
-    Vec3f prevCameraPos;
-    Vec3f prevCameraFocus;
-    u32 prevCameraTimestamp;
-};
-
-/** Renders the object that Mario is holding.
- */
-struct GraphNodeHeldObject {
-    /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ s32 playerIndex;
-    /*0x1C*/ struct Object *objNode;
-    /*0x20*/ Vec3s translation;
-    Vec3f prevShadowPos;
-    u32 prevShadowPosTimestamp;
-};
-
-/** A node that allows an object to specify a different culling radius than the
- *  default one of 300. For this to work, it needs to be a direct child of the
- *  object node. Used for very large objects, such as shock wave rings that Bowser
- *  creates, tornadoes, the big eel.
- */
-struct GraphNodeCullingRadius {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ s16 cullingRadius; // specifies the 'sphere radius' for purposes of frustum culling
-    u8 pad1E[2];
 };
 
 extern struct GraphNodeMasterList *gCurGraphNodeMasterList;
@@ -357,28 +274,21 @@ extern Vec3s gVec3sOne;
 
 void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type);
 
-struct GraphNodeRoot *init_graph_node_root(struct AllocOnlyPool *pool, struct GraphNodeRoot *graphNode,
-                                           s16 areaIndex, s16 x, s16 y, s16 width, s16 height);
-struct GraphNodeOrthoProjection *
-init_graph_node_ortho_projection(struct AllocOnlyPool *pool, struct GraphNodeOrthoProjection *graphNode,
-                                 f32 scale);
-struct GraphNodePerspective *init_graph_node_perspective(struct AllocOnlyPool *pool,
-                                                         struct GraphNodePerspective *graphNode,
-                                                         f32 fov, s16 near, s16 far,
-                                                         GraphNodeFunc nodeFunc, s32 unused);
+struct GraphNodeRoot *init_graph_node_root(struct AllocOnlyPool *pool, s16 areaIndex, s16 x, s16 y,
+                                           s16 width, s16 height);
+struct GraphNodeOrthoProjection *init_graph_node_ortho_projection(struct AllocOnlyPool *pool,
+                                                                  f32 scale);
+struct GraphNodePerspective *init_graph_node_perspective(struct AllocOnlyPool *pool, f32 fov, s16 near,
+                                                         s16 far, GraphNodeFunc nodeFunc);
 struct GraphNodeStart *init_graph_node_start(struct AllocOnlyPool *pool,
                                              struct GraphNodeStart *graphNode);
-struct GraphNodeMasterList *init_graph_node_master_list(struct AllocOnlyPool *pool,
-                                                        struct GraphNodeMasterList *graphNode, s16 on);
+struct GraphNodeMasterList *init_graph_node_master_list(struct AllocOnlyPool *pool, s16 on);
 struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct AllocOnlyPool *pool,
                                                             struct GraphNodeLevelOfDetail *graphNode,
                                                             s16 minDistance, s16 maxDistance);
-struct GraphNodeSwitchCase *init_graph_node_switch_case(struct AllocOnlyPool *pool,
-                                                        struct GraphNodeSwitchCase *graphNode,
-                                                        s16 numCases, s16 selectedCase,
-                                                        GraphNodeFunc nodeFunc, s32 unused);
-struct GraphNodeCamera *init_graph_node_camera(struct AllocOnlyPool *pool,
-                                               struct GraphNodeCamera *graphNode, f32 *pos, f32 *focus,
+struct GraphNodeSwitchCase *init_graph_node_switch_case(struct AllocOnlyPool *pool, s16 numCases,
+                                                        s16 selectedCase, GraphNodeFunc nodeFunc);
+struct GraphNodeCamera *init_graph_node_camera(struct AllocOnlyPool *pool, f32 *pos, f32 *focus,
                                                GraphNodeFunc func, s32 mode);
 struct GraphNodeTranslationRotation *
 init_graph_node_translation_rotation(struct AllocOnlyPool *pool,
@@ -388,44 +298,31 @@ struct GraphNodeTranslation *init_graph_node_translation(struct AllocOnlyPool *p
                                                          struct GraphNodeTranslation *graphNode,
                                                          s32 drawingLayer, void *displayList,
                                                          Vec3s translation);
-struct GraphNodeRotation *init_graph_node_rotation(struct AllocOnlyPool *pool,
-                                                   struct GraphNodeRotation *graphNode,
-                                                   s32 drawingLayer, void *displayList, Vec3s rotation);
-struct GraphNodeScale *init_graph_node_scale(struct AllocOnlyPool *pool,
-                                             struct GraphNodeScale *graphNode, s32 drawingLayer,
+struct GraphNodeRotation *init_graph_node_rotation(struct AllocOnlyPool *pool, s32 drawingLayer,
+                                                   void *displayList, Vec3s rotation);
+struct GraphNodeScale *init_graph_node_scale(struct AllocOnlyPool *pool, s32 drawingLayer,
                                              void *displayList, f32 scale);
 struct GraphNodeObject *init_graph_node_object(struct AllocOnlyPool *pool,
                                                struct GraphNodeObject *graphNode,
                                                struct GraphNode *sharedChild, Vec3f pos, Vec3s angle,
                                                Vec3f scale);
-struct GraphNodeCullingRadius *init_graph_node_culling_radius(struct AllocOnlyPool *pool,
-                                                              struct GraphNodeCullingRadius *graphNode,
-                                                              s16 radius);
+struct GraphNodeCullingRadius *init_graph_node_culling_radius(struct AllocOnlyPool *pool, s16 radius);
 struct GraphNodeAnimatedPart *init_graph_node_animated_part(struct AllocOnlyPool *pool,
-                                                            struct GraphNodeAnimatedPart *graphNode,
                                                             s32 drawingLayer, void *displayList,
                                                             Vec3s translation);
-struct GraphNodeBillboard *init_graph_node_billboard(struct AllocOnlyPool *pool,
-                                                     struct GraphNodeBillboard *graphNode,
-                                                     s32 drawingLayer, void *displayList,
-                                                     Vec3s translation);
-struct GraphNodeDisplayList *init_graph_node_display_list(struct AllocOnlyPool *pool,
-                                                          struct GraphNodeDisplayList *graphNode,
-                                                          s32 drawingLayer, void *displayList);
-struct GraphNodeShadow *init_graph_node_shadow(struct AllocOnlyPool *pool,
-                                               struct GraphNodeShadow *graphNode, s16 shadowScale,
+struct GraphNodeBillboard *init_graph_node_billboard(struct AllocOnlyPool *pool, s32 drawingLayer,
+                                                     void *displayList, Vec3s translation);
+struct GraphNodeDisplayList *init_graph_node_display_list(struct AllocOnlyPool *pool, s32 drawingLayer,
+                                                          void *displayList);
+struct GraphNodeShadow *init_graph_node_shadow(struct AllocOnlyPool *pool, s16 shadowScale,
                                                u8 shadowSolidity, u8 shadowType);
 struct GraphNodeObjectParent *init_graph_node_object_parent(struct AllocOnlyPool *pool,
-                                                            struct GraphNodeObjectParent *sp1c,
                                                             struct GraphNode *sharedChild);
-struct GraphNodeGenerated *init_graph_node_generated(struct AllocOnlyPool *pool,
-                                                     struct GraphNodeGenerated *sp1c,
-                                                     GraphNodeFunc gfxFunc, s32 parameter);
-struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *pool,
-                                                       struct GraphNodeBackground *sp1c, u16 background,
-                                                       GraphNodeFunc backgroundFunc, s32 zero);
+struct GraphNodeGenerated *init_graph_node_generated(struct AllocOnlyPool *pool, GraphNodeFunc gfxFunc,
+                                                     s32 parameter);
+struct GraphNodeBackground *init_graph_node_background(struct AllocOnlyPool *pool, u16 background,
+                                                       GraphNodeFunc backgroundFunc);
 struct GraphNodeHeldObject *init_graph_node_held_object(struct AllocOnlyPool *pool,
-                                                        struct GraphNodeHeldObject *sp1c,
                                                         struct Object *objNode, Vec3s translation,
                                                         GraphNodeFunc nodeFunc, s32 playerIndex);
 struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *childNode);
