@@ -62,20 +62,6 @@
             "dependsOn": "Kill sm64.us.f3dex2e.exe"
         },
         {
-            "label": "build-and-run-Super-Mario-64-With-Debug",
-            "type": "process",
-            "command": "${workspaceFolder}/build/us_pc/sm64.us.f3dex2e.exe",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "dependsOn": "Build Super Mario 64 With Debug"
-        },
-        {
             "label": "Build Super Mario 64 With Release",
             "type": "shell",
             "command": "make",
@@ -92,19 +78,5 @@
             },
             "dependsOn": "Kill sm64.us.f3dex2e.exe"
         },
-        {
-            "label": "build-and-run-Super-Mario-64-With-Release",
-            "type": "process",
-            "command": "${workspaceFolder}/build/us_pc/sm64.us.f3dex2e.exe",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "dependsOn": "Build Super Mario 64 With Release"
-        }
     ]
 }
