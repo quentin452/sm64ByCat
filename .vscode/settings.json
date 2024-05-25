@@ -116,7 +116,8 @@
     "mario_actions_moving.h": "c",
     "controller_mouse.h": "c",
     "geo_layout.h": "c",
-    "shadow.h": "c"
+    "shadow.h": "c",
+    "types.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "[cpp]": {
