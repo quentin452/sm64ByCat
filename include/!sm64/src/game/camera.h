@@ -23,7 +23,7 @@
  * Converts an angle in degrees to sm64's s16 angle units. For example, DEGREES(90) == 0x4000
  * This should be used mainly to make camera code clearer at first glance.
  */
-#define DEGREES(x) ((x) *0x10000 / 360)
+#define DEGREES(x) ((x) * 0x10000 / 360)
 
 #define LEVEL_AREA_INDEX(levelNum, areaNum) (((levelNum) << 4) + (areaNum))
 
@@ -664,6 +664,7 @@ extern u8 gRecentCutscene;
 
 // TODO: sort all of this extremely messy shit out after the split
 
+BAD_RETURN(s32) cutscene_exit_painting_end(struct Camera *c);
 void set_camera_shake_from_hit(s16 shake);
 void set_environmental_camera_shake(s16 shake);
 void set_camera_shake_from_point(s16 shake, f32 posX, f32 posY, f32 posZ);
