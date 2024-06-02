@@ -7,15 +7,15 @@ import logging
 blacklist = ["ThirdPartyLibs", "CMakeFiles"]
 
 
-def find_largest_files(files, n=100):
+def find_largest_files(files):
     sizes_files = []
     for file in files:
         size = os.path.getsize(file)
         with open(file, encoding="ISO-8859-1") as f:
             num_lines = len(f.readlines())
-        ratio = size / num_lines if num_lines > 0 else 0
+        ratio = size * num_lines / 10000 if num_lines > 0 else 0
         sizes_files.append((ratio, size, file))
-    return heapq.nlargest(n, sizes_files)
+    return sizes_files
 
 
 def is_blacklisted(file, blacklist):
@@ -26,12 +26,8 @@ def is_blacklisted(file, blacklist):
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 log_filename = f"{script_name}.txt"
 
-# Supprimer le fichier de log s'il existe
-if os.path.exists(log_filename):
-    os.remove(log_filename)
-
 # Configurer le logger pour écrire dans un fichier .txt
-logging.basicConfig(filename=log_filename, level=logging.INFO)
+logging.basicConfig(filename=log_filename, filemode="w", level=logging.INFO)
 
 directories = [
     "**/*.c",  # C source files
@@ -56,7 +52,7 @@ for directory in directories:
         all_files.extend(files)
 
 # Trouver les n plus grands fichiers dans la liste globale
-largest_files = find_largest_files(all_files, n=100)
+largest_files = find_largest_files(all_files)
 
 # Logging des fichiers classés par taille décroissante
 logged_files = set()
